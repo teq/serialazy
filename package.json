@@ -1,0 +1,30 @@
+{
+  "name": "jsonify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "lint": "tslint --project ./",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "pretest": "npm run build",
+    "test": "node ./dist/spec/run.js"
+  },
+  "author": "Andrey Tselischev",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^8.0.28",
+    "reflect-metadata": "^0.1.10"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/mocha": "^2.2.43",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^3.5.3",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.3"
+  }
+}

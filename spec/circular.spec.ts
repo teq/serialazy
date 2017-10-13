@@ -1,0 +1,1 @@
+describe('circular references', () => {});
