@@ -1,26 +1,31 @@
 import Constructable from '../constructable';
+import SerializationError from '../errors/serialization_error';
 import JsonType from '../json_type';
+import Metadata from '../metadata';
 
 import BooleanSerializer from './boolean_serializer';
 import NumberSerializer from './number_serializer';
+import SerializableSerializer from './serializable_serializer';
 import Serializer from './serializer';
 import StringSerializer from './string_serializer';
 
 namespace SerializerFactory {
 
+    /** Tries to pick a default serializer for given property */
     export function createFor(target: Object, propertyName: string, options: Serializer.Options): Serializer<JsonType, any> {
 
-        const type: Constructable<any> = Reflect.getMetadata('design:type', target, propertyName);
+        const ctor: Constructable<any> = Reflect.getMetadata('design:type', target, propertyName);
 
-        switch (type) {
-            case String:
-                return new StringSerializer(propertyName, options);
-            case Number:
-                return new NumberSerializer(propertyName, options);
-            case Boolean:
-                return new BooleanSerializer(propertyName, options);
-            default:
-                throw new Error(`Unknown type: ${type.name}`);
+        if (ctor === String) {
+            return new StringSerializer(propertyName, options);
+        } else if (ctor === Number) {
+            return new NumberSerializer(propertyName, options);
+        } else if (ctor === Boolean) {
+            return new BooleanSerializer(propertyName, options);
+        } else if (ctor.prototype && Metadata.getFor(ctor.prototype)) { // Serializable
+            return new SerializableSerializer(propertyName, options, ctor);
+        } else {
+            throw new SerializationError(`Unable to find serializer for type: "${ctor.name}". Hint: use serializable type or provide a custom serializer`);
         }
 
     }

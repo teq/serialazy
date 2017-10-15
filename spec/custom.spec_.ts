@@ -1,7 +1,7 @@
 import chai = require('chai');
 
+import Jsonify from '../src/jsonify';
 import Serialize from '../src/serialize';
-import Serializer from '../src/serializer';
 
 const { expect } = chai;
 
@@ -38,9 +38,9 @@ describe('custom serializers', () => {
     it('works', () => {
 
         const book = new Book();
-        const jsonObj = Serializer.toJsonObject(book);
+        const jsonObj = Jsonify.toJsonObject(book);
 
-        const bookObj = Serializer.fromJsonObject(Book, jsonObj);
+        const bookObj = Jsonify.fromJsonObject(Book, jsonObj);
 
     });
 
