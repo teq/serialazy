@@ -16,6 +16,10 @@ namespace SerializerFactory {
 
         const ctor: Constructable<any> = Reflect.getMetadata('design:type', target, propertyName);
 
+        if (ctor === undefined) {
+            throw new Error('Unable to fetch type information. Hint: Enable TS options: `emitDecoratorMetadata` and `experimentalDecorators`');
+        }
+
         if (ctor === String) {
             return new StringSerializer(propertyName, options);
         } else if (ctor === Number) {
