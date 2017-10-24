@@ -31,7 +31,7 @@ describe('default serializer for serializables (serializable objects)', () => {
             author: { name: 'Arthur Conan Doyle' }
         };
 
-        const book = new Book( 'The Story of the Sealed Room', new Author('Arthur Conan Doyle'));
+        const book = new Book('The Story of the Sealed Room', new Author('Arthur Conan Doyle'));
 
         it('serializes to JSON-compatible object', () => {
             const serialized = Jsonify.toJsonObject(book);

@@ -6,7 +6,7 @@ if (!Reflect.getMetadata || !Reflect.defineMetadata || !Reflect.hasOwnMetadata |
     throw new Error('Metadata Reflection API is not defined. Hint: use `reflect-metadata` npm package to polyfill it');
 }
 
-const metadataKey = Symbol('Serializable object metadata');
+const METADATA_KEY = Symbol('Metadata containing info about serializable object');
 
 /** Metadata container for serializables */
 export default class Metadata {
@@ -18,17 +18,11 @@ export default class Metadata {
     /** Get metadata for given object if it's exists or create an empty metadata container */
     public static getOrCreateFor(target: Object): Metadata {
 
-        if (target === null || target === undefined) {
-            throw new SerializationError('Unable to get or create metadata for null/undefined object');
-        }
+        let metadata = this.getFor(target);
 
-        let metadata: Metadata = null;
-
-        if (!Reflect.hasOwnMetadata(metadataKey, target)) {
+        if (!metadata) {
             metadata = new Metadata();
-            Reflect.defineMetadata(metadataKey, metadata, target);
-        } else {
-            metadata = Reflect.getOwnMetadata(metadataKey, target);
+            Reflect.defineMetadata(METADATA_KEY, metadata, target);
         }
 
         return metadata;
@@ -39,10 +33,25 @@ export default class Metadata {
     public static getFor(target: Object): Metadata {
 
         if (target === null || target === undefined) {
-            throw new SerializationError('Unable to get metadata for null/undefined object');
+            throw new SerializationError('null/undefined can not be serializable');
         }
 
-        const metadata: Metadata = Reflect.getOwnMetadata(metadataKey, target) || null;
+        const metadata: Metadata = Reflect.getOwnMetadata(METADATA_KEY, target) || null;
+
+        return metadata;
+
+    }
+
+    /** Get metadata for given object if it's exists or throw an error */
+    public static expectFor(target: Object): Metadata {
+
+        let metadata = this.getFor(target);
+
+        if (!metadata) {
+            throw new SerializationError(
+                "Provided type doesn't seem to be serializable. Hint: use `serialize` decorator to mark properties for serialization"
+            );
+        }
 
         return metadata;
 

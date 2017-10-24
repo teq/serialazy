@@ -20,13 +20,9 @@ namespace Jsonify {
 
         } else {
 
-            const proto = Object.getPrototypeOf(serializable);
+            const proto = Object.getPrototypeOf(serializable) || {};
 
-            if (!proto || !Metadata.getFor(proto)) {
-                throw new SerializationError("Provided object doesn't seem to be serializable. Hint: use `serialize` decorator to mark properties for serialization");
-            }
-
-            const meta = Metadata.getFor(proto);
+            const meta = Metadata.expectFor(proto);
 
             jsonObj = {};
 
@@ -58,15 +54,11 @@ namespace Jsonify {
 
         } else {
 
-            if (!ctor) {
-                throw new SerializationError('Constructor function is not defined');
+            if (!ctor || !ctor.prototype) {
+                throw new SerializationError('Expecting a valid constructor function');
             }
 
-            const meta = Metadata.getFor(ctor.prototype);
-
-            if (!meta) {
-                throw new SerializationError("Provided constructor function doesn't seem to be of serializable type. Hint: use `serialize` decorator to mark properties for serialization");
-            }
+            const meta = Metadata.expectFor(ctor.prototype);
 
             classInstance = new ctor();
 
