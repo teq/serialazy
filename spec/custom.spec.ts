@@ -1,7 +1,6 @@
 import chai = require('chai');
 
-import Jsonify from '../src/jsonify';
-import Serialize from '../src/serialize';
+import Jsonify, { Serialize } from '../src/jsonify';
 
 const { expect } = chai;
 

@@ -1,9 +1,6 @@
 import chai = require('chai');
 
-import Constructable from '../../src/constructable';
-import SerializationError from '../../src/errors/serialization_error';
-import Jsonify from '../../src/jsonify';
-import Serialize from '../../src/serialize';
+import Jsonify, { SerializationError, Serialize } from '../../src/jsonify';
 
 const { expect } = chai;
 

@@ -77,3 +77,6 @@ namespace Jsonify {
 }
 
 export default Jsonify;
+export { default as Serialize} from './serialize';
+export { default as Serializable} from './serializable';
+export { default as SerializationError} from './errors/serialization_error';
