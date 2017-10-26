@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import chai = require('chai');
 import chaiAsPromised = require('chai-as-promised');
 import fs = require('fs');

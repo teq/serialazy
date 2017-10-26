@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import Constructable from './constructable';
 import SerializationError from './errors/serialization_error';
 import { JsonMap } from './json_type';

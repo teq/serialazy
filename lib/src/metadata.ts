@@ -2,10 +2,6 @@ import SerializationError from './errors/serialization_error';
 import JsonType from './json_type';
 import Serializer from './serializers/serializer';
 
-if (!Reflect.getMetadata || !Reflect.defineMetadata || !Reflect.hasOwnMetadata || !Reflect.getOwnMetadata) {
-    throw new Error('Metadata Reflection API is not defined. Hint: use `reflect-metadata` npm package to polyfill it');
-}
-
 const METADATA_KEY = Symbol('Metadata containing info about serializable object');
 
 /** Metadata container for serializables */
