@@ -52,6 +52,7 @@ describe('default serializer for serializables (serializable objects)', () => {
 
         it('should fail to decorate it as serializable', () => {
             expect(() => {
+                // tslint:disable-next-line:no-unused-variable
                 class Book {
                     @Serialize() public author: NotSerializableAuthor;
                 }

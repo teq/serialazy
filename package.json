@@ -5,7 +5,7 @@
   "main": "./lib/dist/jsonify.js",
   "types": "./lib/dist/jsonify.d.ts",
   "scripts": {
-    "lint": "tslint --project ./",
+    "lint": "tslint -p ./lib && tslint -p ./spec",
     "cleanlib": "rm -rf ./lib/dist",
     "cleanspec": "rm -rf ./spec/bin",
     "clean": "npm run cleanlib && npm run cleanspec",
