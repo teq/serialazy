@@ -15,7 +15,8 @@
     "buildspec": "cd ./spec && tsc",
     "build": "npm run buildlib && npm run buildspec",
     "pretest": "npm run build",
-    "test": "node ./spec/bin/run.js"
+    "test": "node ./spec/bin/run.js",
+    "prepublishOnly": "npm run lint && npm run test"
   },
   "author": "Andrey Tselischev",
   "license": "ISC",

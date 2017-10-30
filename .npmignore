@@ -1,0 +1,8 @@
+/node_modules
+/lib/src
+/spec
+tslint.json
+
+# IDEs
+.idea/
+.vscode/
