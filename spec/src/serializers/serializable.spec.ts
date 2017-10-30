@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import Jsonify, { SerializationError, Serialize } from '../../../.';
+import { deflate, inflate, SerializationError, Serialize } from '../../../.';
 
 const { expect } = chai;
 
@@ -32,12 +32,12 @@ describe('default serializer for serializables (serializable objects)', () => {
         const book = new Book('The Story of the Sealed Room', new Author('Arthur Conan Doyle'));
 
         it('serializes to JSON-compatible object', () => {
-            const serialized = Jsonify.toJsonObject(book);
+            const serialized = deflate(book);
             expect(serialized).to.deep.equal(bookObj);
         });
 
         it('deserializes from JSON-compatible object', () => {
-            const deserialized = Jsonify.fromJsonObject(Book, bookObj);
+            const deserialized = inflate(Book, bookObj);
             expect(deserialized instanceof Book).to.equal(true);
             expect(deserialized).to.deep.equal(book);
         });
@@ -72,11 +72,11 @@ describe('default serializer for serializables (serializable objects)', () => {
 
             it('should fail to serialize', () => {
                 const entity = new Book('War and Peace', null);
-                expect(() => Jsonify.toJsonObject(entity)).to.throw(SerializationError, 'Unable to serialize null property');
+                expect(() => deflate(entity)).to.throw(SerializationError, 'Unable to serialize null property');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => Jsonify.fromJsonObject(Book, bookObj)).to.throw(SerializationError, 'Unable to deserialize null property');
+                expect(() => inflate(Book, bookObj)).to.throw(SerializationError, 'Unable to deserialize null property');
             });
 
         });
@@ -94,12 +94,12 @@ describe('default serializer for serializables (serializable objects)', () => {
 
             it('serializes to null', () => {
                 const entity = new Book('War and Peace', null);
-                const serialized = Jsonify.toJsonObject(entity);
+                const serialized = deflate(entity);
                 expect(serialized).to.deep.equal(bookObj);
             });
 
             it('deserializes to null', () => {
-                const deserialized = Jsonify.fromJsonObject(Book, bookObj);
+                const deserialized = inflate(Book, bookObj);
                 expect(deserialized instanceof Book).to.equal(true);
                 expect(deserialized).to.deep.equal(bookObj);
             });
@@ -119,11 +119,11 @@ describe('default serializer for serializables (serializable objects)', () => {
 
             it('should fail to serialize', () => {
                 const entity = new Book('The Little Prince', undefined);
-                expect(() => Jsonify.toJsonObject(entity)).to.throw(SerializationError, 'Unable to serialize undefined property');
+                expect(() => deflate(entity)).to.throw(SerializationError, 'Unable to serialize undefined property');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => Jsonify.fromJsonObject(Book, bookObj)).to.throw(SerializationError, 'Unable to deserialize undefined property');
+                expect(() => inflate(Book, bookObj)).to.throw(SerializationError, 'Unable to deserialize undefined property');
             });
 
         });
@@ -141,12 +141,12 @@ describe('default serializer for serializables (serializable objects)', () => {
 
             it('serializes to undefined', () => {
                 const entity = new Book('The Little Prince', undefined);
-                const serialized = Jsonify.toJsonObject(entity);
+                const serialized = deflate(entity);
                 expect(serialized).to.deep.equal(bookObj);
             });
 
             it('deserializes to undefined', () => {
-                const deserialized = Jsonify.fromJsonObject(Book, bookObj);
+                const deserialized = inflate(Book, bookObj);
                 expect(deserialized instanceof Book).to.equal(true);
                 expect(deserialized).to.deep.equal(bookObj);
             });

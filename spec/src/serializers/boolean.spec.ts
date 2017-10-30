@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import Jsonify, { SerializationError, Serialize } from '../../../.';
+import { deflate, inflate, SerializationError, Serialize } from '../../../.';
 
 const { expect } = chai;
 
@@ -19,12 +19,12 @@ describe('default serializer for boolean properties', () => {
 
             it('serializes to a boolean primitive', () => {
                 const patient = new Patient(true);
-                const serialized = Jsonify.toJsonObject(patient);
+                const serialized = deflate(patient);
                 expect(serialized).to.deep.equal({ married: true });
             });
 
             it('deserializes to a boolean primitive', () => {
-                const deserialized = Jsonify.fromJsonObject(Patient, { married: false });
+                const deserialized = inflate(Patient, { married: false });
                 expect(deserialized instanceof Patient).to.equal(true);
                 expect(deserialized).to.deep.equal({ married: false });
             });
@@ -35,12 +35,12 @@ describe('default serializer for boolean properties', () => {
 
             it('serializes to a boolean primitive', () => {
                 const patient = new Patient(new Boolean(true) as boolean);
-                const serialized = Jsonify.toJsonObject(patient);
+                const serialized = deflate(patient);
                 expect(serialized).to.deep.equal({ married: true });
             });
 
             it('deserializes to a boolean primitive', () => {
-                const deserialized = Jsonify.fromJsonObject(Patient, { married: new Boolean(false) as boolean });
+                const deserialized = inflate(Patient, { married: new Boolean(false) as boolean });
                 expect(deserialized instanceof Patient).to.equal(true);
                 expect(deserialized).to.deep.equal({ married: false });
             });
@@ -53,11 +53,11 @@ describe('default serializer for boolean properties', () => {
 
         it('should fail to serialize', () => {
             const patient = new Patient(new Date() as any);
-            expect(() => Jsonify.toJsonObject(patient)).to.throw(SerializationError, 'not a boolean');
+            expect(() => deflate(patient)).to.throw(SerializationError, 'not a boolean');
         });
 
         it('should fail to deserialize', () => {
-            expect(() => Jsonify.fromJsonObject(Patient, { married: new Date() as any })).to.throw(SerializationError, 'not a boolean');
+            expect(() => inflate(Patient, { married: new Date() as any })).to.throw(SerializationError, 'not a boolean');
         });
 
     });
@@ -68,11 +68,11 @@ describe('default serializer for boolean properties', () => {
 
             it('should fail to serialize', () => {
                 const patient = new Patient(null);
-                expect(() => Jsonify.toJsonObject(patient)).to.throw(SerializationError, 'Unable to serialize null property');
+                expect(() => deflate(patient)).to.throw(SerializationError, 'Unable to serialize null property');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => Jsonify.fromJsonObject(Patient, { married: null })).to.throw(SerializationError, 'Unable to deserialize null property');
+                expect(() => inflate(Patient, { married: null })).to.throw(SerializationError, 'Unable to deserialize null property');
             });
 
         });
@@ -88,12 +88,12 @@ describe('default serializer for boolean properties', () => {
 
             it('serializes to null', () => {
                 const patient = new Patient(null);
-                const serialized = Jsonify.toJsonObject(patient);
+                const serialized = deflate(patient);
                 expect(serialized).to.deep.equal({ married: null });
             });
 
             it('deserializes to null', () => {
-                const deserialized = Jsonify.fromJsonObject(Patient, { married: null });
+                const deserialized = inflate(Patient, { married: null });
                 expect(deserialized instanceof Patient).to.equal(true);
                 expect(deserialized).to.deep.equal({ married: null });
             });
@@ -108,11 +108,11 @@ describe('default serializer for boolean properties', () => {
 
             it('should fail to serialize', () => {
                 const patient = new Patient(undefined);
-                expect(() => Jsonify.toJsonObject(patient)).to.throw(SerializationError, 'Unable to serialize undefined property');
+                expect(() => deflate(patient)).to.throw(SerializationError, 'Unable to serialize undefined property');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => Jsonify.fromJsonObject(Patient, { married: undefined })).to.throw(SerializationError, 'Unable to deserialize undefined property');
+                expect(() => inflate(Patient, { married: undefined })).to.throw(SerializationError, 'Unable to deserialize undefined property');
             });
 
         });
@@ -128,12 +128,12 @@ describe('default serializer for boolean properties', () => {
 
             it('serializes to undefined', () => {
                 const patient = new Patient(undefined);
-                const serialized = Jsonify.toJsonObject(patient);
+                const serialized = deflate(patient);
                 expect(serialized.married).to.equal(undefined);
             });
 
             it('deserializes to undefined', () => {
-                const deserialized = Jsonify.fromJsonObject(Patient, { married: undefined });
+                const deserialized = inflate(Patient, { married: undefined });
                 expect(deserialized instanceof Patient).to.equal(true);
                 expect(deserialized.married).to.equal(undefined);
             });

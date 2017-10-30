@@ -1,9 +1,9 @@
 {
-  "name": "jsonify",
+  "name": "instanceify",
   "version": "1.0.0",
   "description": "",
-  "main": "./lib/dist/jsonify.js",
-  "types": "./lib/dist/jsonify.d.ts",
+  "main": "./lib/dist/instanceify.js",
+  "types": "./lib/dist/instanceify.d.ts",
   "scripts": {
     "lint": "tslint -p ./lib && tslint -p ./spec",
     "cleanlib": "rm -rf ./lib/dist",

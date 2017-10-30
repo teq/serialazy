@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import Jsonify, { Serialize } from '../../.';
+import { deflate, inflate, Serialize } from '../../.';
 
 const { expect } = chai;
 
@@ -28,7 +28,7 @@ describe('custom serializer', () => {
 
         const book = new Book(new Date('1893'), new Map([[1, 'Chapter 1'], [21, 'Chapter 2']]));
 
-        const bookObj = Jsonify.toJsonObject(book);
+        const bookObj = deflate(book);
 
         expect(bookObj).to.deep.equal({
             "releaseDate": "1893-01-01T00:00:00.000Z",
@@ -38,7 +38,7 @@ describe('custom serializer', () => {
             ]
         });
 
-        const deserialized = Jsonify.fromJsonObject(Book, bookObj);
+        const deserialized = inflate(Book, bookObj);
 
         expect(deserialized).to.deep.equal(book);
 

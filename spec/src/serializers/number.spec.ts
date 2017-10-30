@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import Jsonify, { SerializationError, Serialize } from '../../../.';
+import { deflate, inflate, SerializationError, Serialize } from '../../../.';
 
 const { expect } = chai;
 
@@ -19,12 +19,12 @@ describe('default serializer for number properties', () => {
 
             it('serializes to a number primitive', () => {
                 const patient = new Patient(40);
-                const serialized = Jsonify.toJsonObject(patient);
+                const serialized = deflate(patient);
                 expect(serialized).to.deep.equal({ age: 40 });
             });
 
             it('deserializes to a number primitive', () => {
-                const deserialized = Jsonify.fromJsonObject(Patient, { age: 45 });
+                const deserialized = inflate(Patient, { age: 45 });
                 expect(deserialized instanceof Patient).to.equal(true);
                 expect(deserialized).to.deep.equal({ age: 45 });
             });
@@ -35,12 +35,12 @@ describe('default serializer for number properties', () => {
 
             it('serializes to a number primitive', () => {
                 const patient = new Patient(new Number(40) as number);
-                const serialized = Jsonify.toJsonObject(patient);
+                const serialized = deflate(patient);
                 expect(serialized).to.deep.equal({ age: 40 });
             });
 
             it('deserializes to a number primitive', () => {
-                const deserialized = Jsonify.fromJsonObject(Patient, { age: new Number(45) as number });
+                const deserialized = inflate(Patient, { age: new Number(45) as number });
                 expect(deserialized instanceof Patient).to.equal(true);
                 expect(deserialized).to.deep.equal({ age: 45 });
             });
@@ -53,11 +53,11 @@ describe('default serializer for number properties', () => {
 
         it('should fail to serialize', () => {
             const patient = new Patient(new Date() as any);
-            expect(() => Jsonify.toJsonObject(patient)).to.throw(SerializationError, 'not a number');
+            expect(() => deflate(patient)).to.throw(SerializationError, 'not a number');
         });
 
         it('should fail to deserialize', () => {
-            expect(() => Jsonify.fromJsonObject(Patient, { age: new Date() as any })).to.throw(SerializationError, 'not a number');
+            expect(() => inflate(Patient, { age: new Date() as any })).to.throw(SerializationError, 'not a number');
         });
 
     });
@@ -68,11 +68,11 @@ describe('default serializer for number properties', () => {
 
             it('should fail to serialize', () => {
                 const patient = new Patient(null);
-                expect(() => Jsonify.toJsonObject(patient)).to.throw(SerializationError, 'Unable to serialize null property');
+                expect(() => deflate(patient)).to.throw(SerializationError, 'Unable to serialize null property');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => Jsonify.fromJsonObject(Patient, { age: null })).to.throw(SerializationError, 'Unable to deserialize null property');
+                expect(() => inflate(Patient, { age: null })).to.throw(SerializationError, 'Unable to deserialize null property');
             });
 
         });
@@ -88,12 +88,12 @@ describe('default serializer for number properties', () => {
 
             it('serializes to null', () => {
                 const patient = new Patient(null);
-                const serialized = Jsonify.toJsonObject(patient);
+                const serialized = deflate(patient);
                 expect(serialized).to.deep.equal({ age: null });
             });
 
             it('deserializes to null', () => {
-                const deserialized = Jsonify.fromJsonObject(Patient, { age: null });
+                const deserialized = inflate(Patient, { age: null });
                 expect(deserialized instanceof Patient).to.equal(true);
                 expect(deserialized).to.deep.equal({ age: null });
             });
@@ -108,11 +108,11 @@ describe('default serializer for number properties', () => {
 
             it('should fail to serialize', () => {
                 const patient = new Patient(undefined);
-                expect(() => Jsonify.toJsonObject(patient)).to.throw(SerializationError, 'Unable to serialize undefined property');
+                expect(() => deflate(patient)).to.throw(SerializationError, 'Unable to serialize undefined property');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => Jsonify.fromJsonObject(Patient, { age: undefined })).to.throw(SerializationError, 'Unable to deserialize undefined property');
+                expect(() => inflate(Patient, { age: undefined })).to.throw(SerializationError, 'Unable to deserialize undefined property');
             });
 
         });
@@ -128,12 +128,12 @@ describe('default serializer for number properties', () => {
 
             it('serializes to undefined', () => {
                 const patient = new Patient(undefined);
-                const serialized = Jsonify.toJsonObject(patient);
+                const serialized = deflate(patient);
                 expect(serialized.age).to.equal(undefined);
             });
 
             it('deserializes to undefined', () => {
-                const deserialized = Jsonify.fromJsonObject(Patient, { age: undefined });
+                const deserialized = inflate(Patient, { age: undefined });
                 expect(deserialized instanceof Patient).to.equal(true);
                 expect(deserialized.age).to.equal(undefined);
             });

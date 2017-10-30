@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import Jsonify, { SerializationError, Serialize } from '../../../.';
+import { deflate, inflate, SerializationError, Serialize } from '../../../.';
 
 const { expect } = chai;
 
@@ -19,12 +19,12 @@ describe('default serializer for string properties', () => {
 
             it('serializes to a string literal', () => {
                 const greeter = new Greeter('hello');
-                const serialized = Jsonify.toJsonObject(greeter);
+                const serialized = deflate(greeter);
                 expect(serialized).to.deep.equal({ message: 'hello' });
             });
 
             it('deserializes to a string literal', () => {
-                const deserialized = Jsonify.fromJsonObject(Greeter, { message: 'hi' });
+                const deserialized = inflate(Greeter, { message: 'hi' });
                 expect(deserialized instanceof Greeter).to.equal(true);
                 expect(deserialized).to.deep.equal({ message: 'hi' });
             });
@@ -35,12 +35,12 @@ describe('default serializer for string properties', () => {
 
             it('serializes to a string literal', () => {
                 const greeter = new Greeter(new String('hello') as string);
-                const serialized = Jsonify.toJsonObject(greeter);
+                const serialized = deflate(greeter);
                 expect(serialized).to.deep.equal({ message: 'hello' });
             });
 
             it('deserializes to a string literal', () => {
-                const deserialized = Jsonify.fromJsonObject(Greeter, { message: new String('hello') as string });
+                const deserialized = inflate(Greeter, { message: new String('hello') as string });
                 expect(deserialized instanceof Greeter).to.equal(true);
                 expect(deserialized).to.deep.equal({ message: 'hello' });
             });
@@ -53,11 +53,11 @@ describe('default serializer for string properties', () => {
 
         it('should fail to serialize', () => {
             const greeter = new Greeter(new Date() as any);
-            expect(() => Jsonify.toJsonObject(greeter)).to.throw(SerializationError, 'not a string');
+            expect(() => deflate(greeter)).to.throw(SerializationError, 'not a string');
         });
 
         it('should fail to deserialize', () => {
-            expect(() => Jsonify.fromJsonObject(Greeter, { message: new Date() as any })).to.throw(SerializationError, 'not a string');
+            expect(() => inflate(Greeter, { message: new Date() as any })).to.throw(SerializationError, 'not a string');
         });
 
     });
@@ -68,11 +68,11 @@ describe('default serializer for string properties', () => {
 
             it('should fail to serialize', () => {
                 const greeter = new Greeter(null);
-                expect(() => Jsonify.toJsonObject(greeter)).to.throw(SerializationError, 'Unable to serialize null property');
+                expect(() => deflate(greeter)).to.throw(SerializationError, 'Unable to serialize null property');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => Jsonify.fromJsonObject(Greeter, { message: null })).to.throw(SerializationError, 'Unable to deserialize null property');
+                expect(() => inflate(Greeter, { message: null })).to.throw(SerializationError, 'Unable to deserialize null property');
             });
 
         });
@@ -88,12 +88,12 @@ describe('default serializer for string properties', () => {
 
             it('serializes to null', () => {
                 const greeter = new Greeter(null);
-                const serialized = Jsonify.toJsonObject(greeter);
+                const serialized = deflate(greeter);
                 expect(serialized).to.deep.equal({ message: null });
             });
 
             it('deserializes to null', () => {
-                const deserialized = Jsonify.fromJsonObject(Greeter, { message: null });
+                const deserialized = inflate(Greeter, { message: null });
                 expect(deserialized instanceof Greeter).to.equal(true);
                 expect(deserialized).to.deep.equal({ message: null });
             });
@@ -108,11 +108,11 @@ describe('default serializer for string properties', () => {
 
             it('should fail to serialize', () => {
                 const greeter = new Greeter(undefined);
-                expect(() => Jsonify.toJsonObject(greeter)).to.throw(SerializationError, 'Unable to serialize undefined property');
+                expect(() => deflate(greeter)).to.throw(SerializationError, 'Unable to serialize undefined property');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => Jsonify.fromJsonObject(Greeter, { message: undefined })).to.throw(SerializationError, 'Unable to deserialize undefined property');
+                expect(() => inflate(Greeter, { message: undefined })).to.throw(SerializationError, 'Unable to deserialize undefined property');
             });
 
         });
@@ -128,12 +128,12 @@ describe('default serializer for string properties', () => {
 
             it('serializes to undefined', () => {
                 const greeter = new Greeter(undefined);
-                const serialized = Jsonify.toJsonObject(greeter);
+                const serialized = deflate(greeter);
                 expect(serialized.message).to.equal(undefined);
             });
 
             it('deserializes to undefined', () => {
-                const deserialized = Jsonify.fromJsonObject(Greeter, { message: undefined });
+                const deserialized = inflate(Greeter, { message: undefined });
                 expect(deserialized instanceof Greeter).to.equal(true);
                 expect(deserialized.message).to.equal(undefined);
             });
