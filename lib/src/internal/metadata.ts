@@ -1,6 +1,6 @@
-import SerializationError from './errors/serialization_error';
-import JsonType from './json_type';
-import Serializer from './serializers/serializer';
+import JsonType from '../types/json_type';
+import Serializer from '../types/serializer';
+import SerializationError from './serialization_error';
 
 const METADATA_KEY = Symbol('Metadata containing info about serializable object');
 

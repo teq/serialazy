@@ -1,7 +1,8 @@
-import SerializationError from '../errors/serialization_error';
-import JsonType from '../json_type';
-import Serializer from './serializer';
+import JsonType from '../types/json_type';
+import Serializer from '../types/serializer';
+import SerializationError from './serialization_error';
 
+/** Generic default serializer from primitive types */
 abstract class PrimitiveSerializer<T extends string | number | boolean> implements Serializer<JsonType, T> {
 
     public constructor(

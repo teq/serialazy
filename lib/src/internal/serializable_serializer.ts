@@ -1,10 +1,10 @@
-import Constructable from '../constructable';
-import SerializationError from '../errors/serialization_error';
-import { JsonMap } from '../json_type';
 import { deflate, inflate } from '../serialazy';
+import Constructable from '../types/constructable';
+import { JsonMap } from '../types/json_type';
+import Serializer from '../types/serializer';
+import SerializationError from './serialization_error';
 
-import Serializer from './serializer';
-
+/** Default serializer for 'serializable' types */
 class SerializableSerializer implements Serializer<JsonMap, any> {
 
     public constructor(

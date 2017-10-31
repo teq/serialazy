@@ -5,3 +5,6 @@
 # IDEs
 .idea/
 .vscode/
+
+# OS Specific
+.DS_Store
