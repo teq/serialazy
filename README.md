@@ -39,6 +39,11 @@ class Book {
 
     @Serialize() public pages: number;
 
+    // Default serializer options:
+    // * `optional` allows property to be `undefined` (default: `false`)
+    // * `nullable` allows property to be `null (default: `false`)
+    @Serialize({ optional: true, nullable: true }) public isbn: string;
+
     // Properties not marked by `Serialize` decorator are **not** serialized
     public notes: string;
 
