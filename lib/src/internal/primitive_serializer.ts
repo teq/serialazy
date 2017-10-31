@@ -1,38 +1,37 @@
-import Constructable from '../constructable';
-import SerializationError from '../errors/serialization_error';
-import { JsonMap } from '../json_type';
-import { deflate, inflate } from '../serialazy';
+import JsonType from '../json_type';
+import Serializer from '../serializer';
+import SerializationError from './serialization_error';
 
-import Serializer from './serializer';
-
-class SerializableSerializer implements Serializer<JsonMap, any> {
+/** Generic default serializer from primitive types */
+abstract class PrimitiveSerializer<T extends string | number | boolean> implements Serializer<JsonType, T> {
 
     public constructor(
-        private propertyName: string,
-        private options: Serializer.Options,
-        private ctor: Constructable<any>
+        protected propertyName: string,
+        protected options: Serializer.Options
     ) {}
 
-    public down(value: any): JsonMap {
+    public down(value: any): JsonType {
         if (!this.options.optional && value === undefined) {
             throw new SerializationError(`Unable to serialize undefined property: "${this.propertyName}". Hint: make it optional`);
         }
         if (!this.options.nullable && value === null) {
             throw new SerializationError(`Unable to serialize null property: "${this.propertyName}". Hint: make it nullable`);
         }
-        return deflate(value);
+        return this.expectPrimitiveOrNil(value);
     }
 
-    public up(value: any): any {
+    public up(value: any): T {
         if (!this.options.optional && value === undefined) {
             throw new SerializationError(`Unable to deserialize undefined property: "${this.propertyName}". Hint: make it optional`);
         }
         if (!this.options.nullable && value === null) {
             throw new SerializationError(`Unable to deserialize null property: "${this.propertyName}". Hint: make it nullable`);
         }
-        return inflate(this.ctor, value);
+        return this.expectPrimitiveOrNil(value);
     }
+
+    protected abstract expectPrimitiveOrNil(value: any): T;
 
 }
 
-export default SerializableSerializer;
+export default PrimitiveSerializer;

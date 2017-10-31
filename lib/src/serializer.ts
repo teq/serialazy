@@ -1,14 +1,15 @@
 
 /** Generic property serializer */
 interface Serializer<TSerialized, TOriginal> {
-    /** Serializer */
+    /** Serialization function */
     down: (value: TOriginal) => TSerialized;
-    /** Deserializer */
+    /** Deserialization function */
     up: (value: TSerialized) => TOriginal;
 }
 
 namespace Serializer {
 
+    /** Serializer options */
     export interface Options {
         /** Indicates if property can be undefined. Default: false */
         optional?: boolean;

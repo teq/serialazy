@@ -1,4 +1,5 @@
 
+/** Respresents a serialization error */
 class SerializationError extends Error {
 
     public constructor(message?: string) {
