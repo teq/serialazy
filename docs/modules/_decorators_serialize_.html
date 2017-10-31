@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;serialazy&quot; | serialazy</title>
+	<title>&quot;decorators/serialize&quot; | serialazy</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,10 +54,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_serialazy_.html">&quot;serialazy&quot;</a>
+					<a href="_decorators_serialize_.html">&quot;decorators/serialize&quot;</a>
 				</li>
 			</ul>
-			<h1>External module &quot;serialazy&quot;</h1>
+			<h1>External module &quot;decorators/serialize&quot;</h1>
 		</div>
 	</div>
 </header>
@@ -69,92 +69,51 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Functions</h3>
+							<h3>Modules</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_serialazy_.html#deflate" class="tsd-kind-icon">deflate</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_serialazy_.html#inflate" class="tsd-kind-icon">inflate</a></li>
+								<li class="tsd-kind-module tsd-parent-kind-external-module"><a href="_decorators_serialize_.serialize.html" class="tsd-kind-icon">Serialize</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-not-exported">
+							<h3>Object literals</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported"><a href="_decorators_serialize_.html#defaultoptions" class="tsd-kind-icon">default<wbr>Options</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="deflate" class="tsd-anchor"></a>
-					<h3>deflate</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">deflate<span class="tsd-signature-symbol">(</span>serializable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-signature-type">JsonMap</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/851e32d/lib/src/serialazy.ts#L13">serialazy.ts:13</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Deflate class instance to a JSON-compatible object</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>serializable: <span class="tsd-signature-type">any</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Serializable object</p>
-									</div>
-								</li>
+			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+				<h2>Object literals</h2>
+				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="defaultoptions" class="tsd-anchor"></a>
+					<h3>default<wbr>Options</h3>
+					<div class="tsd-signature tsd-kind-icon">default<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/teq/serialazy/blob/e240f8e/lib/src/decorators/serialize.ts#L6">decorators/serialize.ts:6</a></li>
+						</ul>
+					</aside>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
+						<a name="defaultoptions.nullable" class="tsd-anchor"></a>
+						<h3>nullable</h3>
+						<div class="tsd-signature tsd-kind-icon">nullable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/teq/serialazy/blob/e240f8e/lib/src/decorators/serialize.ts#L8">decorators/serialize.ts:8</a></li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-signature-type">JsonMap</a></h4>
-							<p>JSON-compatible object which can be safely passed to <code>JSON.serialize</code></p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-					<a name="inflate" class="tsd-anchor"></a>
-					<h3>inflate</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">inflate&lt;T&gt;<span class="tsd-signature-symbol">(</span>ctor<span class="tsd-signature-symbol">: </span><a href="_types_constructable_.html#constructable" class="tsd-signature-type">Constructable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, jsonObj<span class="tsd-signature-symbol">: </span><a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-signature-type">JsonMap</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/851e32d/lib/src/serialazy.ts#L47">serialazy.ts:47</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Construct/inflate class instance from JSON-compatible object</p>
-								</div>
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T</h4>
-								</li>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
+						<a name="defaultoptions.optional" class="tsd-anchor"></a>
+						<h3>optional</h3>
+						<div class="tsd-signature tsd-kind-icon">optional<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/teq/serialazy/blob/e240f8e/lib/src/decorators/serialize.ts#L7">decorators/serialize.ts:7</a></li>
 							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>ctor: <a href="_types_constructable_.html#constructable" class="tsd-signature-type">Constructable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Class instance constructor</p>
-									</div>
-								</li>
-								<li>
-									<h5>jsonObj: <a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-signature-type">JsonMap</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>JSON-compatible object (e.g. returned from <code>JSON.parse</code>)</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
-							<p>Class instance</p>
-						</li>
-					</ul>
+						</aside>
+					</section>
 				</section>
 			</section>
 		</div>
@@ -164,10 +123,10 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="_decorators_serialize_.html">"decorators/serialize"</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="_serialazy_.html">"serialazy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -183,11 +142,8 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="_serialazy_.html#deflate" class="tsd-kind-icon">deflate</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_serialazy_.html#inflate" class="tsd-kind-icon">inflate</a>
+					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_decorators_serialize_.html#defaultoptions" class="tsd-kind-icon">default<wbr>Options</a>
 					</li>
 				</ul>
 			</nav>
