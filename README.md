@@ -19,6 +19,11 @@ Requirements
 
 Library can be consumed _only_ from **TypeScript** projects because it make use of TypeScript experimental feature which emits type metadata to be used in runtime. Make sure that you enabled `--emitDecoratorMetadata` in your `tsconfig.json`.
 
+Installation
+------------
+
+`npm i --save serialazy`
+
 Usage
 -----
 
@@ -26,7 +31,7 @@ Simplest case:
 
 ```ts
 
-import { deflate, inflate, Serialize } from '../../.';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 class Book {
 
@@ -63,7 +68,7 @@ Custom property serializer:
 
 ```ts
 
-import { deflate, inflate, Serialize } from '../../.';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 class Book {
 
