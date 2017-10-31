@@ -1,7 +1,7 @@
-import Constructable from '../constructable';
-import { JsonMap } from '../json_type';
 import { deflate, inflate } from '../serialazy';
-import Serializer from '../serializer';
+import Constructable from '../types/constructable';
+import { JsonMap } from '../types/json_type';
+import Serializer from '../types/serializer';
 import SerializationError from './serialization_error';
 
 /** Default serializer for 'serializable' types */

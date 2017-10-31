@@ -1,7 +1,7 @@
-import Metadata from './internal/metadata';
-import SerializerFactory from './internal/serializer_factory';
-import JsonType from './json_type';
-import Serializer from './serializer';
+import Metadata from '../internal/metadata';
+import SerializerFactory from '../internal/serializer_factory';
+import JsonType from '../types/json_type';
+import Serializer from '../types/serializer';
 
 const defaultOptions: Serializer.Options = {
     optional: false,

@@ -21,7 +21,7 @@
   "types": "./lib/dist/serialazy.d.ts",
   "scripts": {
     "lint": "tslint -p ./lib && tslint -p ./spec",
-    "apidoc": "typedoc --target ES6 --module commonjs --excludePrivate --out ./doc ./lib",
+    "apidoc": "typedoc --target ES6 --module commonjs --excludePrivate --excludeExternals --exclude **/internal/* --out ./doc ./lib/src",
     "cleanlib": "rm -rf ./lib/dist",
     "cleanspec": "rm -rf ./spec/bin",
     "clean": "npm run cleanlib && npm run cleanspec",

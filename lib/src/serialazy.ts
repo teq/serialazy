@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 
-import Constructable from './constructable';
 import Metadata from './internal/metadata';
 import SerializationError from './internal/serialization_error';
-import { JsonMap } from './json_type';
+import Constructable from './types/constructable';
+import { JsonMap } from './types/json_type';
 
 /**
  * Deflate class instance to a JSON-compatible object
@@ -74,5 +74,5 @@ export function inflate<T>(ctor: Constructable<T>, jsonObj: JsonMap): T {
     return classInstance;
 }
 
-export { default as Serialize} from './serialize';
+export { default as Serialize} from './decorators/serialize';
 export { default as SerializationError} from './internal/serialization_error';
