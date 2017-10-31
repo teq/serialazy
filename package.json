@@ -1,6 +1,6 @@
 {
   "name": "serialazy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple serialization tool for class instances / instance trees",
   "keywords": [
     "serialize",
