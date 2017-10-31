@@ -1,7 +1,22 @@
 {
   "name": "instanceify",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple serialization tool for class instances / instance trees",
+  "keywords": [
+    "serialize",
+    "deserialize",
+    "json",
+    "mapping",
+    "typescript"
+  ],
+  "homepage": "https://github.com/teq/instanceify",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teq/instanceify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/teq/instanceify/issues"
+  },
   "main": "./lib/dist/instanceify.js",
   "types": "./lib/dist/instanceify.d.ts",
   "scripts": {
@@ -18,8 +33,8 @@
     "test": "node ./spec/bin/run.js",
     "prepublishOnly": "npm run lint && npm run test"
   },
-  "author": "Andrey Tselischev",
-  "license": "ISC",
+  "author": "Andrey Tselischev <vorteq@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "reflect-metadata": "^0.1.10"
   },
