@@ -1,6 +1,6 @@
 {
   "name": "serialazy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple serialization tool for class instances / instance trees",
   "keywords": [
     "serialize",
@@ -21,7 +21,7 @@
   "types": "./lib/dist/serialazy.d.ts",
   "scripts": {
     "lint": "tslint -p ./lib && tslint -p ./spec",
-    "apidoc": "typedoc --target ES6 --module commonjs --excludePrivate --excludeExternals --exclude **/internal/* --out ./doc ./lib/src",
+    "apidoc": "typedoc --target ES6 --module commonjs --excludePrivate --excludeExternals --exclude **/internal/* --out ./docs ./lib/src",
     "cleanlib": "rm -rf ./lib/dist",
     "cleanspec": "rm -rf ./spec/bin",
     "clean": "npm run cleanlib && npm run cleanspec",

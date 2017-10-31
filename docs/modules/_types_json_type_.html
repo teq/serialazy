@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;decorators/serialize&quot; | serialazy</title>
+	<title>&quot;types/json_type&quot; | serialazy</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,10 +54,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_decorators_serialize_.html">&quot;decorators/serialize&quot;</a>
+					<a href="_types_json_type_.html">&quot;types/json_type&quot;</a>
 				</li>
 			</ul>
-			<h1>External module &quot;decorators/serialize&quot;</h1>
+			<h1>External module &quot;types/json_type&quot;</h1>
 		</div>
 	</div>
 </header>
@@ -69,51 +69,53 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Modules</h3>
+							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-module tsd-parent-kind-external-module"><a href="_decorators_serialize_.serialize.html" class="tsd-kind-icon">Serialize</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_types_json_type_.jsonarray.html" class="tsd-kind-icon">Json<wbr>Array</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-kind-icon">Json<wbr>Map</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-not-exported">
-							<h3>Object literals</h3>
+						<section class="tsd-index-section ">
+							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported"><a href="_decorators_serialize_.html#defaultoptions" class="tsd-kind-icon">default<wbr>Options</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_types_json_type_.html#jsonprimitive" class="tsd-kind-icon">Json<wbr>Primitive</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_types_json_type_.html#jsontype" class="tsd-kind-icon">Json<wbr>Type</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-				<h2>Object literals</h2>
-				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="defaultoptions" class="tsd-anchor"></a>
-					<h3>default<wbr>Options</h3>
-					<div class="tsd-signature tsd-kind-icon">default<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="jsonprimitive" class="tsd-anchor"></a>
+					<h3>Json<wbr>Primitive</h3>
+					<div class="tsd-signature tsd-kind-icon">Json<wbr>Primitive<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/teq/serialazy/blob/851e32d/lib/src/decorators/serialize.ts#L6">decorators/serialize.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/teq/serialazy/blob/a18f8ec/lib/src/types/json_type.ts#L3">types/json_type.ts:3</a></li>
 						</ul>
 					</aside>
-					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="defaultoptions.nullable" class="tsd-anchor"></a>
-						<h3>nullable</h3>
-						<div class="tsd-signature tsd-kind-icon">nullable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/teq/serialazy/blob/851e32d/lib/src/decorators/serialize.ts#L8">decorators/serialize.ts:8</a></li>
-							</ul>
-						</aside>
-					</section>
-					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="defaultoptions.optional" class="tsd-anchor"></a>
-						<h3>optional</h3>
-						<div class="tsd-signature tsd-kind-icon">optional<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/teq/serialazy/blob/851e32d/lib/src/decorators/serialize.ts#L7">decorators/serialize.ts:7</a></li>
-							</ul>
-						</aside>
-					</section>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>JSON primitive type</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="jsontype" class="tsd-anchor"></a>
+					<h3>Json<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">Json<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="_types_json_type_.html#jsonprimitive" class="tsd-signature-type">JsonPrimitive</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_types_json_type_.jsonarray.html" class="tsd-signature-type">JsonArray</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-signature-type">JsonMap</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/teq/serialazy/blob/a18f8ec/lib/src/types/json_type.ts#L12">types/json_type.ts:12</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>JSON-compatible type</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -123,7 +125,7 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="_decorators_serialize_.html">"decorators/serialize"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -132,7 +134,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="_types_constructable_.html">"types/constructable"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="_types_json_type_.html">"types/json_<wbr>type"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -142,8 +144,17 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_decorators_serialize_.html#defaultoptions" class="tsd-kind-icon">default<wbr>Options</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_types_json_type_.jsonarray.html" class="tsd-kind-icon">Json<wbr>Array</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-kind-icon">Json<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="_types_json_type_.html#jsonprimitive" class="tsd-kind-icon">Json<wbr>Primitive</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="_types_json_type_.html#jsontype" class="tsd-kind-icon">Json<wbr>Type</a>
 					</li>
 				</ul>
 			</nav>
