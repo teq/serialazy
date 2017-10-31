@@ -1,7 +1,7 @@
 import Constructable from '../constructable';
 import SerializationError from '../errors/serialization_error';
-import { deflate, inflate } from '../instanceify';
 import { JsonMap } from '../json_type';
+import { deflate, inflate } from '../serialazy';
 
 import Serializer from './serializer';
 

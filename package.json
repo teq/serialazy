@@ -1,5 +1,5 @@
 {
-  "name": "instanceify",
+  "name": "serialazy",
   "version": "1.0.0",
   "description": "A simple serialization tool for class instances / instance trees",
   "keywords": [
@@ -9,16 +9,16 @@
     "mapping",
     "typescript"
   ],
-  "homepage": "https://github.com/teq/instanceify",
+  "homepage": "https://github.com/teq/serialazy",
   "repository": {
     "type": "git",
-    "url": "https://github.com/teq/instanceify.git"
+    "url": "https://github.com/teq/serialazy.git"
   },
   "bugs": {
-    "url": "https://github.com/teq/instanceify/issues"
+    "url": "https://github.com/teq/serialazy/issues"
   },
-  "main": "./lib/dist/instanceify.js",
-  "types": "./lib/dist/instanceify.d.ts",
+  "main": "./lib/dist/serialazy.js",
+  "types": "./lib/dist/serialazy.d.ts",
   "scripts": {
     "lint": "tslint -p ./lib && tslint -p ./spec",
     "cleanlib": "rm -rf ./lib/dist",
