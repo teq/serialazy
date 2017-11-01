@@ -1,5 +1,5 @@
 /node_modules
-/doc
+/docs
 /lib/src
 /spec
 tslint.json
