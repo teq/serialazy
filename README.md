@@ -17,7 +17,7 @@ Planned:
 Requirements
 ------------
 
-Library can be consumed _only_ from **TypeScript** projects because it make use of TypeScript experimental feature which emits type metadata to be used in runtime. Make sure that you enabled `--emitDecoratorMetadata` in your `tsconfig.json`.
+Library can be consumed _only_ from **TypeScript** projects because it makes use of TypeScript experimental feature which emits type metadata to the resulting JS. Make sure that you enabled `--emitDecoratorMetadata` in your `tsconfig.json`.
 
 Installation
 ------------
