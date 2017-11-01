@@ -2,7 +2,8 @@
 /docs
 /lib/src
 /spec
-tslint.json
+**/tsconfig.json
+**/tslint.json
 
 # IDEs
 .idea/
