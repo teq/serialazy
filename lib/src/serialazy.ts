@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
-import Metadata from './internal/metadata';
-import SerializationError from './internal/serialization_error';
+import SerializationError from './errors/serialization_error';
+import Metadata from './serializers/metadata';
 import Constructable from './types/constructable';
 import { JsonMap } from './types/json_type';
 
@@ -75,4 +75,4 @@ export function inflate<T>(ctor: Constructable<T>, jsonObj: JsonMap): T {
 }
 
 export { default as Serialize} from './decorators/serialize';
-export { default as SerializationError} from './internal/serialization_error';
+export { default as SerializationError} from './errors/serialization_error';

@@ -1,11 +1,11 @@
+import SerializationError from '../errors/serialization_error';
 import Constructable from '../types/constructable';
 import JsonType from '../types/json_type';
-import Serializer from '../types/serializer';
 import BooleanSerializer from './boolean_serializer';
 import Metadata from './metadata';
 import NumberSerializer from './number_serializer';
 import SerializableSerializer from './serializable_serializer';
-import SerializationError from './serialization_error';
+import Serializer from './serializer';
 import StringSerializer from './string_serializer';
 
 namespace SerializerFactory {

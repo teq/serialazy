@@ -1,5 +1,5 @@
+import SerializationError from '../errors/serialization_error';
 import PrimitiveSerializer from './primitive_serializer';
-import SerializationError from './serialization_error';
 
 /** Default serializer for numbers */
 class NumberSerializer extends PrimitiveSerializer<number> {
