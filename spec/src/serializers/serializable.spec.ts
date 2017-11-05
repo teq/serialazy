@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, SerializationError, Serialize } from '../../../.';
+import { deflate, inflate, Serialize } from '../../../.';
 
 const { expect } = chai;
 
@@ -56,7 +56,7 @@ describe('default serializer for serializables (serializable objects)', () => {
                 class Book {
                     @Serialize() public author: NotSerializableAuthor;
                 }
-            }).to.throw(SerializationError, 'Unable to find serializer for type: "NotSerializableAuthor"');
+            }).to.throw('Unable to find serializer for type: "NotSerializableAuthor"');
         });
 
     });
@@ -72,11 +72,11 @@ describe('default serializer for serializables (serializable objects)', () => {
 
             it('should fail to serialize', () => {
                 const entity = new Book('War and Peace', null);
-                expect(() => deflate(entity)).to.throw(SerializationError, 'Unable to serialize null property');
+                expect(() => deflate(entity)).to.throw('Unable to serialize property "author": Value is null');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate(Book, bookObj)).to.throw(SerializationError, 'Unable to deserialize null property');
+                expect(() => inflate(Book, bookObj)).to.throw('Unable to deserialize property "author": Value is null');
             });
 
         });
@@ -119,11 +119,11 @@ describe('default serializer for serializables (serializable objects)', () => {
 
             it('should fail to serialize', () => {
                 const entity = new Book('The Little Prince', undefined);
-                expect(() => deflate(entity)).to.throw(SerializationError, 'Unable to serialize undefined property');
+                expect(() => deflate(entity)).to.throw('Unable to serialize property "author": Value is undefined');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate(Book, bookObj)).to.throw(SerializationError, 'Unable to deserialize undefined property');
+                expect(() => inflate(Book, bookObj)).to.throw('Unable to deserialize property "author": Value is undefined');
             });
 
         });

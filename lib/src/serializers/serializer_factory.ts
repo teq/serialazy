@@ -1,4 +1,3 @@
-import SerializationError from '../errors/serialization_error';
 import Constructable from '../types/constructable';
 import JsonType from '../types/json_type';
 import BooleanSerializer from './boolean_serializer';
@@ -16,19 +15,19 @@ namespace SerializerFactory {
         const ctor: Constructable<any> = Reflect.getMetadata('design:type', target, propertyName);
 
         if (ctor === undefined) {
-            throw new Error('Unable to fetch type information. Hint: Enable TS options: `emitDecoratorMetadata` and `experimentalDecorators`');
+            throw new Error('Unable to fetch type information. Hint: Enable TS options: "emitDecoratorMetadata" and "experimentalDecorators"');
         }
 
         if (ctor === String) {
-            return new StringSerializer(propertyName, options);
+            return new StringSerializer(options);
         } else if (ctor === Number) {
-            return new NumberSerializer(propertyName, options);
+            return new NumberSerializer(options);
         } else if (ctor === Boolean) {
-            return new BooleanSerializer(propertyName, options);
+            return new BooleanSerializer(options);
         } else if (ctor.prototype && Metadata.getFor(ctor.prototype)) { // Serializable
-            return new SerializableSerializer(propertyName, options, ctor);
+            return new SerializableSerializer(options, ctor);
         } else {
-            throw new SerializationError(`Unable to find serializer for type: "${ctor.name}". Hint: use serializable type or provide a custom serializer`);
+            throw new Error(`Unable to find serializer for type: "${ctor.name}". Hint: use serializable type or provide a custom serializer`);
         }
 
     }

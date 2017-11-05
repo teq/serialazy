@@ -1,4 +1,3 @@
-import SerializationError from '../errors/serialization_error';
 import JsonType from '../types/json_type';
 import Serializer from './serializer';
 
@@ -29,7 +28,7 @@ export default class Metadata {
     public static getFor(target: Object): Metadata {
 
         if (target === null || target === undefined) {
-            throw new SerializationError('null/undefined can not be serializable');
+            throw new Error('null/undefined can not be serializable');
         }
 
         const metadata: Metadata = Reflect.getOwnMetadata(METADATA_KEY, target) || null;
@@ -44,8 +43,8 @@ export default class Metadata {
         let metadata = this.getFor(target);
 
         if (!metadata) {
-            throw new SerializationError(
-                "Provided type doesn't seem to be serializable. Hint: use `serialize` decorator to mark properties for serialization"
+            throw new Error(
+                'Provided type doesn\'t seem to be serializable. Hint: use "Serialize" decorator to mark properties for serialization'
             );
         }
 

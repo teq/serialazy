@@ -1,4 +1,3 @@
-import SerializationError from '../errors/serialization_error';
 import PrimitiveSerializer from './primitive_serializer';
 
 /** Default serializer for numbers */
@@ -12,7 +11,7 @@ class NumberSerializer extends PrimitiveSerializer<number> {
         } else if (value === null || value === undefined) {
             return value;
         } else {
-            throw new SerializationError(`Property "${this.propertyName}" (typeof: "${typeof(value)}", value: "${value}") is not a number`);
+            throw new Error(`Not a number (typeof: "${typeof(value)}", value: "${value}")`);
         }
     }
 

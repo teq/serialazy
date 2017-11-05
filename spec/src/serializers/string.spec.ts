@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, SerializationError, Serialize } from '../../../.';
+import { deflate, inflate, Serialize } from '../../../.';
 
 const { expect } = chai;
 
@@ -53,11 +53,11 @@ describe('default serializer for string properties', () => {
 
         it('should fail to serialize', () => {
             const greeter = new Greeter(new Date() as any);
-            expect(() => deflate(greeter)).to.throw(SerializationError, 'not a string');
+            expect(() => deflate(greeter)).to.throw('Unable to serialize property "message": Not a string');
         });
 
         it('should fail to deserialize', () => {
-            expect(() => inflate(Greeter, { message: new Date() as any })).to.throw(SerializationError, 'not a string');
+            expect(() => inflate(Greeter, { message: new Date() as any })).to.throw('Unable to deserialize property "message": Not a string');
         });
 
     });
@@ -68,11 +68,11 @@ describe('default serializer for string properties', () => {
 
             it('should fail to serialize', () => {
                 const greeter = new Greeter(null);
-                expect(() => deflate(greeter)).to.throw(SerializationError, 'Unable to serialize null property');
+                expect(() => deflate(greeter)).to.throw('Unable to serialize property "message": Value is null');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate(Greeter, { message: null })).to.throw(SerializationError, 'Unable to deserialize null property');
+                expect(() => inflate(Greeter, { message: null })).to.throw('Unable to deserialize property "message": Value is null');
             });
 
         });
@@ -108,11 +108,11 @@ describe('default serializer for string properties', () => {
 
             it('should fail to serialize', () => {
                 const greeter = new Greeter(undefined);
-                expect(() => deflate(greeter)).to.throw(SerializationError, 'Unable to serialize undefined property');
+                expect(() => deflate(greeter)).to.throw('Unable to serialize property "message": Value is undefined');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate(Greeter, { message: undefined })).to.throw(SerializationError, 'Unable to deserialize undefined property');
+                expect(() => inflate(Greeter, { message: undefined })).to.throw('Unable to deserialize property "message": Value is undefined');
             });
 
         });

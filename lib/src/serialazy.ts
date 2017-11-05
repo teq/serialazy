@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 
-import SerializationError from './errors/serialization_error';
 import Metadata from './serializers/metadata';
 import Constructable from './types/constructable';
 import { JsonMap } from './types/json_type';
@@ -27,9 +26,13 @@ export function deflate(serializable: any): JsonMap {
         jsonObj = {};
 
         meta.props.forEach((serializer, name) => {
-            const value = serializer.down(serializable[name]);
-            if (value !== undefined) {
-                jsonObj[name] = value;
+            try {
+                const value = serializer.down(serializable[name]);
+                if (value !== undefined) {
+                    jsonObj[name] = value;
+                }
+            } catch (error) {
+                throw new Error(`Unable to serialize property "${name}": ${error.message}`);
             }
         });
 
@@ -55,7 +58,7 @@ export function inflate<T>(ctor: Constructable<T>, jsonObj: JsonMap): T {
     } else {
 
         if (!ctor || !ctor.prototype) {
-            throw new SerializationError('Expecting a valid constructor function');
+            throw new Error('Expecting a valid constructor function');
         }
 
         const meta = Metadata.expectFor(ctor.prototype);
@@ -63,9 +66,13 @@ export function inflate<T>(ctor: Constructable<T>, jsonObj: JsonMap): T {
         classInstance = new ctor();
 
         meta.props.forEach((serializer, name) => {
-            const value = serializer.up(jsonObj[name]);
-            if (value !== undefined) {
-                (classInstance as any)[name] = value;
+            try {
+                const value = serializer.up(jsonObj[name]);
+                if (value !== undefined) {
+                    (classInstance as any)[name] = value;
+                }
+            } catch (error) {
+                throw new Error(`Unable to deserialize property "${name}": ${error.message}`);
             }
         });
 
@@ -75,4 +82,3 @@ export function inflate<T>(ctor: Constructable<T>, jsonObj: JsonMap): T {
 }
 
 export { default as Serialize} from './decorators/serialize';
-export { default as SerializationError} from './errors/serialization_error';

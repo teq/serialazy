@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, SerializationError, Serialize } from '../../../.';
+import { deflate, inflate, Serialize } from '../../../.';
 
 const { expect } = chai;
 
@@ -53,11 +53,11 @@ describe('default serializer for boolean properties', () => {
 
         it('should fail to serialize', () => {
             const patient = new Patient(new Date() as any);
-            expect(() => deflate(patient)).to.throw(SerializationError, 'not a boolean');
+            expect(() => deflate(patient)).to.throw('Unable to serialize property "married": Not a boolean');
         });
 
         it('should fail to deserialize', () => {
-            expect(() => inflate(Patient, { married: new Date() as any })).to.throw(SerializationError, 'not a boolean');
+            expect(() => inflate(Patient, { married: new Date() as any })).to.throw('Unable to deserialize property "married": Not a boolean');
         });
 
     });
@@ -68,11 +68,11 @@ describe('default serializer for boolean properties', () => {
 
             it('should fail to serialize', () => {
                 const patient = new Patient(null);
-                expect(() => deflate(patient)).to.throw(SerializationError, 'Unable to serialize null property');
+                expect(() => deflate(patient)).to.throw('Unable to serialize property "married": Value is null');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate(Patient, { married: null })).to.throw(SerializationError, 'Unable to deserialize null property');
+                expect(() => inflate(Patient, { married: null })).to.throw('Unable to deserialize property "married": Value is null');
             });
 
         });
@@ -108,11 +108,11 @@ describe('default serializer for boolean properties', () => {
 
             it('should fail to serialize', () => {
                 const patient = new Patient(undefined);
-                expect(() => deflate(patient)).to.throw(SerializationError, 'Unable to serialize undefined property');
+                expect(() => deflate(patient)).to.throw('Unable to serialize property "married": Value is undefined');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate(Patient, { married: undefined })).to.throw(SerializationError, 'Unable to deserialize undefined property');
+                expect(() => inflate(Patient, { married: undefined })).to.throw('Unable to deserialize property "married": Value is undefined');
             });
 
         });
