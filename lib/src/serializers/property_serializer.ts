@@ -28,8 +28,7 @@ class PropertySerializer<TSerialized, TOriginal> {
     /** Performs property serialization */
     public down(serializable: any, serialized: JsonMap) {
 
-        const propertyName = this.propertyName;
-        const mappedName = this.propertyName;
+        const [propertyName, mappedName] = [this.propertyName, this.options.name || this.propertyName];
 
         try {
             const originalValue = serializable[propertyName];
@@ -46,8 +45,7 @@ class PropertySerializer<TSerialized, TOriginal> {
     /** Performs property deserialization */
     public up(serializable: any, serialized: JsonMap) {
 
-        const propertyName = this.propertyName;
-        const mappedName = this.propertyName;
+        const [propertyName, mappedName] = [this.propertyName, this.options.name || this.propertyName];
 
         try {
             const serializedValue = serialized[mappedName];
@@ -81,6 +79,8 @@ namespace PropertySerializer {
         optional?: boolean;
         /** Indicates if property can be null. Default: false */
         nullable?: boolean;
+        /** Use different property name in serialized object. Default: use the same name */
+        name?: string;
     }
 
 }
