@@ -7,7 +7,7 @@ const DEFAULT_OPTIONS: PropertySerializer.Options = {
 };
 
 /** Represents a property serializer */
-class PropertySerializer<TSerialized, TOriginal> {
+class PropertySerializer {
 
     private options: PropertySerializer.Options;
 
@@ -19,7 +19,7 @@ class PropertySerializer<TSerialized, TOriginal> {
      */
     public constructor(
         private propertyName: string,
-        private typeSerializer: Serializer<TSerialized, TOriginal>,
+        private typeSerializer: Serializer<JsonType, any>,
         options?: PropertySerializer.Options
     ) {
         this.options = options ? { ...DEFAULT_OPTIONS, ...options } : DEFAULT_OPTIONS;
@@ -49,7 +49,7 @@ class PropertySerializer<TSerialized, TOriginal> {
 
         try {
             const serializedValue = serialized[mappedName];
-            const originalValue = this.typeSerializer.up(this.validate(serializedValue));
+            const originalValue = this.validate(this.typeSerializer.up(serializedValue));
             if (originalValue !== undefined) {
                 serializable[propertyName] = originalValue;
             }

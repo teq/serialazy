@@ -1,4 +1,3 @@
-import JsonType from '../types/json_type';
 import PropertySerializer from './property_serializer';
 
 const METADATA_KEY = Symbol('Metadata containing info about serializable object');
@@ -8,7 +7,7 @@ export default class Metadata {
 
     private constructor() {} // constructable via `getOrCreateFor`
 
-    public serializers = new Array<PropertySerializer<JsonType, any>>();
+    public serializers = new Array<PropertySerializer>();
 
     /** Get metadata for given object if it's exists or create an empty metadata container */
     public static getOrCreateFor(target: Object): Metadata {
