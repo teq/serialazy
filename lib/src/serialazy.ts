@@ -11,11 +11,11 @@ import { JsonMap } from './types/json_type';
  */
 export function deflate(serializable: any): JsonMap {
 
-    let jsonObj: JsonMap;
+    let serialized: JsonMap;
 
     if (serializable === null || serializable === undefined) {
 
-        jsonObj = serializable;
+        serialized = serializable;
 
     } else {
 
@@ -23,37 +23,28 @@ export function deflate(serializable: any): JsonMap {
 
         const meta = Metadata.expectFor(proto);
 
-        jsonObj = {};
+        serialized = {};
 
-        meta.props.forEach((serializer, name) => {
-            try {
-                const value = serializer.down(serializable[name]);
-                if (value !== undefined) {
-                    jsonObj[name] = value;
-                }
-            } catch (error) {
-                throw new Error(`Unable to serialize property "${name}": ${error.message}`);
-            }
-        });
+        meta.serializers.forEach(serializer => serializer.down(serializable, serialized));
 
     }
 
-    return jsonObj;
+    return serialized;
 }
 
 /**
  * Construct/inflate class instance from JSON-compatible object
  * @param ctor Class instance constructor
- * @param jsonObj JSON-compatible object (e.g. returned from `JSON.parse`)
+ * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
  * @returns Class instance
  */
-export function inflate<T>(ctor: Constructable<T>, jsonObj: JsonMap): T {
+export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
 
     let classInstance: T;
 
-    if (jsonObj === null || jsonObj === undefined) {
+    if (serialized === null || serialized === undefined) {
 
-        classInstance = jsonObj as any;
+        classInstance = serialized as any;
 
     } else {
 
@@ -65,16 +56,7 @@ export function inflate<T>(ctor: Constructable<T>, jsonObj: JsonMap): T {
 
         classInstance = new ctor();
 
-        meta.props.forEach((serializer, name) => {
-            try {
-                const value = serializer.up(jsonObj[name]);
-                if (value !== undefined) {
-                    (classInstance as any)[name] = value;
-                }
-            } catch (error) {
-                throw new Error(`Unable to deserialize property "${name}": ${error.message}`);
-            }
-        });
+        meta.serializers.forEach(serializer => serializer.up(classInstance, serialized));
 
     }
 

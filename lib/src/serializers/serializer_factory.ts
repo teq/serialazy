@@ -9,8 +9,8 @@ import StringSerializer from './string_serializer';
 
 namespace SerializerFactory {
 
-    /** Tries to pick a default serializer for given property */
-    export function createFor(target: Object, propertyName: string, options: Serializer.Options): Serializer<JsonType, any> {
+    /** Tries to pick a default serializer for given property based on its type */
+    export function createFor(target: Object, propertyName: string): Serializer<JsonType, any> {
 
         const ctor: Constructable<any> = Reflect.getMetadata('design:type', target, propertyName);
 
@@ -19,13 +19,13 @@ namespace SerializerFactory {
         }
 
         if (ctor === String) {
-            return new StringSerializer(options);
+            return new StringSerializer();
         } else if (ctor === Number) {
-            return new NumberSerializer(options);
+            return new NumberSerializer();
         } else if (ctor === Boolean) {
-            return new BooleanSerializer(options);
+            return new BooleanSerializer();
         } else if (ctor.prototype && Metadata.getFor(ctor.prototype)) { // Serializable
-            return new SerializableSerializer(options, ctor);
+            return new SerializableSerializer(ctor);
         } else {
             throw new Error(`Unable to find serializer for type: "${ctor.name}". Hint: use serializable type or provide a custom serializer`);
         }
