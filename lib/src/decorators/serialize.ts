@@ -16,9 +16,12 @@ function Serialize(options?: PropertySerializer.Options) {
 namespace Serialize {
 
     /** Decorator used to mark function for serialization with custom serializer */
-    export function Custom<TSerialized extends JsonType, TOriginal = any>(serializer: Serializer<TSerialized, TOriginal>) {
+    export function Custom<TSerialized extends JsonType, TOriginal = any>(
+        serializer: Serializer<TSerialized, TOriginal>,
+        options?: PropertySerializer.Options
+    ) {
         return (target: Object, propertyName: string, propertyDescriptor?: TypedPropertyDescriptor<TOriginal>) => {
-            const propertySerializer = new PropertySerializer(propertyName, serializer);
+            const propertySerializer = new PropertySerializer(propertyName, serializer, options);
             Metadata.getOrCreateFor(target).serializers.push(propertySerializer);
         };
     }

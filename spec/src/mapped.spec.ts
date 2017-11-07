@@ -4,37 +4,49 @@ import { deflate, inflate, Serialize } from '../../.';
 
 const { expect } = chai;
 
-describe('"name" option', () => {
+describe('"name" option behavior', () => {
 
-    describe('when used with default serializer', () => {
+    describe('when option is null/undefined/empty', () => {
 
         class Patient {
-            @Serialize({ name: 'years' }) public age: number;
-            public constructor(age?: number) {
+            @Serialize({ name: undefined }) public name: string;
+            @Serialize({ name: null }) public age: number;
+            @Serialize({ name: '' }) public notes : string;
+            public constructor(name?: string, age?: number, notes?: string) {
+                if (name !== undefined) { this.name = name; }
                 if (age !== undefined) { this.age = age; }
+                if (notes !== undefined) { this.notes = notes; }
             }
         }
 
-        it('forces property to use a different name in serialized object', () => {
-            const patient = new Patient(35);
+        it('doesn\'t affect property name in resulting serialized object', () => {
+            const patient = new Patient('Joe', 35, 'None');
             const serialized = deflate(patient);
-            expect(serialized).to.deep.equal({ years: 35 });
+            expect(serialized).to.deep.equal({ name: 'Joe', age: 35, notes: 'None' });
             const deserialized = inflate(Patient, serialized);
             expect(deserialized).to.deep.equal(patient);
         });
 
     });
 
-    describe('when used with custom serializer', () => {
+    describe('when option is a non-empty string', () => {
 
-        // class Patient {
-        //     @Serialize({ name: 'dateOfBirth' }) public birthday: Date;
-        //     public constructor(birthday?: Date) {
-        //         if (birthday !== undefined) { this.birthday = birthday; }
-        //     }
-        // }
+        class Patient {
+            @Serialize() public name: string;
+            @Serialize({ name: 'years' }) public age: number;
+            public constructor(name?: string, age?: number) {
+                if (name !== undefined) { this.name = name; }
+                if (age !== undefined) { this.age = age; }
+            }
+        }
 
-        it('forces property to use a different name in serialized object', () => {});
+        it('overrides property name in resulting serialized object', () => {
+            const patient = new Patient('John', 35);
+            const serialized = deflate(patient);
+            expect(serialized).to.deep.equal({ name: 'John', years: 35 });
+            const deserialized = inflate(Patient, serialized);
+            expect(deserialized).to.deep.equal(patient);
+        });
 
     });
 
