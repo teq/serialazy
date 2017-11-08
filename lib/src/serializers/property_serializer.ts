@@ -1,15 +1,8 @@
 import { JsonMap, JsonType } from '../types/json_type';
 import Serializer from './serializer';
 
-const DEFAULT_OPTIONS: PropertySerializer.Options = {
-    optional: false,
-    nullable: false
-};
-
 /** Represents a property serializer */
 class PropertySerializer {
-
-    private options: PropertySerializer.Options;
 
     /**
      * Construct a new property serializer
@@ -20,10 +13,8 @@ class PropertySerializer {
     public constructor(
         private propertyName: string,
         private typeSerializer: Serializer<JsonType, any>,
-        options?: PropertySerializer.Options
-    ) {
-        this.options = options ? { ...DEFAULT_OPTIONS, ...options } : DEFAULT_OPTIONS;
-    }
+        private options: PropertySerializer.Options = {}
+    ) {}
 
     /** Performs property serialization */
     public down(serializable: any, serialized: JsonMap) {
@@ -61,10 +52,12 @@ class PropertySerializer {
 
     private validate(value: any) {
         if (!this.options.optional && value === undefined) {
-            throw new Error('Value is undefined. Hint: make it optional');
+            const hint = (typeof(this.options.optional) !== 'boolean') ? 'Hint: make it optional' : null;
+            throw new Error(`Value is undefined${ hint ? `; ${hint}` : ''}`);
         }
         if (!this.options.nullable && value === null) {
-            throw new Error('Value is null. Hint: make it nullable');
+            const hint = (typeof(this.options.nullable) !== 'boolean') ? 'Hint: make it nullable' : null;
+            throw new Error(`Value is null${ hint ? `; ${hint}` : ''}`);
         }
         return value;
     }
