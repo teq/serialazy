@@ -1,10 +1,10 @@
 import { deflate, inflate } from '../serialazy';
 import Constructable from '../types/constructable';
 import { JsonMap } from '../types/json_type';
-import Serializer from './serializer';
+import TypeSerializer from './type_serializer';
 
 /** Default serializer for 'serializable' types */
-class SerializableSerializer implements Serializer<JsonMap, any> {
+class SerializableSerializer implements TypeSerializer<JsonMap, any> {
 
     public constructor(
         private ctor: Constructable<any>

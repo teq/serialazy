@@ -1,8 +1,8 @@
 import JsonType from '../types/json_type';
-import Serializer from './serializer';
+import TypeSerializer from './type_serializer';
 
 /** Generic default serializer from primitive types */
-abstract class PrimitiveSerializer<T extends string | number | boolean> implements Serializer<JsonType, T> {
+abstract class PrimitiveSerializer<T extends string | number | boolean> implements TypeSerializer<JsonType, T> {
 
     public down(value: any): JsonType {
         return this.expectPrimitiveOrNil(value);

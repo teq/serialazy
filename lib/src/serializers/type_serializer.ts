@@ -4,13 +4,20 @@ import BooleanSerializer from './boolean_serializer';
 import Metadata from './metadata';
 import NumberSerializer from './number_serializer';
 import SerializableSerializer from './serializable_serializer';
-import Serializer from './serializer';
 import StringSerializer from './string_serializer';
 
-namespace SerializerFactory {
+/** Generic type serializer */
+interface TypeSerializer<TSerialized, TOriginal> {
+    /** Serialization function */
+    down: (value: TOriginal) => TSerialized;
+    /** Deserialization function */
+    up: (value: TSerialized) => TOriginal;
+}
 
-    /** Tries to pick a default serializer for given property based on its type */
-    export function createFor(target: Object, propertyName: string): Serializer<JsonType, any> {
+namespace TypeSerializer {
+
+    /** Factory method tries to pick a default serializer for given property based on its type */
+    export function createFor(target: Object, propertyName: string): TypeSerializer<JsonType, any> {
 
         const ctor: Constructable<any> = Reflect.getMetadata('design:type', target, propertyName);
 
@@ -34,4 +41,4 @@ namespace SerializerFactory {
 
 }
 
-export default SerializerFactory;
+export default TypeSerializer;

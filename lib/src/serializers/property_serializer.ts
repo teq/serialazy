@@ -1,5 +1,5 @@
 import { JsonMap, JsonType } from '../types/json_type';
-import Serializer from './serializer';
+import TypeSerializer from './type_serializer';
 
 /** Represents a property serializer */
 class PropertySerializer {
@@ -12,7 +12,7 @@ class PropertySerializer {
      */
     public constructor(
         private propertyName: string,
-        private typeSerializer: Serializer<JsonType, any>,
+        private typeSerializer: TypeSerializer<JsonType, any>,
         private options: PropertySerializer.Options = {}
     ) {}
 
