@@ -5,9 +5,33 @@ const METADATA_KEY = Symbol('Metadata containing info about serializable object'
 /** Metadata container for serializables */
 export default class Metadata {
 
-    private constructor() {} // constructable via `getOrCreateFor`
+    private constructor(
+        private target: Object
+    ) {} // constructable via `getOrCreateFor`
 
-    public serializers = new Array<PropertySerializer>();
+    /** Contains serializable's own metadata */
+    public ownSerializers = new Map<string, PropertySerializer>();
+
+    /** Aggregates all serializers: own and inherited */
+    public aggregateSerializers(): ReadonlyMap<string, PropertySerializer> {
+        const parentMeta = this.seekForParentMeta();
+        if (parentMeta) {
+            return new Map([...parentMeta.aggregateSerializers(), ...this.ownSerializers]);
+        } else {
+            return new Map(this.ownSerializers); // clone
+        }
+    }
+
+    /** Seek prototype chain for inherited serializable's metadata */
+    private seekForParentMeta(): Metadata {
+        let result: Metadata = null;
+        let target = this.target;
+        while (target && !result) {
+            target = Object.getPrototypeOf(target);
+            result = target ? Metadata.getFor(target) : null;
+        }
+        return result;
+    }
 
     /** Get metadata for given object if it's exists or create an empty metadata container */
     public static getOrCreateFor(target: Object): Metadata {
@@ -15,7 +39,7 @@ export default class Metadata {
         let metadata = this.getFor(target);
 
         if (!metadata) {
-            metadata = new Metadata();
+            metadata = new Metadata(target);
             Reflect.defineMetadata(METADATA_KEY, metadata, target);
         }
 

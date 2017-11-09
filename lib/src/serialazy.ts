@@ -21,11 +21,10 @@ export function deflate(serializable: any): JsonMap {
 
         const proto = Object.getPrototypeOf(serializable) || {};
 
-        const meta = Metadata.expectFor(proto);
-
         serialized = {};
 
-        meta.serializers.forEach(serializer => serializer.down(serializable, serialized));
+        const serializers = Metadata.expectFor(proto).aggregateSerializers();
+        serializers.forEach(serializer => serializer.down(serializable, serialized));
 
     }
 
@@ -52,11 +51,10 @@ export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
             throw new Error('Expecting a valid constructor function');
         }
 
-        const meta = Metadata.expectFor(ctor.prototype);
-
         classInstance = new ctor();
 
-        meta.serializers.forEach(serializer => serializer.up(classInstance, serialized));
+        const serializers = Metadata.expectFor(ctor.prototype).aggregateSerializers();
+        serializers.forEach(serializer => serializer.up(classInstance, serialized));
 
     }
 
