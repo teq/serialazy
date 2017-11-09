@@ -56,7 +56,7 @@ describe('default serializer for serializables (serializable objects)', () => {
                 class Book {
                     @Serialize() public author: NotSerializableAuthor;
                 }
-            }).to.throw('Unable to find serializer for type: "NotSerializableAuthor"');
+            }).to.throw('No default serializer for property: "Book.author"');
         });
 
     });

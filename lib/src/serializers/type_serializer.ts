@@ -34,7 +34,11 @@ namespace TypeSerializer {
         } else if (ctor.prototype && Metadata.getFor(ctor.prototype)) { // Serializable
             return new SerializableSerializer(ctor);
         } else {
-            throw new Error(`Unable to find serializer for type: "${ctor.name}". Hint: use serializable type or provide a custom serializer`);
+            const className = target.constructor.name;
+            throw new Error( // TODO: Warn user about this: https://github.com/Microsoft/TypeScript/issues/18995
+                `No default serializer for property: "${className}.${propertyName}" ('design:type': "${ctor.name}"). ` +
+                'Hint: use serializable type or provide a custom serializer'
+            );
         }
 
     }
