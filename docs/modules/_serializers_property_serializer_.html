@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Serializer | serialazy</title>
+	<title>&quot;serializers/property_serializer&quot; | serialazy</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -38,6 +38,8 @@
 							</div>
 							<input type="checkbox" id="tsd-filter-inherited" checked />
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
 							<input type="checkbox" id="tsd-filter-only-exported" />
 							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
@@ -54,129 +56,26 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_types_serializer_.html">&quot;types/serializer&quot;</a>
-				</li>
-				<li>
-					<a href="_types_serializer_.serializer.html">Serializer</a>
+					<a href="_serializers_property_serializer_.html">&quot;serializers/property_serializer&quot;</a>
 				</li>
 			</ul>
-			<h1>Module Serializer&lt;TSerialized, TOriginal&gt;</h1>
+			<h1>External module &quot;serializers/property_serializer&quot;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Generic property serializer</p>
-					</div>
-				</div>
-			</section>
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>TSerialized</h4>
-					</li>
-					<li>
-						<h4>TOriginal</h4>
-					</li>
-				</ul>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Interfaces</h3>
+							<h3>Modules</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_types_serializer_.serializer.options.html" class="tsd-kind-icon">Options</a></li>
+								<li class="tsd-kind-module tsd-parent-kind-external-module"><a href="_serializers_property_serializer_.propertyserializer.html" class="tsd-kind-icon">Property<wbr>Serializer</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section ">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-module"><a href="_types_serializer_.serializer.html#down" class="tsd-kind-icon">down</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-module"><a href="_types_serializer_.serializer.html#up" class="tsd-kind-icon">up</a></li>
-							</ul>
-						</section>
-					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-module">
-					<a name="down" class="tsd-anchor"></a>
-					<h3>down</h3>
-					<div class="tsd-signature tsd-kind-icon">down<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/teq/serialazy/blob/a18f8ec/lib/src/types/serializer.ts#L5">types/serializer.ts:5</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Serialization function</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-siganture">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TOriginal</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TSerialized</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-parameters-title">Parameters</h4>
-										<ul class="tsd-parameters">
-											<li>
-												<h5>value: <span class="tsd-signature-type">TOriginal</span></h5>
-											</li>
-										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TSerialized</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-module">
-					<a name="up" class="tsd-anchor"></a>
-					<h3>up</h3>
-					<div class="tsd-signature tsd-kind-icon">up<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/teq/serialazy/blob/a18f8ec/lib/src/types/serializer.ts#L7">types/serializer.ts:7</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Deserialization function</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-siganture">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TSerialized</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TOriginal</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-parameters-title">Parameters</h4>
-										<ul class="tsd-parameters">
-											<li>
-												<h5>value: <span class="tsd-signature-type">TSerialized</span></h5>
-											</li>
-										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TOriginal</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
 					</div>
 				</section>
 			</section>
@@ -187,19 +86,51 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_decorators_serialize_.html">"decorators/serialize"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serialazy_.html">"serialazy"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_boolean_serializer_.html">"serializers/boolean_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_metadata_.html">"serializers/metadata"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_number_serializer_.html">"serializers/number_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_primitive_serializer_.html">"serializers/primitive_<wbr>serializer"</a>
+					</li>
+					<li class="current tsd-kind-external-module">
+						<a href="_serializers_property_serializer_.html">"serializers/property_<wbr>serializer"</a>
+						<ul>
+							<li class=" tsd-kind-module tsd-parent-kind-external-module">
+								<a href="_serializers_property_serializer_.propertyserializer.html">Property<wbr>Serializer</a>
+							</li>
+						</ul>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_serializable_serializer_.html">"serializers/serializable_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_string_serializer_.html">"serializers/string_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_type_serializer_.html">"serializers/type_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_types_constructable_.html">"types/constructable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_types_json_type_.html">"types/json_<wbr>type"</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/_types_serializer_.serializer.options.html" class="tsd-kind-icon">Options</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module">
-						<a href="_types_serializer_.serializer.html#down" class="tsd-kind-icon">down</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module">
-						<a href="_types_serializer_.serializer.html#up" class="tsd-kind-icon">up</a>
-					</li>
 				</ul>
 			</nav>
 		</div>

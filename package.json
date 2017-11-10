@@ -21,7 +21,7 @@
   "types": "./lib/dist/serialazy.d.ts",
   "scripts": {
     "lint": "tslint -p ./lib && tslint -p ./spec && tslint -p ./samples",
-    "apidoc": "typedoc --target ES6 --module commonjs --excludePrivate --excludeExternals --exclude **/internal/* --out ./docs ./lib/src && touch ./docs/.nojekyll",
+    "apidoc": "typedoc --target ES6 --module commonjs --excludePrivate --out ./docs ./lib/src && touch ./docs/.nojekyll",
     "clean_lib": "rm -rf ./lib/dist",
     "clean_spec": "rm -rf ./spec/bin",
     "clean_samples": "rm -rf ./samples/bin",
