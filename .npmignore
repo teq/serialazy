@@ -1,6 +1,7 @@
 /node_modules
 /docs
 /lib/src
+/samples/bin
 /spec
 **/tsconfig.json
 **/tslint.json
