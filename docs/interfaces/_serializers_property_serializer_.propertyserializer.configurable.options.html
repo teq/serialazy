@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Serialize | serialazy</title>
+	<title>Options | serialazy</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,43 +56,37 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_decorators_serialize_.html">&quot;decorators/serialize&quot;</a>
+					<a href="../modules/_serializers_property_serializer_.html">&quot;serializers/property_serializer&quot;</a>
 				</li>
 				<li>
-					<a href="_decorators_serialize_.serialize.html">Serialize</a>
+					<a href="../modules/_serializers_property_serializer_.propertyserializer.html">PropertySerializer</a>
+				</li>
+				<li>
+					<a href="../classes/_serializers_property_serializer_.propertyserializer.configurable.html">Configurable</a>
+				</li>
+				<li>
+					<a href="_serializers_property_serializer_.propertyserializer.configurable.options.html">Options</a>
 				</li>
 			</ul>
-			<h1>Module Serialize</h1>
+			<h1>Interface Options</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel">
-				<h3 class="tsd-before-signature">Callable</h3>
-				<ul class="tsd-signatures tsd-kind-module tsd-parent-kind-external-module">
-					<li class="tsd-signature tsd-kind-icon">Serialize<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_serializers_property_serializer_.propertyserializer.configurable.options.html" class="tsd-signature-type">Options</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous function)</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/teq/serialazy/blob/aeb6098/lib/src/decorators/serialize.ts#L7">decorators/serialize.ts:7</a></li>
-							</ul>
-						</aside>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>Decorator used to mark property for serialization with default serializer</p>
-							</div>
-						</div>
-						<h4 class="tsd-parameters-title">Parameters</h4>
-						<ul class="tsd-parameters">
-							<li>
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_serializers_property_serializer_.propertyserializer.configurable.options.html" class="tsd-signature-type">Options</a></h5>
-							</li>
-						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous function)</span></h4>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Configurable property serializer options</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Options</span>
 					</li>
 				</ul>
 			</section>
@@ -101,78 +95,62 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Functions</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter"><a href="_decorators_serialize_.serialize.html#custom" class="tsd-kind-icon">Custom</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_decorators_serialize_.serialize.html#skip" class="tsd-kind-icon">Skip</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_serializers_property_serializer_.propertyserializer.configurable.options.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_serializers_property_serializer_.propertyserializer.configurable.options.html#nullable" class="tsd-kind-icon">nullable</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_serializers_property_serializer_.propertyserializer.configurable.options.html#optional" class="tsd-kind-icon">optional</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-					<a name="custom" class="tsd-anchor"></a>
-					<h3>Custom</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">Custom&lt;TSerialized, TOriginal&gt;<span class="tsd-signature-symbol">(</span>serializer<span class="tsd-signature-symbol">: </span><a href="_serializers_type_serializer_.typeserializer.html" class="tsd-signature-type">TypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSerialized</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TOriginal</span><span class="tsd-signature-symbol">&gt;</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_serializers_property_serializer_.propertyserializer.configurable.options.html" class="tsd-signature-type">Options</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous function)</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/aeb6098/lib/src/decorators/serialize.ts#L18">decorators/serialize.ts:18</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Decorator used to mark property for serialization with custom serializer</p>
-								</div>
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>TSerialized<span class="tsd-signature-symbol">: </span><a href="_types_json_type_.html#jsontype" class="tsd-signature-type">JsonType</a></h4>
-								</li>
-								<li>
-									<h4>TOriginal</h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>serializer: <a href="_serializers_type_serializer_.typeserializer.html" class="tsd-signature-type">TypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSerialized</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TOriginal</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_serializers_property_serializer_.propertyserializer.configurable.options.html" class="tsd-signature-type">Options</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous function)</span></h4>
-						</li>
-					</ul>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="name" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/teq/serialazy/blob/aeb6098/lib/src/serializers/property_serializer.ts#L89">serializers/property_serializer.ts:89</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Use different property name in serialized object. Default: use the same name</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-					<a name="skip" class="tsd-anchor"></a>
-					<h3>Skip</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">Skip<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous function)</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/aeb6098/lib/src/decorators/serialize.ts#L29">decorators/serialize.ts:29</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Decorator used to explicitely mark property as non-serializable. Can be used to erase inherited serializer.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous function)</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="nullable" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> nullable</h3>
+					<div class="tsd-signature tsd-kind-icon">nullable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/teq/serialazy/blob/aeb6098/lib/src/serializers/property_serializer.ts#L87">serializers/property_serializer.ts:87</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Indicates if property can be null. Default: false</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="optional" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> optional</h3>
+					<div class="tsd-signature tsd-kind-icon">optional<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/teq/serialazy/blob/aeb6098/lib/src/serializers/property_serializer.ts#L85">serializers/property_serializer.ts:85</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Indicates if property can be undefined. Default: false</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -182,56 +160,91 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_decorators_serialize_.html">"decorators/serialize"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_serialazy_.html">"serialazy"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_serializers_boolean_serializer_.html">"serializers/boolean_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_serializers_metadata_.html">"serializers/metadata"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_serializers_number_serializer_.html">"serializers/number_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_serializers_primitive_serializer_.html">"serializers/primitive_<wbr>serializer"</a>
+					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_decorators_serialize_.html">"decorators/serialize"</a>
+						<a href="../modules/_serializers_property_serializer_.html">"serializers/property_<wbr>serializer"</a>
 						<ul>
 							<li class="current tsd-kind-module tsd-parent-kind-external-module">
-								<a href="_decorators_serialize_.serialize.html">Serialize</a>
+								<a href="../modules/_serializers_property_serializer_.propertyserializer.html">Property<wbr>Serializer</a>
 							</li>
 						</ul>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serialazy_.html">"serialazy"</a>
+						<a href="../modules/_serializers_serializable_serializer_.html">"serializers/serializable_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_boolean_serializer_.html">"serializers/boolean_<wbr>serializer"</a>
+						<a href="../modules/_serializers_string_serializer_.html">"serializers/string_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_metadata_.html">"serializers/metadata"</a>
+						<a href="../modules/_serializers_type_serializer_.html">"serializers/type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_number_serializer_.html">"serializers/number_<wbr>serializer"</a>
+						<a href="../modules/_types_constructable_.html">"types/constructable"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_primitive_serializer_.html">"serializers/primitive_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_serializers_property_serializer_.html">"serializers/property_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_serializers_serializable_serializer_.html">"serializers/serializable_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_serializers_string_serializer_.html">"serializers/string_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_serializers_type_serializer_.html">"serializers/type_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_types_constructable_.html">"types/constructable"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_types_json_type_.html">"types/json_<wbr>type"</a>
+						<a href="../modules/_types_json_type_.html">"types/json_<wbr>type"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="_decorators_serialize_.serialize.html#custom" class="tsd-kind-icon">Custom</a>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/_serializers_property_serializer_.propertyserializer.configurable.html" class="tsd-kind-icon">Configurable</a>
+						<ul>
+							<li class="current tsd-kind-interface tsd-parent-kind-class">
+								<a href="_serializers_property_serializer_.propertyserializer.configurable.options.html" class="tsd-kind-icon">Options</a>
+								<ul>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_serializers_property_serializer_.propertyserializer.configurable.options.html#name" class="tsd-kind-icon">name</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_serializers_property_serializer_.propertyserializer.configurable.options.html#nullable" class="tsd-kind-icon">nullable</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_serializers_property_serializer_.propertyserializer.configurable.options.html#optional" class="tsd-kind-icon">optional</a>
+									</li>
+								</ul>
+							</li>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="../classes/_serializers_property_serializer_.propertyserializer.configurable.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_serializers_property_serializer_.propertyserializer.configurable.html#down" class="tsd-kind-icon">down</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_serializers_property_serializer_.propertyserializer.configurable.html#up" class="tsd-kind-icon">up</a>
+							</li>
+						</ul>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="_decorators_serialize_.serialize.html#skip" class="tsd-kind-icon">Skip</a>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/_serializers_property_serializer_.propertyserializer.dummy.html" class="tsd-kind-icon">Dummy</a>
+					</li>
+					<li class=" tsd-kind-method tsd-parent-kind-module">
+						<a href="../modules/_serializers_property_serializer_.propertyserializer.html#down" class="tsd-kind-icon">down</a>
+					</li>
+					<li class=" tsd-kind-method tsd-parent-kind-module">
+						<a href="../modules/_serializers_property_serializer_.propertyserializer.html#up" class="tsd-kind-icon">up</a>
 					</li>
 				</ul>
 			</nav>

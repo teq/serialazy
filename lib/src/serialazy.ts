@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 
-import Metadata from './internal/metadata';
-import SerializationError from './internal/serialization_error';
+import Metadata from './serializers/metadata';
 import Constructable from './types/constructable';
 import { JsonMap } from './types/json_type';
 
@@ -12,62 +11,50 @@ import { JsonMap } from './types/json_type';
  */
 export function deflate(serializable: any): JsonMap {
 
-    let jsonObj: JsonMap;
+    let serialized: JsonMap;
 
     if (serializable === null || serializable === undefined) {
 
-        jsonObj = serializable;
+        serialized = serializable;
 
     } else {
 
         const proto = Object.getPrototypeOf(serializable) || {};
 
-        const meta = Metadata.expectFor(proto);
+        serialized = {};
 
-        jsonObj = {};
-
-        meta.props.forEach((serializer, name) => {
-            const value = serializer.down(serializable[name]);
-            if (value !== undefined) {
-                jsonObj[name] = value;
-            }
-        });
+        const serializers = Metadata.expectFor(proto).aggregateSerializers();
+        serializers.forEach(serializer => serializer.down(serializable, serialized));
 
     }
 
-    return jsonObj;
+    return serialized;
 }
 
 /**
  * Construct/inflate class instance from JSON-compatible object
  * @param ctor Class instance constructor
- * @param jsonObj JSON-compatible object (e.g. returned from `JSON.parse`)
+ * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
  * @returns Class instance
  */
-export function inflate<T>(ctor: Constructable<T>, jsonObj: JsonMap): T {
+export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
 
     let classInstance: T;
 
-    if (jsonObj === null || jsonObj === undefined) {
+    if (serialized === null || serialized === undefined) {
 
-        classInstance = jsonObj as any;
+        classInstance = serialized as any;
 
     } else {
 
         if (!ctor || !ctor.prototype) {
-            throw new SerializationError('Expecting a valid constructor function');
+            throw new Error('Expecting a valid constructor function');
         }
-
-        const meta = Metadata.expectFor(ctor.prototype);
 
         classInstance = new ctor();
 
-        meta.props.forEach((serializer, name) => {
-            const value = serializer.up(jsonObj[name]);
-            if (value !== undefined) {
-                (classInstance as any)[name] = value;
-            }
-        });
+        const serializers = Metadata.expectFor(ctor.prototype).aggregateSerializers();
+        serializers.forEach(serializer => serializer.up(classInstance, serialized));
 
     }
 
@@ -75,4 +62,3 @@ export function inflate<T>(ctor: Constructable<T>, jsonObj: JsonMap): T {
 }
 
 export { default as Serialize} from './decorators/serialize';
-export { default as SerializationError} from './internal/serialization_error';

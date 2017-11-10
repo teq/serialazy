@@ -38,6 +38,8 @@
 							</div>
 							<input type="checkbox" id="tsd-filter-inherited" checked />
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
 							<input type="checkbox" id="tsd-filter-only-exported" />
 							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
@@ -66,65 +68,121 @@
 				<p>Features:</p>
 				<ul>
 					<li>Default serializers for primitive types (string, number, boolean)</li>
-					<li>Support for optional / nullable properties</li>
-					<li>Recursive object tree serialization (circular references not handled yet)</li>
-					<li>Custom property serialization functions</li>
+					<li>Support for optional / nullable / mapped (different property name in serialized object) properties</li>
+					<li>Recursive serialization (circular references not handled yet)</li>
+					<li>Child class inherits serializers from parent</li>
+					<li>Custom (user defined) property serialization functions</li>
 					<li>TypeScript-friendly API based on decorators</li>
 				</ul>
 				<p>Planned:</p>
 				<ul>
-					<li>Class inheritance</li>
 					<li>Circular references</li>
 					<li>Various &#39;serialization backends&#39;, not just JSON</li>
 				</ul>
 				<h2 id="requirements">Requirements</h2>
-				<p>Library can be consumed <em>only</em> from <strong>TypeScript</strong> projects because it make use of TypeScript experimental feature which emits type metadata to be used in runtime. Make sure that you enabled <code>--emitDecoratorMetadata</code> in your <code>tsconfig.json</code>.</p>
+				<p>Library can be consumed <em>only</em> from <strong>TypeScript</strong> projects because it makes use of TypeScript experimental feature which emits type metadata to the resulting JS. Make sure that you enabled <code>--emitDecoratorMetadata</code> in your <code>tsconfig.json</code>.</p>
 				<h2 id="installation">Installation</h2>
 				<p><code>npm i --save serialazy</code></p>
 				<h2 id="usage">Usage</h2>
-				<p>Simplest case:</p>
+				<h3 id="simplest-case">Simplest case</h3>
 				<pre><code class="lang-ts">
 <span class="hljs-keyword">import</span> { deflate, inflate, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'serialazy'</span>;
 
+<span class="hljs-keyword">import</span> chai = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chai'</span>);
+<span class="hljs-keyword">const</span> { expect } = chai;
+
+<span class="hljs-comment">// *** Class definition</span>
 <span class="hljs-keyword">class</span> Book {
 
+    <span class="hljs-comment">// "Serialize" decorator tries to pick a default serializer for given data type</span>
     <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> title: <span class="hljs-built_in">string</span>;
-
     <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> pages: <span class="hljs-built_in">number</span>;
 
-    <span class="hljs-comment">// Serializer options:</span>
-    <span class="hljs-comment">// * `optional` allows property to be `undefined` (default: `false`)</span>
-    <span class="hljs-comment">// * `nullable` allows property to be `null (default: `false`)</span>
-    <span class="hljs-meta">@Serialize</span>({ optional: <span class="hljs-literal">true</span>, nullable: <span class="hljs-literal">true</span> }) <span class="hljs-keyword">public</span> isbn: <span class="hljs-built_in">string</span>;
-
-    <span class="hljs-comment">// Properties not marked by `Serialize` decorator are **not** serialized</span>
+    <span class="hljs-comment">// Properties not decorated by `Serialize` are NOT serialized</span>
     <span class="hljs-keyword">public</span> notes: <span class="hljs-built_in">string</span>;
 
 }
 
-<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book();
-book.title = <span class="hljs-string">'The Adventure of the Yellow Face'</span>;
-book.pages = <span class="hljs-number">123</span>;
-book.notes = <span class="hljs-string">'Interesting story'</span>;
+<span class="hljs-comment">// *** Create instance</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Book(), {
+    title: <span class="hljs-string">'The Adventure of the Yellow Face'</span>,
+    pages: <span class="hljs-number">123</span>,
+    notes: <span class="hljs-string">'Interesting story'</span>
+});
 
 <span class="hljs-comment">// *** Serialize</span>
-<span class="hljs-keyword">const</span> jsonObj = deflate(book); <span class="hljs-comment">// `jsonObj` is a JSON-compatible object (can be safely passed to `JSON.stringify`)</span>
+<span class="hljs-keyword">const</span> serialized = deflate(book); <span class="hljs-comment">// JSON-compatible object (can be safely passed to `JSON.stringify`)</span>
 
-<span class="hljs-comment">// jsonObj = {</span>
-<span class="hljs-comment">//     "title": "The Adventure of the Yellow Face",</span>
-<span class="hljs-comment">//     "pages": 123</span>
-<span class="hljs-comment">// }</span>
+expect(serialized).to.deep.equal({
+    title: <span class="hljs-string">'The Adventure of the Yellow Face'</span>,
+    pages: <span class="hljs-number">123</span>
+    <span class="hljs-comment">// Notice that "notes" is not serialized</span>
+});
 
 <span class="hljs-comment">// *** Deserialize</span>
-<span class="hljs-keyword">const</span> newBook = inflate(Book, jsonObj);
+<span class="hljs-keyword">const</span> deserialized = inflate(Book, serialized);
 
-<span class="hljs-comment">// `newBook` is an instance of `Book` and equals to `book` except `notes` property which was not serialized</span>
+expect(deserialized <span class="hljs-keyword">instanceof</span> Book).to.equal(<span class="hljs-literal">true</span>);
+expect(deserialized).to.deep.equal({
+    title: <span class="hljs-string">'The Adventure of the Yellow Face'</span>,
+    pages: <span class="hljs-number">123</span>
+});
 </code></pre>
-				<p>Custom property serializer:</p>
+				<h3 id="serializer-options">Serializer options</h3>
 				<pre><code class="lang-ts">
 <span class="hljs-keyword">import</span> { deflate, inflate, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'serialazy'</span>;
 
+<span class="hljs-keyword">import</span> chai = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chai'</span>);
+<span class="hljs-keyword">const</span> { expect } = chai;
+
+<span class="hljs-comment">// *** Class definition</span>
 <span class="hljs-keyword">class</span> Book {
+
+    <span class="hljs-comment">// "Serialize" decorator can accept options:</span>
+    <span class="hljs-comment">// * `optional` allows property to be `undefined` (default: `false`)</span>
+    <span class="hljs-comment">// * `nullable` allows property to be `null (default: `false`)</span>
+    <span class="hljs-comment">// * `name` allows to override property name</span>
+    <span class="hljs-meta">@Serialize</span>({ optional: <span class="hljs-literal">true</span> }) <span class="hljs-keyword">public</span> isbn: <span class="hljs-built_in">string</span>;
+
+    <span class="hljs-meta">@Serialize</span>({ name: <span class="hljs-string">'summary'</span> }) <span class="hljs-keyword">public</span> description: <span class="hljs-built_in">string</span>;
+
+}
+
+<span class="hljs-comment">// *** Create instance</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Book(), {
+    description: <span class="hljs-string">'Descriptive text'</span>,
+    <span class="hljs-comment">// Note that "isbn" is undefined and it won't throw during deserialization because `optional: true`</span>
+});
+
+<span class="hljs-comment">// *** Serialize</span>
+<span class="hljs-keyword">const</span> serialized = deflate(book);
+
+expect(serialized).to.deep.equal({
+    summary: <span class="hljs-string">'Descriptive text'</span> <span class="hljs-comment">// note that "description" is mapped to "summary" in serialized object</span>
+});
+
+<span class="hljs-comment">// *** Deserialize</span>
+<span class="hljs-keyword">const</span> deserialized = inflate(Book, serialized);
+
+expect(deserialized <span class="hljs-keyword">instanceof</span> Book).to.equal(<span class="hljs-literal">true</span>);
+expect(deserialized).to.deep.equal(book);
+</code></pre>
+				<h3 id="custom-property-serializer">Custom property serializer</h3>
+				<pre><code class="lang-ts">
+<span class="hljs-keyword">import</span> { deflate, inflate, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'serialazy'</span>;
+
+<span class="hljs-keyword">import</span> chai = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chai'</span>);
+<span class="hljs-keyword">const</span> { expect } = chai;
+
+<span class="hljs-comment">// *** Class definition</span>
+<span class="hljs-keyword">class</span> Book {
+
+    <span class="hljs-comment">// A custom serializer which converts Date to ISO date string</span>
+    <span class="hljs-meta">@Serialize</span>.Custom({
+        down: <span class="hljs-function">(<span class="hljs-params">val: <span class="hljs-built_in">Date</span></span>) =&gt;</span> val.toISOString(),
+        up: <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(val)
+    }, { name: <span class="hljs-string">'releaseDate'</span> }) <span class="hljs-comment">// Note that custom serializer can accept options</span>
+    <span class="hljs-keyword">public</span> publicationDate: <span class="hljs-built_in">Date</span>;
 
     <span class="hljs-comment">// A custom serializer which converts Map to a JSON-compatible array of objects</span>
     <span class="hljs-meta">@Serialize</span>.Custom({
@@ -135,76 +193,115 @@ book.notes = <span class="hljs-string">'Interesting story'</span>;
 
 }
 
-<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book();
-book.contents = <span class="hljs-keyword">new</span> Map([
-    [<span class="hljs-number">1</span>, <span class="hljs-string">'Introduction'</span>],
-    [<span class="hljs-number">5</span>, <span class="hljs-string">'Chapter 1'</span>],
-    [<span class="hljs-number">9</span>, <span class="hljs-string">'Chapter 2'</span>]
-]);
+<span class="hljs-comment">// *** Create instance</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Book(), {
+    publicationDate: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'1893-02-01T00:00:00.000Z'</span>),
+    contents: <span class="hljs-keyword">new</span> Map([
+        [<span class="hljs-number">1</span>, <span class="hljs-string">'Introduction'</span>],
+        [<span class="hljs-number">5</span>, <span class="hljs-string">'Chapter 1'</span>],
+        [<span class="hljs-number">9</span>, <span class="hljs-string">'Chapter 2'</span>]
+    ])
+});
 
 <span class="hljs-comment">// *** Serialize</span>
-<span class="hljs-keyword">const</span> jsonObj = deflate(book);
+<span class="hljs-keyword">const</span> serialized = deflate(book);
 
-<span class="hljs-comment">// jsonObj = {</span>
-<span class="hljs-comment">//     "contents": [</span>
-<span class="hljs-comment">//       {</span>
-<span class="hljs-comment">//         "page": 1,</span>
-<span class="hljs-comment">//         "title": "Introduction"</span>
-<span class="hljs-comment">//       },</span>
-<span class="hljs-comment">//       {</span>
-<span class="hljs-comment">//         "page": 5,</span>
-<span class="hljs-comment">//         "title": "Chapter 1"</span>
-<span class="hljs-comment">//       },</span>
-<span class="hljs-comment">//       {</span>
-<span class="hljs-comment">//         "page": 9,</span>
-<span class="hljs-comment">//         "title": "Chapter 2"</span>
-<span class="hljs-comment">//       }</span>
-<span class="hljs-comment">//     ]</span>
-<span class="hljs-comment">// }</span>
+expect(serialized).to.deep.equal({
+    releaseDate: <span class="hljs-string">'1893-02-01T00:00:00.000Z'</span>,
+    contents: [
+        { page: <span class="hljs-number">1</span>, title: <span class="hljs-string">'Introduction'</span> },
+        { page: <span class="hljs-number">5</span>, title: <span class="hljs-string">'Chapter 1'</span> },
+        { page: <span class="hljs-number">9</span>, title: <span class="hljs-string">'Chapter 2'</span> }
+    ]
+});
 
 <span class="hljs-comment">// *** Deserialize</span>
-<span class="hljs-keyword">const</span> sameBook = inflate(Book, jsonObj);
+<span class="hljs-keyword">const</span> deserialized = inflate(Book, serialized);
+
+expect(deserialized <span class="hljs-keyword">instanceof</span> Book).to.equal(<span class="hljs-literal">true</span>);
+expect(deserialized).to.deep.equal(book);
 </code></pre>
-				<p>Recursive serialization:</p>
+				<h3 id="recursive-serialization">Recursive serialization</h3>
 				<pre><code class="lang-ts">
 <span class="hljs-keyword">import</span> { deflate, inflate, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'serialazy'</span>;
 
+<span class="hljs-keyword">import</span> chai = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chai'</span>);
+<span class="hljs-keyword">const</span> { expect } = chai;
+
+<span class="hljs-comment">// *** Class definition</span>
 <span class="hljs-keyword">class</span> Author {
-
     <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> name: <span class="hljs-built_in">string</span>;
-
 }
 
 <span class="hljs-keyword">class</span> Book {
-
     <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> title: <span class="hljs-built_in">string</span>;
-
-    <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> author: Author;
-
-    <span class="hljs-meta">@Serialize</span>.Custom({ down: <span class="hljs-function">(<span class="hljs-params">val: <span class="hljs-built_in">Date</span></span>) =&gt;</span> val.toISOString(), up: <span class="hljs-function">(<span class="hljs-params">val: <span class="hljs-built_in">string</span></span>) =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(val) })
-    <span class="hljs-keyword">public</span> releaseDate: <span class="hljs-built_in">Date</span>;
-
+    <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> author: Author; <span class="hljs-comment">// Serializes Author recursively</span>
 }
 
-<span class="hljs-keyword">const</span> author = <span class="hljs-keyword">new</span> Author();
-author.name = <span class="hljs-string">'Arthur Conan Doyle'</span>;
+<span class="hljs-comment">// *** Create instance</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Book(), {
+    title: <span class="hljs-string">'The Adventure of the Yellow Face'</span>,
+    author: <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Author(), {
+        name: <span class="hljs-string">'Arthur Conan Doyle'</span>
+    }),
+});
 
-<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book();
-book.author = author;
-book.title = <span class="hljs-string">'The Adventure of the Yellow Face'</span>;
-book.releaseDate = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'February 1893'</span>);
+<span class="hljs-comment">// *** Serialize</span>
+<span class="hljs-keyword">const</span> serialized = deflate(book);
 
-<span class="hljs-keyword">const</span> jsonObj = deflate(book);
+expect(serialized).to.deep.equal({
+    title: <span class="hljs-string">'The Adventure of the Yellow Face'</span>,
+    author: {
+        name: <span class="hljs-string">'Arthur Conan Doyle'</span>
+    }
+});
 
-<span class="hljs-comment">// jsonObj = {</span>
-<span class="hljs-comment">//   "title": "The Adventure of the Yellow Face",</span>
-<span class="hljs-comment">//   "author": {</span>
-<span class="hljs-comment">//     "name": "Arthur Conan Doyle"</span>
-<span class="hljs-comment">//   },</span>
-<span class="hljs-comment">//   "releaseDate": "1893-01-31T21:00:00.000Z"</span>
-<span class="hljs-comment">// }</span>
+<span class="hljs-comment">// *** Deserialize</span>
+<span class="hljs-keyword">const</span> deserialized = inflate(Book, serialized);
 
-<span class="hljs-keyword">const</span> sameBook = inflate(Book, jsonObj); <span class="hljs-comment">// `sameBook` in an instance of `Book` and deep equal to `book`</span>
+expect(deserialized <span class="hljs-keyword">instanceof</span> Book).to.equal(<span class="hljs-literal">true</span>);
+expect(deserialized).to.deep.equal(book);
+</code></pre>
+				<h3 id="class-inheritance">Class inheritance</h3>
+				<pre><code class="lang-ts">
+<span class="hljs-keyword">import</span> { deflate, inflate, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'serialazy'</span>;
+
+<span class="hljs-keyword">import</span> chai = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chai'</span>);
+<span class="hljs-keyword">const</span> { expect } = chai;
+
+<span class="hljs-comment">// *** Class definition</span>
+<span class="hljs-keyword">class</span> Shape {
+    <span class="hljs-comment">// Serializes [number, number] tuple to "x,y" string</span>
+    <span class="hljs-meta">@Serialize</span>.Custom({
+        down: <span class="hljs-function">(<span class="hljs-params">pos: [<span class="hljs-built_in">number</span>, <span class="hljs-built_in">number</span>]</span>) =&gt;</span> pos.join(<span class="hljs-string">','</span>),
+        up: <span class="hljs-function"><span class="hljs-params">str</span> =&gt;</span> str.split(<span class="hljs-string">','</span>).map(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> <span class="hljs-built_in">Number</span>.parseFloat(s))
+    })
+    <span class="hljs-keyword">public</span> position: [<span class="hljs-built_in">number</span>, <span class="hljs-built_in">number</span>];
+}
+
+<span class="hljs-keyword">class</span> Circle <span class="hljs-keyword">extends</span> Shape { <span class="hljs-comment">// inherits props &amp; serializers from Shape</span>
+    <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> radius: <span class="hljs-built_in">number</span>;
+}
+
+<span class="hljs-comment">// *** Create instance</span>
+<span class="hljs-keyword">const</span> circle = <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Circle(), {
+    position: [<span class="hljs-number">23</span>, <span class="hljs-number">34</span>],
+    radius: <span class="hljs-number">11</span>
+});
+
+<span class="hljs-comment">// *** Serialize</span>
+<span class="hljs-keyword">const</span> serialized = deflate(circle);
+
+expect(serialized).to.deep.equal({
+    position: <span class="hljs-string">'23,34'</span>,
+    radius: <span class="hljs-number">11</span>
+});
+
+<span class="hljs-comment">// *** Deserialize</span>
+<span class="hljs-keyword">const</span> deserialized = inflate(Circle, serialized);
+
+expect(deserialized <span class="hljs-keyword">instanceof</span> Circle).to.equal(<span class="hljs-literal">true</span>);
+expect(deserialized).to.deep.equal(circle);
 </code></pre>
 			</div>
 		</div>
@@ -221,13 +318,34 @@ book.releaseDate = <span class="hljs-keyword">new</span> <span class="hljs-built
 						<a href="modules/_serialazy_.html">"serialazy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_boolean_serializer_.html">"serializers/boolean_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_metadata_.html">"serializers/metadata"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_number_serializer_.html">"serializers/number_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_primitive_serializer_.html">"serializers/primitive_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_property_serializer_.html">"serializers/property_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_serializable_serializer_.html">"serializers/serializable_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_string_serializer_.html">"serializers/string_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_type_serializer_.html">"serializers/type_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="modules/_types_constructable_.html">"types/constructable"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_types_json_type_.html">"types/json_<wbr>type"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_types_serializer_.html">"types/serializer"</a>
 					</li>
 				</ul>
 			</nav>

@@ -1,8 +1,10 @@
 /node_modules
-/doc
+/docs
 /lib/src
+/samples/bin
 /spec
-tslint.json
+**/tsconfig.json
+**/tslint.json
 
 # IDEs
 .idea/

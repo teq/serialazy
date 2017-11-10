@@ -1,5 +1,4 @@
 import PrimitiveSerializer from './primitive_serializer';
-import SerializationError from './serialization_error';
 
 /** Default serializer for booleans */
 class BooleanSerializer extends PrimitiveSerializer<boolean> {
@@ -12,7 +11,7 @@ class BooleanSerializer extends PrimitiveSerializer<boolean> {
         } else if (value === null || value === undefined) {
             return value;
         } else {
-            throw new SerializationError(`Property "${this.propertyName}" (typeof: "${typeof(value)}", value: "${value}") is not a boolean`);
+            throw new Error(`Not a boolean (typeof: "${typeof(value)}", value: "${value}")`);
         }
     }
 

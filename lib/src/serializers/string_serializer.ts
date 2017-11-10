@@ -1,5 +1,4 @@
 import PrimitiveSerializer from './primitive_serializer';
-import SerializationError from './serialization_error';
 
 /** Default serializer for strings */
 class StringSerializer extends PrimitiveSerializer<string> {
@@ -12,7 +11,7 @@ class StringSerializer extends PrimitiveSerializer<string> {
         } else if (value === null || value === undefined) {
             return value;
         } else {
-            throw new SerializationError(`Property "${this.propertyName}" (typeof: "${typeof(value)}", value: "${value}") is not a string`);
+            throw new Error(`Not a string (typeof: "${typeof(value)}", value: "${value}")`);
         }
     }
 
