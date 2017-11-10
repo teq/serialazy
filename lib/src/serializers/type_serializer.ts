@@ -35,9 +35,9 @@ namespace TypeSerializer {
             return new SerializableSerializer(ctor);
         } else {
             const className = target.constructor.name;
-            throw new Error( // TODO: Warn user about this: https://github.com/Microsoft/TypeScript/issues/18995
+            throw new Error(
                 `No default serializer for property: "${className}.${propertyName}" ('design:type': "${ctor.name}"). ` +
-                'Hint: use serializable type or provide a custom serializer'
+                'Hint: Use serializable type or provide a custom serializer. You may be affected by this issue: https://github.com/Microsoft/TypeScript/issues/18995. Try to specify property type explicitely.'
             );
         }
 
