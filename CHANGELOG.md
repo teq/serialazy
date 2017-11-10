@@ -1,3 +1,10 @@
+v1.2.0
+------
+
+* Child class inherits serializers from parent
+* Added support for `options` in custom serializers
+* Added `name` option which allows to map property to a different name
+
 v1.0.1
 ------
 
