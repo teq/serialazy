@@ -61,4 +61,9 @@ export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
     return classInstance;
 }
 
+// Export decorators
 export { default as Serialize} from './decorators/serialize';
+
+// Export types
+import * as Json from './types/json_type';
+export { Json };

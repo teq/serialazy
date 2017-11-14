@@ -1,3 +1,8 @@
+v1.2.1
+------
+
+* Added JSON types export
+
 v1.2.0
 ------
 

@@ -1,7 +1,7 @@
 {
   "name": "serialazy",
-  "version": "1.2.0",
-  "description": "A simple serialization tool for class instances / instance trees",
+  "version": "1.2.1",
+  "description": "A simple TypeScript class serialization library",
   "keywords": [
     "serialize",
     "deserialize",
