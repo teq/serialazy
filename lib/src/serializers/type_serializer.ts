@@ -1,5 +1,6 @@
 import Constructable from '../types/constructable';
 import JsonType from '../types/json_type';
+import Provider from '../types/provider';
 import BooleanSerializer from './boolean_serializer';
 import Metadata from './metadata';
 import NumberSerializer from './number_serializer';
@@ -15,6 +16,11 @@ interface TypeSerializer<TSerialized, TOriginal> {
 }
 
 namespace TypeSerializer {
+
+    /** Creates a provider function. When called it tries to pick a default serializer for given property based on its type */
+    export function getProviderFor(target: Object, propertyName: string): Provider<TypeSerializer<JsonType, any>> {
+        return () => createFor(target, propertyName);
+    }
 
     /** Factory method tries to pick a default serializer for given property based on its type */
     export function createFor(target: Object, propertyName: string): TypeSerializer<JsonType, any> {

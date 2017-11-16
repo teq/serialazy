@@ -1,4 +1,5 @@
 import { JsonMap, JsonType } from '../types/json_type';
+import Provider from '../types/provider';
 import TypeSerializer from './type_serializer';
 
 /** Reporesents an abstract property serializer */
@@ -23,9 +24,13 @@ namespace PropertySerializer {
          */
         public constructor(
             private propertyName: string,
-            private typeSerializer: TypeSerializer<JsonType, any>,
+            private typeSerializerProvider: Provider<TypeSerializer<JsonType, any>>,
             private options: Configurable.Options = {}
         ) {}
+
+        private get typeSerializer() {
+            return this.typeSerializerProvider();
+        }
 
         public down(serializable: any, serialized: JsonMap) {
 
@@ -35,7 +40,7 @@ namespace PropertySerializer {
                 const originalValue = serializable[propertyName];
                 const serializedValue = this.typeSerializer.down(this.validate(originalValue));
                 if (serializedValue !== undefined) {
-                    serialized[mappedName] = this.typeSerializer.down(this.validate(originalValue)) as any;
+                    serialized[mappedName] = serializedValue;
                 }
             } catch (error) {
                 throw new Error(`Unable to serialize property "${propertyName}": ${error.message}`);

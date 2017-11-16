@@ -6,8 +6,8 @@ import JsonType from '../types/json_type';
 /** Decorator used to mark property for serialization with default serializer */
 function Serialize(options?: PropertySerializer.Configurable.Options) {
     return (target: Object, propertyName: string) => {
-        const typeSerializer = TypeSerializer.createFor(target, propertyName);
-        const propertySerializer = new PropertySerializer.Configurable(propertyName, typeSerializer, options);
+        const typeSerializerProvider = TypeSerializer.getProviderFor(target, propertyName);
+        const propertySerializer = new PropertySerializer.Configurable(propertyName, typeSerializerProvider, options);
         Metadata.getOrCreateFor(target).ownSerializers.set(propertyName, propertySerializer);
     };
 }
@@ -20,7 +20,8 @@ namespace Serialize {
         options?: PropertySerializer.Configurable.Options
     ) {
         return (target: Object, propertyName: string, propertyDescriptor?: TypedPropertyDescriptor<TOriginal>) => {
-            const propertySerializer = new PropertySerializer.Configurable(propertyName, serializer, options);
+            const typeSerializerProvider = () => serializer;
+            const propertySerializer = new PropertySerializer.Configurable(propertyName, typeSerializerProvider, options);
             Metadata.getOrCreateFor(target).ownSerializers.set(propertyName, propertySerializer);
         };
     }

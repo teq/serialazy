@@ -6,28 +6,28 @@ const { expect } = chai;
 
 describe('default serializer for serializables (serializable objects)', () => {
 
-    class Author {
-        @Serialize() public name: string;
-        public constructor(name?: string) {
-            if (name !== undefined) { this.name = name; }
-        }
-    }
-
-    class Book {
-        @Serialize() public title: string;
-        @Serialize() public author: Author;
-        public constructor(title?: string, author?: Author) {
-            if (title !== undefined) { this.title = title; }
-            if (author !== undefined) { this.author = author; }
-        }
-    }
+    const bookObj = {
+        title: 'The Story of the Sealed Room',
+        author: { name: 'Arthur Conan Doyle' }
+    };
 
     describe('when a property is serializable', () => {
 
-        const bookObj = {
-            title: 'The Story of the Sealed Room',
-            author: { name: 'Arthur Conan Doyle' }
-        };
+        class Author {
+            @Serialize() public name: string;
+            public constructor(name?: string) {
+                if (name !== undefined) { this.name = name; }
+            }
+        }
+
+        class Book {
+            @Serialize() public title: string;
+            @Serialize() public author: Author;
+            public constructor(title?: string, author?: Author) {
+                if (title !== undefined) { this.title = title; }
+                if (author !== undefined) { this.author = author; }
+            }
+        }
 
         const book = new Book('The Story of the Sealed Room', new Author('Arthur Conan Doyle'));
 
@@ -46,17 +46,30 @@ describe('default serializer for serializables (serializable objects)', () => {
 
     describe('when a property is a non-serializable', () => {
 
-        class NotSerializableAuthor {
+        class Author {
             public name: string;
+            public constructor(name?: string) {
+                if (name !== undefined) { this.name = name; }
+            }
         }
 
-        it('should fail to decorate it as serializable', () => {
-            expect(() => {
-                // tslint:disable-next-line:no-unused-variable
-                class Book {
-                    @Serialize() public author: NotSerializableAuthor;
-                }
-            }).to.throw('No default serializer for property: "Book.author"');
+        class Book {
+            @Serialize() public title: string;
+            @Serialize() public author: Author;
+            public constructor(title?: string, author?: Author) {
+                if (title !== undefined) { this.title = title; }
+                if (author !== undefined) { this.author = author; }
+            }
+        }
+
+        const book = new Book('The Story of the Sealed Room', new Author('Arthur Conan Doyle'));
+
+        it('should fail to serialize', () => {
+            expect(() => deflate(book)).to.throw('No default serializer for property: "Book.author"');
+        });
+
+        it('should fail to deserialize', () => {
+            expect(() => inflate(Book, bookObj)).to.throw('No default serializer for property: "Book.author"');
         });
 
     });

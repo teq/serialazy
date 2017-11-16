@@ -1,3 +1,8 @@
+v1.2.2
+------
+
+* Fixed a bug with circular module dependencies
+
 v1.2.1
 ------
 
