@@ -1,3 +1,8 @@
+v1.2.3
+------
+
+* `Serialize.Custom` decorator now accepts either serializer or serializer provider function
+
 v1.2.2
 ------
 

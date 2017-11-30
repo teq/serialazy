@@ -2,6 +2,7 @@ import Metadata from '../serializers/metadata';
 import PropertySerializer from '../serializers/property_serializer';
 import TypeSerializer from '../serializers/type_serializer';
 import JsonType from '../types/json_type';
+import Provider from '../types/provider';
 
 /** Decorator used to mark property for serialization with default serializer */
 function Serialize(options?: PropertySerializer.Configurable.Options) {
@@ -16,11 +17,11 @@ namespace Serialize {
 
     /** Decorator used to mark property for serialization with custom serializer */
     export function Custom<TSerialized extends JsonType, TOriginal = any>(
-        serializer: TypeSerializer<TSerialized, TOriginal>,
+        serializerOrProvider: TypeSerializer<TSerialized, TOriginal> | Provider<TypeSerializer<TSerialized, TOriginal>>,
         options?: PropertySerializer.Configurable.Options
     ) {
         return (target: Object, propertyName: string, propertyDescriptor?: TypedPropertyDescriptor<TOriginal>) => {
-            const typeSerializerProvider = () => serializer;
+            const typeSerializerProvider = typeof(serializerOrProvider) === 'function' ? serializerOrProvider : () => serializerOrProvider;
             const propertySerializer = new PropertySerializer.Configurable(propertyName, typeSerializerProvider, options);
             Metadata.getOrCreateFor(target).ownSerializers.set(propertyName, propertySerializer);
         };
