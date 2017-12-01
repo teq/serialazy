@@ -6,7 +6,8 @@ const METADATA_KEY = Symbol('Metadata containing info about serializable object'
 export default class Metadata {
 
     private constructor(
-        private target: Object
+        private target: Object,
+        public className = target.constructor ? target.constructor.name : '<unknown>'
     ) {} // constructable via `getOrCreateFor`
 
     /** Contains serializable's own metadata */

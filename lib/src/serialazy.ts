@@ -23,8 +23,13 @@ export function deflate(serializable: any): JsonMap {
 
         serialized = {};
 
-        const serializers = Metadata.expectFor(proto).aggregateSerializers();
-        serializers.forEach(serializer => serializer.down(serializable, serialized));
+        const meta = Metadata.expectFor(proto);
+
+        try {
+            meta.aggregateSerializers().forEach(serializer => serializer.down(serializable, serialized));
+        } catch (error) {
+            throw new Error(`Unable to serialize an instance of a class "${meta.className}": ${error.message}`);
+        }
 
     }
 
@@ -53,8 +58,13 @@ export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
 
         classInstance = new ctor();
 
-        const serializers = Metadata.expectFor(ctor.prototype).aggregateSerializers();
-        serializers.forEach(serializer => serializer.up(classInstance, serialized));
+        const meta = Metadata.expectFor(ctor.prototype);
+
+        try {
+            meta.aggregateSerializers().forEach(serializer => serializer.up(classInstance, serialized));
+        } catch (error) {
+            throw new Error(`Unable to deserialize an instance of a class "${meta.className}": ${error.message}`);
+        }
 
     }
 

@@ -1,3 +1,5 @@
+* Added class name to serialization/deserialization error message
+
 v1.2.3
 ------
 
