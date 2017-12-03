@@ -3,8 +3,8 @@
   "compilerOptions": {
 
     /* Basic Options */
-    "declaration": false,                     /* Generates corresponding '.d.ts' file. */
-    "sourceMap": false,                       /* Generates corresponding '.map' file. */
+    "declaration": true,                      /* Generates corresponding '.d.ts' file. */
+    "sourceMap": true,                        /* Generates corresponding '.map' file. */
     "outDir": "./bin"                         /* Redirect output structure to the directory. */
 
   }

@@ -30,9 +30,8 @@
     "build_spec": "npm run clean_spec && cd ./spec && tsc",
     "build_samples": "npm run clean_samples && cd ./samples && tsc",
     "build_all": "npm run build_lib && npm run build_spec && npm run build_samples",
-    "pretest": "npm run build_lib && npm run build_spec",
-    "test": "node ./spec/bin/run.js",
-    "prepublishOnly": "npm run lint && npm run test"
+    "test": "npm run build_spec && node ./spec/bin/run.js",
+    "prepublishOnly": "npm run lint && npm run test && npm run build_lib"
   },
   "author": "Andrey Tselischev <vorteq@gmail.com>",
   "license": "MIT",
