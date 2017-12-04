@@ -69,6 +69,22 @@ export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
     return classInstance;
 }
 
+/**
+ * Check if value is an instance of serializable class
+ * @param target Value to check
+ */
+export function isSerializable(target: any): boolean {
+
+    if (target === null || target === undefined) {
+        throw new Error('Expecting `target` to be not null/undefined');
+    }
+
+    const meta = Metadata.getFor(Object.getPrototypeOf(target));
+
+    return !!meta;
+
+}
+
 // Export decorators
 export { default as Serialize} from './decorators/serialize';
 
