@@ -1,4 +1,4 @@
-* Added `isSerializable` function which allows to check if target is an instance of serializable class
+* Added `isSerializable` function which allows to check if target is a serializable class instance or serializable class constructor function
 * Added class name to serialization/deserialization error message
 
 v1.2.3

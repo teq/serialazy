@@ -285,8 +285,9 @@ class Author {
 
 // *** Check
 
-expect(isSerializable(new Book())).to.equal(true); // serializable
-expect(isSerializable(new Author())).to.equal(false); // not serializable
+expect(isSerializable(new Book())).to.equal(true); // instance of serializable class => TRUE
+expect(isSerializable(Book)).to.equal(true); // serializable class constructor => TRUE
+expect(isSerializable(new Author())).to.equal(false); // not serializable instance => FALSE
 expect(isSerializable(123)).to.equal(false); // not serializable
 expect(isSerializable('test')).to.equal(false); // not serializable
 

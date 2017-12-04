@@ -15,11 +15,13 @@ describe('"isSerializable" function', () => {
     it('returns true if argument is serializable', () => {
         class Book { @Serialize() public title: string; }
         expect(isSerializable(new Book())).to.equal(true);
+        expect(isSerializable(Book)).to.equal(true);
     });
 
     it('returns false if argument is not serializable', () => {
         class Test {}
         expect(isSerializable(new Test())).to.equal(false);
+        expect(isSerializable(Test)).to.equal(false);
         expect(isSerializable(123)).to.equal(false);
         expect(isSerializable('test')).to.equal(false);
     });

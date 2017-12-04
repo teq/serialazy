@@ -70,8 +70,8 @@ export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
 }
 
 /**
- * Check if value is an instance of serializable class
- * @param target Value to check
+ * Check if target is a serializable class constructor or an instance of serializable class
+ * @param target Target to check
  */
 export function isSerializable(target: any): boolean {
 
@@ -79,7 +79,9 @@ export function isSerializable(target: any): boolean {
         throw new Error('Expecting `target` to be not null/undefined');
     }
 
-    const meta = Metadata.getFor(Object.getPrototypeOf(target));
+    const meta = (typeof(target) === 'function' && target.prototype) ?
+        Metadata.getFor(target.prototype) // treat target as a constructor function
+        : Metadata.getFor(Object.getPrototypeOf(target)); // treat target as an instance
 
     return !!meta;
 
