@@ -18,14 +18,14 @@ interface TypeSerializer<TSerialized, TOriginal> {
 namespace TypeSerializer {
 
     /** Creates a provider function. When called it tries to pick a default serializer for given property based on its type */
-    export function getProviderFor(target: Object, propertyName: string): Provider<TypeSerializer<JsonType, any>> {
-        return () => createFor(target, propertyName);
+    export function getProviderFor(proto: Object, propertyName: string): Provider<TypeSerializer<JsonType, any>> {
+        return () => createFor(proto, propertyName);
     }
 
     /** Factory method tries to pick a default serializer for given property based on its type */
-    export function createFor(target: Object, propertyName: string): TypeSerializer<JsonType, any> {
+    export function createFor(proto: Object, propertyName: string): TypeSerializer<JsonType, any> {
 
-        const ctor: Constructable<any> = Reflect.getMetadata('design:type', target, propertyName);
+        const ctor: Constructable<any> = Reflect.getMetadata('design:type', proto, propertyName);
 
         if (ctor === undefined) {
             throw new Error('Unable to fetch type information. Hint: Enable TS options: "emitDecoratorMetadata" and "experimentalDecorators"');
@@ -40,7 +40,7 @@ namespace TypeSerializer {
         } else if (ctor.prototype && Metadata.getFor(ctor.prototype)) { // Serializable
             return new SerializableSerializer(ctor);
         } else {
-            const className = target.constructor.name;
+            const className = proto.constructor.name;
             throw new Error(
                 `No default serializer for property: "${className}.${propertyName}" ('design:type': "${ctor.name}"). ` +
                 'Hint: Use serializable type or provide a custom serializer. You may be affected by this issue: https://github.com/Microsoft/TypeScript/issues/18995. Try to specify property type explicitely.'

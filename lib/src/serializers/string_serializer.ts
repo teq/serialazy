@@ -3,15 +3,15 @@ import PrimitiveSerializer from './primitive_serializer';
 /** Default serializer for strings */
 class StringSerializer extends PrimitiveSerializer<string> {
 
-    /*override*/ protected expectPrimitiveOrNil(value: any): string {
-        if (typeof(value) === 'string') {
-            return value;
-        } else if (value instanceof String) {
-            return value.valueOf();
-        } else if (value === null || value === undefined) {
-            return value;
+    /*override*/ protected expectPrimitiveOrNil(maybeString: any): string {
+        if (typeof(maybeString) === 'string') {
+            return maybeString;
+        } else if (maybeString instanceof String) {
+            return maybeString.valueOf();
+        } else if (maybeString === null || maybeString === undefined) {
+            return maybeString;
         } else {
-            throw new Error(`Not a string (typeof: "${typeof(value)}", value: "${value}")`);
+            throw new Error(`Not a string (typeof: "${typeof(maybeString)}", value: "${maybeString}")`);
         }
     }
 

@@ -14,7 +14,7 @@ class SerializableSerializer implements TypeSerializer<JsonMap, any> {
         return deflate(value);
     }
 
-    public up(value: any): any {
+    public up(value: JsonMap): any {
         return inflate(this.ctor, value);
     }
 

@@ -6,7 +6,7 @@ import { JsonMap } from './types/json_type';
 
 /**
  * Deflate class instance to a JSON-compatible object
- * @param serializable Serializable object
+ * @param serializable Serializable class instance
  * @returns JSON-compatible object which can be safely passed to `JSON.serialize`
  */
 export function deflate(serializable: any): JsonMap {
@@ -19,11 +19,9 @@ export function deflate(serializable: any): JsonMap {
 
     } else {
 
-        const proto = Object.getPrototypeOf(serializable) || {};
+        const meta = Metadata.expectFor(Object.getPrototypeOf(serializable));
 
         serialized = {};
-
-        const meta = Metadata.expectFor(proto);
 
         try {
             meta.aggregateSerializers().forEach(serializer => serializer.down(serializable, serialized));
@@ -38,9 +36,9 @@ export function deflate(serializable: any): JsonMap {
 
 /**
  * Construct/inflate class instance from JSON-compatible object
- * @param ctor Class instance constructor
+ * @param ctor Serializable class constructor function
  * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
- * @returns Class instance
+ * @returns Serializable class instance
  */
 export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
 
@@ -56,9 +54,9 @@ export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
             throw new Error('Expecting a valid constructor function');
         }
 
-        classInstance = new ctor();
-
         const meta = Metadata.expectFor(ctor.prototype);
+
+        classInstance = new ctor();
 
         try {
             meta.aggregateSerializers().forEach(serializer => serializer.up(classInstance, serialized));

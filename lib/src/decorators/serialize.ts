@@ -6,10 +6,10 @@ import Provider from '../types/provider';
 
 /** Decorator used to mark property for serialization with default serializer */
 function Serialize(options?: PropertySerializer.Configurable.Options) {
-    return (target: Object, propertyName: string) => {
-        const typeSerializerProvider = TypeSerializer.getProviderFor(target, propertyName);
+    return (proto: Object, propertyName: string) => {
+        const typeSerializerProvider = TypeSerializer.getProviderFor(proto, propertyName);
         const propertySerializer = new PropertySerializer.Configurable(propertyName, typeSerializerProvider, options);
-        Metadata.getOrCreateFor(target).ownSerializers.set(propertyName, propertySerializer);
+        Metadata.getOrCreateFor(proto).ownSerializers.set(propertyName, propertySerializer);
     };
 }
 
@@ -20,18 +20,18 @@ namespace Serialize {
         serializerOrProvider: TypeSerializer<TSerialized, TOriginal> | Provider<TypeSerializer<TSerialized, TOriginal>>,
         options?: PropertySerializer.Configurable.Options
     ) {
-        return (target: Object, propertyName: string, propertyDescriptor?: TypedPropertyDescriptor<TOriginal>) => {
+        return (proto: Object, propertyName: string, propertyDescriptor?: TypedPropertyDescriptor<TOriginal>) => {
             const typeSerializerProvider = typeof(serializerOrProvider) === 'function' ? serializerOrProvider : () => serializerOrProvider;
             const propertySerializer = new PropertySerializer.Configurable(propertyName, typeSerializerProvider, options);
-            Metadata.getOrCreateFor(target).ownSerializers.set(propertyName, propertySerializer);
+            Metadata.getOrCreateFor(proto).ownSerializers.set(propertyName, propertySerializer);
         };
     }
 
     /** Decorator used to explicitely mark property as non-serializable. Can be used to erase inherited serializer. */
     export function Skip() {
-        return (target: Object, propertyName: string) => {
+        return (proto: Object, propertyName: string) => {
             const propertySerializer = new PropertySerializer.Dummy();
-            Metadata.getOrCreateFor(target).ownSerializers.set(propertyName, propertySerializer);
+            Metadata.getOrCreateFor(proto).ownSerializers.set(propertyName, propertySerializer);
         };
     }
 

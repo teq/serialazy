@@ -1,3 +1,4 @@
+import Constructable from '../types/constructable';
 import PropertySerializer from './property_serializer';
 
 const METADATA_KEY = Symbol('Metadata containing info about serializable object');
@@ -6,8 +7,9 @@ const METADATA_KEY = Symbol('Metadata containing info about serializable object'
 export default class Metadata {
 
     private constructor(
-        private target: Object,
-        public className = target.constructor ? target.constructor.name : '<unknown>'
+        private proto: Object,
+        public readonly classConstructor = proto.constructor as Constructable<any>,
+        public readonly className = classConstructor.name
     ) {} // constructable via `getOrCreateFor`
 
     /** Contains serializable's own metadata */
@@ -26,45 +28,45 @@ export default class Metadata {
     /** Seek prototype chain for inherited serializable's metadata */
     private seekForParentMeta(): Metadata {
         let result: Metadata = null;
-        let target = this.target;
-        while (target && !result) {
-            target = Object.getPrototypeOf(target);
-            result = target ? Metadata.getFor(target) : null;
+        let proto = this.proto;
+        while (proto && !result) {
+            proto = Object.getPrototypeOf(proto);
+            result = proto ? Metadata.getFor(proto) : null;
         }
         return result;
     }
 
-    /** Get metadata for given object if it's exists or create an empty metadata container */
-    public static getOrCreateFor(target: Object): Metadata {
+    /** Get metadata for given prototype if it's exists or create an empty metadata container */
+    public static getOrCreateFor(proto: Object): Metadata {
 
-        let metadata = this.getFor(target);
+        let metadata = this.getFor(proto);
 
         if (!metadata) {
-            metadata = new Metadata(target);
-            Reflect.defineMetadata(METADATA_KEY, metadata, target);
+            metadata = new Metadata(proto);
+            Reflect.defineMetadata(METADATA_KEY, metadata, proto);
         }
 
         return metadata;
 
     }
 
-    /** Get metadata for given object if it's exists or return a null */
-    public static getFor(target: Object): Metadata {
+    /** Get metadata for given prototype if it's exists or return a null */
+    public static getFor(proto: Object): Metadata {
 
-        if (target === null || target === undefined) {
-            throw new Error('null/undefined can not be serializable');
+        if (proto === null || proto === undefined) {
+            throw new Error('Expecting prototype object to be not null/undefined');
         }
 
-        const metadata: Metadata = Reflect.getOwnMetadata(METADATA_KEY, target) || null;
+        const metadata: Metadata = Reflect.getOwnMetadata(METADATA_KEY, proto) || null;
 
         return metadata;
 
     }
 
-    /** Get metadata for given object if it's exists or throw an error */
-    public static expectFor(target: Object): Metadata {
+    /** Get metadata for given prototype if it's exists or throw an error */
+    public static expectFor(proto: Object): Metadata {
 
-        let metadata = this.getFor(target);
+        let metadata = this.getFor(proto);
 
         if (!metadata) {
             throw new Error(

@@ -3,15 +3,15 @@ import PrimitiveSerializer from './primitive_serializer';
 /** Default serializer for booleans */
 class BooleanSerializer extends PrimitiveSerializer<boolean> {
 
-    /*override*/ protected expectPrimitiveOrNil(value: any): boolean {
-        if (typeof(value) === 'boolean') {
-            return value;
-        } else if (value instanceof Boolean) {
-            return value.valueOf();
-        } else if (value === null || value === undefined) {
-            return value;
+    /*override*/ protected expectPrimitiveOrNil(maybeBoolean: any): boolean {
+        if (typeof(maybeBoolean) === 'boolean') {
+            return maybeBoolean;
+        } else if (maybeBoolean instanceof Boolean) {
+            return maybeBoolean.valueOf();
+        } else if (maybeBoolean === null || maybeBoolean === undefined) {
+            return maybeBoolean;
         } else {
-            throw new Error(`Not a boolean (typeof: "${typeof(value)}", value: "${value}")`);
+            throw new Error(`Not a boolean (typeof: "${typeof(maybeBoolean)}", value: "${maybeBoolean}")`);
         }
     }
 

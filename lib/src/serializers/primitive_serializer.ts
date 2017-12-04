@@ -2,17 +2,17 @@ import JsonType from '../types/json_type';
 import TypeSerializer from './type_serializer';
 
 /** Generic default serializer from primitive types */
-abstract class PrimitiveSerializer<T extends string | number | boolean> implements TypeSerializer<JsonType, T> {
+abstract class PrimitiveSerializer<TPrimitive extends string | number | boolean> implements TypeSerializer<JsonType, TPrimitive> {
 
-    public down(value: any): JsonType {
-        return this.expectPrimitiveOrNil(value);
+    public down(originalValue: TPrimitive): JsonType {
+        return this.expectPrimitiveOrNil(originalValue);
     }
 
-    public up(value: any): T {
-        return this.expectPrimitiveOrNil(value);
+    public up(serializedValue: JsonType): TPrimitive {
+        return this.expectPrimitiveOrNil(serializedValue);
     }
 
-    protected abstract expectPrimitiveOrNil(value: any): T;
+    protected abstract expectPrimitiveOrNil(maybePrimitive: any): TPrimitive;
 
 }
 

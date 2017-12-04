@@ -3,15 +3,15 @@ import PrimitiveSerializer from './primitive_serializer';
 /** Default serializer for numbers */
 class NumberSerializer extends PrimitiveSerializer<number> {
 
-    /*override*/ protected expectPrimitiveOrNil(value: any): number {
-        if (typeof(value) === 'number') {
-            return value;
-        } else if (value instanceof Number) {
-            return value.valueOf();
-        } else if (value === null || value === undefined) {
-            return value;
+    /*override*/ protected expectPrimitiveOrNil(maybeNumber: any): number {
+        if (typeof(maybeNumber) === 'number') {
+            return maybeNumber;
+        } else if (maybeNumber instanceof Number) {
+            return maybeNumber.valueOf();
+        } else if (maybeNumber === null || maybeNumber === undefined) {
+            return maybeNumber;
         } else {
-            throw new Error(`Not a number (typeof: "${typeof(value)}", value: "${value}")`);
+            throw new Error(`Not a number (typeof: "${typeof(maybeNumber)}", value: "${maybeNumber}")`);
         }
     }
 
