@@ -112,6 +112,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_serializers_property_serializer_.propertyserializer.configurable.html#assign" class="tsd-kind-icon">assign</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_serializers_property_serializer_.propertyserializer.configurable.html#down" class="tsd-kind-icon">down</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_serializers_property_serializer_.propertyserializer.configurable.html#up" class="tsd-kind-icon">up</a></li>
 							</ul>
@@ -125,13 +126,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Configurable<span class="tsd-signature-symbol">(</span>propertyName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, typeSerializer<span class="tsd-signature-symbol">: </span><a href="../modules/_serializers_type_serializer_.typeserializer.html" class="tsd-signature-type">TypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_types_json_type_.html#jsontype" class="tsd-signature-type">JsonType</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_serializers_property_serializer_.propertyserializer.configurable.options.html" class="tsd-signature-type">Options</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_serializers_property_serializer_.propertyserializer.configurable.html" class="tsd-signature-type">Configurable</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Configurable<span class="tsd-signature-symbol">(</span>propertyName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, typeSerializerProvider<span class="tsd-signature-symbol">: </span><a href="../modules/_types_provider_.html#provider" class="tsd-signature-type">Provider</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_serializers_type_serializer_.typeserializer.html" class="tsd-signature-type">TypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_types_json_type_.html#jsontype" class="tsd-signature-type">JsonType</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_serializers_property_serializer_.propertyserializer.configurable.options.html" class="tsd-signature-type">Options</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_serializers_property_serializer_.propertyserializer.configurable.html" class="tsd-signature-type">Configurable</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/aeb6098/lib/src/serializers/property_serializer.ts#L16">serializers/property_serializer.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/teq/serialazy/blob/a2dc7cc/lib/src/serializers/property_serializer.ts#L29">serializers/property_serializer.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -150,7 +151,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>typeSerializer: <a href="../modules/_serializers_type_serializer_.typeserializer.html" class="tsd-signature-type">TypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_types_json_type_.html#jsontype" class="tsd-signature-type">JsonType</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>typeSerializerProvider: <a href="../modules/_types_provider_.html#provider" class="tsd-signature-type">Provider</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_serializers_type_serializer_.typeserializer.html" class="tsd-signature-type">TypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_types_json_type_.html#jsontype" class="tsd-signature-type">JsonType</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
 											<p>Type serializer for given property</p>
@@ -174,6 +175,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="assign" class="tsd-anchor"></a>
+					<h3>assign</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">assign<span class="tsd-signature-symbol">(</span>destination<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/teq/serialazy/blob/a2dc7cc/lib/src/serializers/property_serializer.ts#L79">serializers/property_serializer.ts:79</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>destination: <span class="tsd-signature-type">any</span></h5>
+								</li>
+								<li>
+									<h5>source: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="down" class="tsd-anchor"></a>
 					<h3>down</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -183,7 +210,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/aeb6098/lib/src/serializers/property_serializer.ts#L30">serializers/property_serializer.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/teq/serialazy/blob/a2dc7cc/lib/src/serializers/property_serializer.ts#L47">serializers/property_serializer.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -209,7 +236,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/aeb6098/lib/src/serializers/property_serializer.ts#L46">serializers/property_serializer.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/teq/serialazy/blob/a2dc7cc/lib/src/serializers/property_serializer.ts#L63">serializers/property_serializer.ts:63</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -240,16 +267,22 @@
 						<a href="../modules/_serialazy_.html">"serialazy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_serializers_boolean_serializer_.html">"serializers/boolean_<wbr>serializer"</a>
+						<a href="../modules/_serializers_json_json_boolean_serializer_.html">"serializers/json/json_<wbr>boolean_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_serializers_json_json_number_serializer_.html">"serializers/json/json_<wbr>number_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_serializers_json_json_serializable_serializer_.html">"serializers/json/json_<wbr>serializable_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_serializers_json_json_string_serializer_.html">"serializers/json/json_<wbr>string_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_serializers_json_json_type_serializer_.html">"serializers/json/json_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_serializers_metadata_.html">"serializers/metadata"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_serializers_number_serializer_.html">"serializers/number_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_serializers_primitive_serializer_.html">"serializers/primitive_<wbr>serializer"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_serializers_property_serializer_.html">"serializers/property_<wbr>serializer"</a>
@@ -260,12 +293,6 @@
 						</ul>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_serializers_serializable_serializer_.html">"serializers/serializable_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_serializers_string_serializer_.html">"serializers/string_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="../modules/_serializers_type_serializer_.html">"serializers/type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -273,6 +300,9 @@
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_types_json_type_.html">"types/json_<wbr>type"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_types_provider_.html">"types/provider"</a>
 					</li>
 				</ul>
 			</nav>
@@ -290,6 +320,9 @@
 								<a href="_serializers_property_serializer_.propertyserializer.configurable.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_serializers_property_serializer_.propertyserializer.configurable.html#assign" class="tsd-kind-icon">assign</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_serializers_property_serializer_.propertyserializer.configurable.html#down" class="tsd-kind-icon">down</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -301,6 +334,9 @@
 				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="_serializers_property_serializer_.propertyserializer.dummy.html" class="tsd-kind-icon">Dummy</a>
+					</li>
+					<li class=" tsd-kind-method tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="../modules/_serializers_property_serializer_.propertyserializer.html#assign" class="tsd-kind-icon">assign</a>
 					</li>
 					<li class=" tsd-kind-method tsd-parent-kind-module">
 						<a href="../modules/_serializers_property_serializer_.propertyserializer.html#down" class="tsd-kind-icon">down</a>
