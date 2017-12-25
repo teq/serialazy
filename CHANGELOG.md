@@ -1,3 +1,6 @@
+v1.3.0
+------
+
 * Added `deepMerge` function which performs a deep (recursive) property merge from serializable-like source object to serializable destination object (TODO: add example to README)
 * Added `isSerializable` function which allows to check if target is a serializable class instance or serializable class constructor function
 * Added class name to serialization/deserialization error message
