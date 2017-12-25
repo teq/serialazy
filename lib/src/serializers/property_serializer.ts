@@ -1,8 +1,6 @@
 import { deepMerge, isSerializable } from '../serialazy';
-import Constructable from '../types/constructable';
 import { JsonMap, JsonType } from '../types/json_type';
 import Provider from '../types/provider';
-import Metadata from './metadata';
 import TypeSerializer from './type_serializer';
 
 /** Reporesents an abstract property serializer */

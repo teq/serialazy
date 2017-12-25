@@ -5,7 +5,7 @@ import JsonType from '../types/json_type';
 import Provider from '../types/provider';
 
 /** Decorator used to mark property for serialization with default serializer */
-function Serialize<TSerialized extends JsonType, TOriginal = any>(
+function Serialize(
     options?: PropertySerializer.Configurable.Options
 ) {
     return (proto: Object, propertyName: string) => {
