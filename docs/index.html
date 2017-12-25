@@ -303,6 +303,36 @@ expect(serialized).to.deep.equal({
 expect(deserialized <span class="hljs-keyword">instanceof</span> Circle).to.equal(<span class="hljs-literal">true</span>);
 expect(deserialized).to.deep.equal(circle);
 </code></pre>
+				<h3 id="-isserializable-function"><code>isSerializable</code> function</h3>
+				<p>Checks if target is an instance of serializable class or serializable class constructor function</p>
+				<pre><code class="lang-ts">
+<span class="hljs-keyword">import</span> { isSerializable, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'./@lib/serialazy'</span>;
+
+<span class="hljs-keyword">import</span> chai = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chai'</span>);
+<span class="hljs-keyword">const</span> { expect } = chai;
+
+<span class="hljs-comment">// *** Class definition</span>
+
+<span class="hljs-keyword">class</span> Book {
+    <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> title: <span class="hljs-built_in">string</span>;
+}
+
+<span class="hljs-keyword">class</span> Author {
+    <span class="hljs-keyword">public</span> name: <span class="hljs-built_in">string</span>;
+}
+
+<span class="hljs-comment">// *** Check</span>
+
+expect(isSerializable(<span class="hljs-keyword">new</span> Book())).to.equal(<span class="hljs-literal">true</span>); <span class="hljs-comment">// instance of serializable class =&gt; TRUE</span>
+expect(isSerializable(Book)).to.equal(<span class="hljs-literal">true</span>); <span class="hljs-comment">// serializable class constructor =&gt; TRUE</span>
+expect(isSerializable(<span class="hljs-keyword">new</span> Author())).to.equal(<span class="hljs-literal">false</span>); <span class="hljs-comment">// not serializable instance =&gt; FALSE</span>
+expect(isSerializable(<span class="hljs-number">123</span>)).to.equal(<span class="hljs-literal">false</span>); <span class="hljs-comment">// not serializable</span>
+expect(isSerializable(<span class="hljs-string">'test'</span>)).to.equal(<span class="hljs-literal">false</span>); <span class="hljs-comment">// not serializable</span>
+</code></pre>
+				<h3 id="-deepmerge-function"><code>deepMerge</code> function</h3>
+				<pre><code class="lang-ts">
+<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> Add example...</span>
+</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -318,25 +348,25 @@ expect(deserialized).to.deep.equal(circle);
 						<a href="modules/_serialazy_.html">"serialazy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_serializers_boolean_serializer_.html">"serializers/boolean_<wbr>serializer"</a>
+						<a href="modules/_serializers_json_json_boolean_serializer_.html">"serializers/json/json_<wbr>boolean_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_json_json_number_serializer_.html">"serializers/json/json_<wbr>number_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_json_json_serializable_serializer_.html">"serializers/json/json_<wbr>serializable_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_json_json_string_serializer_.html">"serializers/json/json_<wbr>string_<wbr>serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_json_json_type_serializer_.html">"serializers/json/json_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_serializers_metadata_.html">"serializers/metadata"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_serializers_number_serializer_.html">"serializers/number_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_serializers_primitive_serializer_.html">"serializers/primitive_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="modules/_serializers_property_serializer_.html">"serializers/property_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_serializers_serializable_serializer_.html">"serializers/serializable_<wbr>serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_serializers_string_serializer_.html">"serializers/string_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_serializers_type_serializer_.html">"serializers/type_<wbr>serializer"</a>
@@ -346,6 +376,9 @@ expect(deserialized).to.deep.equal(circle);
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_types_json_type_.html">"types/json_<wbr>type"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_provider_.html">"types/provider"</a>
 					</li>
 				</ul>
 			</nav>
