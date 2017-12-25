@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serialize } from '../../../.';
+import { deflate, inflate, Serialize } from '../@lib/serialazy';
 
 const { expect } = chai;
 
@@ -65,11 +65,11 @@ describe('default serializer for serializables (serializable objects)', () => {
         const book = new Book('The Story of the Sealed Room', new Author('Arthur Conan Doyle'));
 
         it('should fail to serialize', () => {
-            expect(() => deflate(book)).to.throw('No default serializer for property: "Book.author"');
+            expect(() => deflate(book)).to.throw('No serializer for type "Author"');
         });
 
         it('should fail to deserialize', () => {
-            expect(() => inflate(Book, bookObj)).to.throw('No default serializer for property: "Book.author"');
+            expect(() => inflate(Book, bookObj)).to.throw('No serializer for type "Author"');
         });
 
     });

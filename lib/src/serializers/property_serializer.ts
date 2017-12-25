@@ -1,13 +1,27 @@
+import { deepMerge, isSerializable } from '../serialazy';
+import Constructable from '../types/constructable';
 import { JsonMap, JsonType } from '../types/json_type';
 import Provider from '../types/provider';
+import Metadata from './metadata';
 import TypeSerializer from './type_serializer';
 
 /** Reporesents an abstract property serializer */
 interface PropertySerializer {
-    /** Performs property serialization */
+
+    /** Serializes target property in `serializable` and writes value to `serialized` */
     down(serializable: any, serialized: JsonMap): void;
-    /** Performs property deserialization */
+
+    /** Deserializes target property from `serialized` and writes value to `serializable` */
     up(serializable: any, serialized: JsonMap): void;
+
+    /**
+     * Assigns target property in `destination` to corresponding property value from `source`. Mutates `destination`.
+     * @param destination Destination serializable class instance
+     * @param source Source class instance or plain object, may be non-serializable
+     * @returns Destination class instance
+     */
+    assign<T>(destination: T, source: T): T;
+
 }
 
 /** Contains property serializer implementations */
@@ -19,7 +33,7 @@ namespace PropertySerializer {
         /**
          * Construct a new property serializer
          * @param propertyName Property name
-         * @param typeSerializer Type serializer for given property
+         * @param typeSerializerProvider Type serializer for given property
          * @param options Serializer options
          */
         public constructor(
@@ -64,6 +78,37 @@ namespace PropertySerializer {
 
         }
 
+        public assign(destination: any, source: any) {
+
+            if (destination === null || destination === undefined) {
+                throw new Error('Expecting `destination` to be not null/undefined');
+            }
+
+            if (source === null || source === undefined) {
+                throw new Error('Expecting `source` to be not null/undefined');
+            }
+
+            const type = (() => { // fetch type
+                if (this.typeSerializer.discriminate) {
+                    if (source[this.propertyName] === null || source[this.propertyName] === undefined) {
+                        throw new Error('Unable to discriminate property type when property value is null/undefined');
+                    }
+                    return this.typeSerializer.discriminate(source[this.propertyName]);
+                } else {
+                    return this.typeSerializer.type;
+                }
+            })();
+
+            if (type && isSerializable(type)) {
+                destination[this.propertyName] = deepMerge(new type(), source[this.propertyName]);
+            } else {
+                destination[this.propertyName] = source[this.propertyName];
+            }
+
+            return destination;
+
+        }
+
         private validate(value: any) {
 
             if (!this.options.optional && value === undefined) {
@@ -103,6 +148,8 @@ namespace PropertySerializer {
         public down(serializable: any, serialized: JsonMap) { /* do nothing */ }
 
         public up(serializable: any, serialized: JsonMap) { /* do nothing */ }
+
+        public assign(destination: any, source: any) { return destination; }
 
     }
 

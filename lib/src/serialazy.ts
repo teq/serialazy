@@ -6,7 +6,7 @@ import { JsonMap } from './types/json_type';
 
 /**
  * Deflate class instance to a JSON-compatible object
- * @param serializable Serializable object
+ * @param serializable Serializable class instance
  * @returns JSON-compatible object which can be safely passed to `JSON.serialize`
  */
 export function deflate(serializable: any): JsonMap {
@@ -19,12 +19,15 @@ export function deflate(serializable: any): JsonMap {
 
     } else {
 
-        const proto = Object.getPrototypeOf(serializable) || {};
+        const meta = Metadata.expectFor(Object.getPrototypeOf(serializable));
 
         serialized = {};
 
-        const serializers = Metadata.expectFor(proto).aggregateSerializers();
-        serializers.forEach(serializer => serializer.down(serializable, serialized));
+        try {
+            meta.aggregateSerializers().forEach(serializer => serializer.down(serializable, serialized));
+        } catch (error) {
+            throw new Error(`Unable to serialize an instance of a class "${meta.className}": ${error.message}`);
+        }
 
     }
 
@@ -33,9 +36,9 @@ export function deflate(serializable: any): JsonMap {
 
 /**
  * Construct/inflate class instance from JSON-compatible object
- * @param ctor Class instance constructor
+ * @param ctor Serializable class constructor function
  * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
- * @returns Class instance
+ * @returns Serializable class instance
  */
 export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
 
@@ -51,14 +54,65 @@ export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
             throw new Error('Expecting a valid constructor function');
         }
 
+        const meta = Metadata.expectFor(ctor.prototype);
+
         classInstance = new ctor();
 
-        const serializers = Metadata.expectFor(ctor.prototype).aggregateSerializers();
-        serializers.forEach(serializer => serializer.up(classInstance, serialized));
+        try {
+            meta.aggregateSerializers().forEach(serializer => serializer.up(classInstance, serialized));
+        } catch (error) {
+            throw new Error(`Unable to deserialize an instance of a class "${meta.className}": ${error.message}`);
+        }
 
     }
 
     return classInstance;
+}
+
+/**
+ * Check if target is a serializable class constructor or an instance of serializable class
+ * @param target Target to check
+ */
+export function isSerializable(target: any): boolean {
+
+    if (target === null || target === undefined) {
+        throw new Error('Expecting `target` to be not null/undefined');
+    }
+
+    const meta = (typeof(target) === 'function' && target.prototype) ?
+        Metadata.getFor(target.prototype) // treat target as a constructor function
+        : Metadata.getFor(Object.getPrototypeOf(target)); // treat target as an instance
+
+    return !!meta;
+
+}
+
+/**
+ * Traverse recursively all serializable properties of `destination`, merge them
+ * with corresponding properties of `source` and return resulting object.
+ * NOTE: This function mutates `destination`
+ * @param destination Destination serializable class instance
+ * @param source Source class instance or plain object (may be non-serializable) to take property values from
+ * @returns Destination class instance
+ */
+export function deepMerge<T>(destination: T, source: T): T {
+
+    if (destination === null || destination === undefined) {
+        throw new Error('Expecting `destination` to be not null/undefined');
+    }
+
+    const meta = Metadata.expectFor(Object.getPrototypeOf(destination));
+
+    if (source !== null && source !== undefined) {
+        try {
+            meta.aggregateSerializers().forEach(serializer => serializer.assign(destination, source));
+        } catch (error) {
+            throw new Error(`Unable to perform a deep property merge for instance of "${meta.className}": ${error.message}`);
+        }
+    }
+
+    return destination;
+
 }
 
 // Export decorators

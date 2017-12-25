@@ -1,4 +1,4 @@
-import { deflate, inflate, Serialize } from '../../.';
+import { deflate, inflate, Serialize } from './@lib/serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
