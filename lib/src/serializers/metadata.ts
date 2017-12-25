@@ -70,7 +70,8 @@ export default class Metadata {
 
         if (!metadata) {
             throw new Error(
-                'Provided type doesn\'t seem to be serializable. Hint: use "Serialize" decorator to mark properties for serialization'
+                `Provided type doesn\'t seem to be serializable: "${proto.constructor.name}". ` +
+                'Hint: use "Serialize" decorator to mark properties for serialization'
             );
         }
 

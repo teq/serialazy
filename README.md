@@ -264,7 +264,7 @@ expect(deserialized).to.deep.equal(circle);
 
 ### `isSerializable` function
 
-Checks if target is an instance of serializable class
+Checks if target is an instance of serializable class or serializable class constructor function
 
 ```ts
 
@@ -290,5 +290,13 @@ expect(isSerializable(Book)).to.equal(true); // serializable class constructor =
 expect(isSerializable(new Author())).to.equal(false); // not serializable instance => FALSE
 expect(isSerializable(123)).to.equal(false); // not serializable
 expect(isSerializable('test')).to.equal(false); // not serializable
+
+```
+
+### `deepMerge` function
+
+```ts
+
+// TODO: Add example...
 
 ```

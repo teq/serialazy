@@ -1,51 +1,64 @@
 import Constructable from '../types/constructable';
-import JsonType from '../types/json_type';
-import Provider from '../types/provider';
-import BooleanSerializer from './boolean_serializer';
-import Metadata from './metadata';
-import NumberSerializer from './number_serializer';
-import SerializableSerializer from './serializable_serializer';
-import StringSerializer from './string_serializer';
+import JsonTypeSerializer from './json/json_type_serializer';
 
-/** Generic type serializer */
+/** Represents a type serializer */
 interface TypeSerializer<TSerialized, TOriginal> {
-    /** Serialization function */
-    down: (value: TOriginal) => TSerialized;
-    /** Deserialization function */
-    up: (value: TSerialized) => TOriginal;
+
+    /**
+     * Property value serializer
+     * @param originalValue Original property value
+     * @returns Serialized property value
+     */
+    down(this: void, originalValue: TOriginal): TSerialized;
+
+    /**
+     * Property value deserializer
+     * @param serializedValue Serialized property value
+     * @returns Original property value
+     */
+    up(this: void, serializedValue: TSerialized): TOriginal;
+
+    /**
+     * _Optional._ Property type constructor function.
+     * Default: Value of `design:type` for given property.
+     */
+    type?: Constructable.Default<TOriginal>;
+
+    /**
+     * _Optional._ Property type descriminator function.
+     * Used to narrow type constructor function (e.g. for union types)
+     * @param value Property value
+     * @returns Property type constructor function
+     */
+    discriminate?(this: void, value: TOriginal): Constructable.Default<TOriginal>;
+
 }
 
 namespace TypeSerializer {
 
-    /** Creates a provider function. When called it tries to pick a default serializer for given property based on its type */
-    export function getProviderFor(proto: Object, propertyName: string): Provider<TypeSerializer<JsonType, any>> {
-        return () => createFor(proto, propertyName);
+    /** Try to pick a (possibly partial) type serializer for given property */
+    export function partialFor(proto: Object, propertyName: string): Partial<JsonTypeSerializer<any>> {
+        return JsonTypeSerializer.partialFor(proto, propertyName);
     }
 
-    /** Factory method tries to pick a default serializer for given property based on its type */
-    export function createFor(proto: Object, propertyName: string): TypeSerializer<JsonType, any> {
+    /** Combine type serializer partials to final type serializer */
+    export function combine<TSerialized, TOriginal>(
+        partials: Array<Partial<TypeSerializer<TSerialized, TOriginal>>>
+    ): TypeSerializer<TSerialized, TOriginal> {
 
-        const ctor: Constructable<any> = Reflect.getMetadata('design:type', proto, propertyName);
+        const { down, up, type, discriminate } = partials.reduce((combined, partial) => ({ ...combined, ...partial }), {});
 
-        if (ctor === undefined) {
-            throw new Error('Unable to fetch type information. Hint: Enable TS options: "emitDecoratorMetadata" and "experimentalDecorators"');
-        }
-
-        if (ctor === String) {
-            return new StringSerializer();
-        } else if (ctor === Number) {
-            return new NumberSerializer();
-        } else if (ctor === Boolean) {
-            return new BooleanSerializer();
-        } else if (ctor.prototype && Metadata.getFor(ctor.prototype)) { // Serializable
-            return new SerializableSerializer(ctor);
-        } else {
-            const className = proto.constructor.name;
+        if (!down || !up) {
+            const typeName = type && type.name ? type.name : '<unknown>';
             throw new Error(
-                `No default serializer for property: "${className}.${propertyName}" ('design:type': "${ctor.name}"). ` +
-                'Hint: Use serializable type or provide a custom serializer. You may be affected by this issue: https://github.com/Microsoft/TypeScript/issues/18995. Try to specify property type explicitely.'
+                `No serializer for type "${typeName}". ` +
+                'Hint: Use serializable type or provide a custom serializer. ' +
+                'Try to specify property type explicitely, default serializer may be failing to pick it because of: ' +
+                'https://github.com/Microsoft/TypeScript/issues/18995. '
             );
         }
+
+        return { down, up, type, discriminate };
 
     }
 

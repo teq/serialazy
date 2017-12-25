@@ -87,6 +87,34 @@ export function isSerializable(target: any): boolean {
 
 }
 
+/**
+ * Traverse recursively all serializable properties of `destination`, merge them
+ * with corresponding properties of `source` and return resulting object.
+ * NOTE: This function mutates `destination`
+ * @param destination Destination serializable class instance
+ * @param source Source class instance or plain object (may be non-serializable) to take property values from
+ * @returns Destination class instance
+ */
+export function deepMerge<T>(destination: T, source: T): T {
+
+    if (destination === null || destination === undefined) {
+        throw new Error('Expecting `destination` to be not null/undefined');
+    }
+
+    const meta = Metadata.expectFor(Object.getPrototypeOf(destination));
+
+    if (source !== null && source !== undefined) {
+        try {
+            meta.aggregateSerializers().forEach(serializer => serializer.assign(destination, source));
+        } catch (error) {
+            throw new Error(`Unable to perform a deep property merge for instance of "${meta.className}": ${error.message}`);
+        }
+    }
+
+    return destination;
+
+}
+
 // Export decorators
 export { default as Serialize} from './decorators/serialize';
 
