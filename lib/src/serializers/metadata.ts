@@ -71,11 +71,14 @@ export default class Metadata {
 
         const metadata: Metadata = Reflect.getOwnMetadata(METADATA_KEY, proto) || null;
 
-        if (metadata && metadata.version !== METADATA_VERSION) {
-            throw new Error(
-                `Metadata version mismatch (lib: ${METADATA_VERSION}, meta: ${metadata.version}). ` +
-                'Seems like you\'re trying to use 2 or more incompatible versions of "serialazy"'
-            );
+        if (metadata) {
+            const version = metadata.version || 0;
+            if (version !== METADATA_VERSION) {
+                throw new Error(
+                    `Metadata version mismatch (lib: ${METADATA_VERSION}, meta: ${version}). ` +
+                    'Seems like you\'re trying to use 2 or more incompatible versions of "serialazy"'
+                );
+            }
         }
 
         return metadata;
