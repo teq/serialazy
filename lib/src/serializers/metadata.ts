@@ -1,10 +1,22 @@
 import Constructable from '../types/constructable';
 import PropertySerializer from './property_serializer';
 
-const METADATA_KEY = Symbol('Metadata containing info about serializable object');
+/**
+ * There may be multiple "serialazy" instances in project (from different dependencies)
+ * We use global symbol to make sure that all of them can access the same metadata.
+ */
+const METADATA_KEY = Symbol.for('com.github.teq.serialazy.metadata');
+
+/**
+ * We need to make sure that metadata is compatible with all "serialazy" instances.
+ * This version is increased in case of incompatible changes in `Metadata` class.
+ */
+const METADATA_VERSION = 1;
 
 /** Metadata container for serializables */
 export default class Metadata {
+
+    private version = METADATA_VERSION;
 
     private constructor(
         private proto: Object,
@@ -58,6 +70,13 @@ export default class Metadata {
         }
 
         const metadata: Metadata = Reflect.getOwnMetadata(METADATA_KEY, proto) || null;
+
+        if (metadata && metadata.version !== METADATA_VERSION) {
+            throw new Error(
+                `Metadata version mismatch (lib: ${METADATA_VERSION}, meta: ${metadata.version}). ` +
+                'Seems like you\'re trying to use 2 or more incompatible versions of "serialazy"'
+            );
+        }
 
         return metadata;
 

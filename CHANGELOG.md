@@ -1,3 +1,7 @@
+* Using global symbol to access serializable's metadata.
+  This fixes a bug when project dependencies introduce multiple instances of library
+  and metadata defined in one verion can't be accessed in another.
+
 v1.3.0
 ------
 
