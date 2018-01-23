@@ -1,3 +1,14 @@
+v1.3.1
+------
+
+* Added `assertSerializable` functions which throws an error if target is not serializable class instance
+  or serializable class constructor function (TODO: add example to README).
+* Previously to be _serializable_ class should have serializers on its own properties (i.e. should have own metadata)
+  with no respect to its ancestors. Now class is _serializable_ if it either has own serializers or any of its ancestors have serializers.
+* Using global symbol to access serializable's metadata.
+  This fixes a bug when project dependencies introduce multiple instances of library
+  and metadata defined in one verion can't be accessed in another.
+
 v1.3.0
 ------
 
