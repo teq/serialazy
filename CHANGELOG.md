@@ -1,3 +1,6 @@
+v1.3.1
+------
+
 * Added `assertSerializable` functions which throws an error if target is not serializable class instance
   or serializable class constructor function (TODO: add example to README).
 * Previously to be _serializable_ class should have serializers on its own properties (i.e. should have own metadata)
