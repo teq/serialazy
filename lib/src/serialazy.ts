@@ -19,7 +19,8 @@ export function deflate(serializable: any): JsonMap {
 
     } else {
 
-        const meta = Metadata.expectFor(Object.getPrototypeOf(serializable));
+        assertSerializable(serializable);
+        const meta = Metadata.getOwnOrInheritedMetaFor(Object.getPrototypeOf(serializable));
 
         serialized = {};
 
@@ -54,7 +55,8 @@ export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
             throw new Error('Expecting a valid constructor function');
         }
 
-        const meta = Metadata.expectFor(ctor.prototype);
+        assertSerializable(ctor);
+        const meta = Metadata.getOwnOrInheritedMetaFor(ctor.prototype);
 
         classInstance = new ctor();
 
@@ -80,10 +82,25 @@ export function isSerializable(target: any): boolean {
     }
 
     const meta = (typeof(target) === 'function' && target.prototype) ?
-        Metadata.getFor(target.prototype) // treat target as a constructor function
-        : Metadata.getFor(Object.getPrototypeOf(target)); // treat target as an instance
+        Metadata.getOwnOrInheritedMetaFor(target.prototype) // treat target as a constructor function
+        : Metadata.getOwnOrInheritedMetaFor(Object.getPrototypeOf(target)); // treat target as an instance
 
-    return !!meta;
+    return !!meta; // treat target as serializable if it has own or inherited metadata
+
+}
+
+/**
+ * Asserts that target is a serializable class constructor or an instance of serializable class
+ * @param target Target to check
+ */
+export function assertSerializable(target: any): void {
+
+    if (!isSerializable(target)) {
+        throw new Error(
+            `Provided instance or constructor function doesn\'t seem to be serializable: "${target}". ` +
+            'Hint: use "Serialize" decorator to mark properties for serialization'
+        );
+    }
 
 }
 
@@ -101,7 +118,8 @@ export function deepMerge<T>(destination: T, source: T): T {
         throw new Error('Expecting `destination` to be not null/undefined');
     }
 
-    const meta = Metadata.expectFor(Object.getPrototypeOf(destination));
+    assertSerializable(destination);
+    const meta = Metadata.getOwnOrInheritedMetaFor(Object.getPrototypeOf(destination));
 
     if (source !== null && source !== undefined) {
         try {

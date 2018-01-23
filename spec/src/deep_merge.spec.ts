@@ -13,7 +13,7 @@ describe('"deepMerge" function', () => {
     });
 
     it('throws if destination is not serializable', () => {
-        expect(() => deepMerge({}, null)).to.throw('Provided type doesn\'t seem to be serializable');
+        expect(() => deepMerge({}, null)).to.throw("Provided instance or constructor function doesn't seem to be serializable");
     });
 
     it('does nothing if source is null/undefined', () => {

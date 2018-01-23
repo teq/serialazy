@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serialize } from './@lib/serialazy';
+import { deflate, inflate, isSerializable, Serialize } from './@lib/serialazy';
 
 const { expect } = chai;
 
@@ -57,6 +57,29 @@ describe('class inheritance', () => {
         });
         const deserialized = inflate(Square, serialized);
         expect(deserialized).to.deep.equal(square);
+    });
+
+    describe('when parent is serializable and child has no explicit serializers', () => {
+
+        class TaggedRectangle extends Rectangle {
+            public tag: string;
+        }
+
+        it('should result in child to be serializable too', () => {
+            expect(isSerializable(TaggedRectangle)).to.equal(true);
+        });
+
+        it('should result in child to inherit all parent\'s serializers', () => {
+
+            const original = Object.assign(new TaggedRectangle(), { position: [1, 2], width: 3, height: 4, tag: 'test' });
+            expect(isSerializable(original)).to.equal(true);
+            const serialized = deflate(original);
+            expect(serialized).to.deep.equal({ position: '1,2', width: 3, height: 4 }); // NOTE: no `tag` in serialized object
+            const deserialized = inflate(TaggedRectangle, serialized);
+            expect(deserialized).to.deep.equal({ position: [1, 2], width: 3, height: 4 }); // NOTE: no `tag` in deserialized instance
+
+        });
+
     });
 
 });
