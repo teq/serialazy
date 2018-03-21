@@ -5,9 +5,9 @@ import Constructable from './types/constructable';
 import { JsonMap } from './types/json_type';
 
 /**
- * Deflate class instance to a JSON-compatible object
+ * Deflate a serializable class instance to a JSON-compatible type
  * @param serializable Serializable class instance
- * @returns JSON-compatible object which can be safely passed to `JSON.serialize`
+ * @returns JSON-compatible type which can be safely passed to `JSON.serialize`
  */
 export function deflate(serializable: any): JsonMap {
 
@@ -27,7 +27,7 @@ export function deflate(serializable: any): JsonMap {
         try {
             meta.aggregateSerializers().forEach(serializer => serializer.down(serializable, serialized));
         } catch (error) {
-            throw new Error(`Unable to serialize an instance of a class "${meta.className}": ${error.message}`);
+            throw new Error(`Unable to serialize an instance of a class "${meta.name}": ${error.message}`);
         }
 
     }
@@ -63,7 +63,7 @@ export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
         try {
             meta.aggregateSerializers().forEach(serializer => serializer.up(classInstance, serialized));
         } catch (error) {
-            throw new Error(`Unable to deserialize an instance of a class "${meta.className}": ${error.message}`);
+            throw new Error(`Unable to deserialize an instance of a class "${meta.name}": ${error.message}`);
         }
 
     }
@@ -85,7 +85,7 @@ export function isSerializable(target: any): boolean {
         Metadata.getOwnOrInheritedMetaFor(target.prototype) // treat target as a constructor function
         : Metadata.getOwnOrInheritedMetaFor(Object.getPrototypeOf(target)); // treat target as an instance
 
-    return !!meta; // treat target as serializable if it has own or inherited metadata
+    return !!meta; // target is serializable if it has own or inherited metadata
 
 }
 
@@ -125,7 +125,7 @@ export function deepMerge<T>(destination: T, source: T): T {
         try {
             meta.aggregateSerializers().forEach(serializer => serializer.assign(destination, source));
         } catch (error) {
-            throw new Error(`Unable to perform a deep property merge for instance of "${meta.className}": ${error.message}`);
+            throw new Error(`Unable to perform a deep property merge for instance of "${meta.name}": ${error.message}`);
         }
     }
 

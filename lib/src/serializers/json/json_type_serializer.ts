@@ -12,7 +12,8 @@ type JsonTypeSerializer<TOriginal> = TypeSerializer<JsonType, TOriginal>;
 
 namespace JsonTypeSerializer {
 
-    export function partialFor(proto: Object, propertyName: string): Partial<JsonTypeSerializer<any>> {
+    /** Try to pick a (possibly partial) type serializer for given property */
+    export function pickFor(proto: Object, propertyName: string): Partial<JsonTypeSerializer<any>> {
 
         const type: Constructable.Default<any> = Reflect.getMetadata('design:type', proto, propertyName);
 

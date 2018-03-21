@@ -20,15 +20,15 @@ export default class Metadata {
 
     private constructor(
         private proto: Object,
-        public readonly classConstructor = proto.constructor as Constructable<any>,
-        public readonly className = classConstructor.name
+        public readonly ctor = proto.constructor as Constructable.Default<any>,
+        public readonly name = ctor.name
     ) {} // constructable via `getOrCreateFor`
 
     /** Contains serializable's own metadata */
-    public ownSerializers = new Map<string, PropertySerializer>();
+    public ownSerializers = new Map<string, PropertySerializer<any, any>>();
 
     /** Aggregates all serializers: own and inherited */
-    public aggregateSerializers(): ReadonlyMap<string, PropertySerializer> {
+    public aggregateSerializers(): ReadonlyMap<string, PropertySerializer<any, any>> {
 
         const parentMeta = Metadata.seekForInheritedMetaFor(this.proto);
 

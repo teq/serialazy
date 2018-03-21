@@ -1,7 +1,6 @@
 import Constructable from '../types/constructable';
-import JsonTypeSerializer from './json/json_type_serializer';
 
-/** Represents a type serializer */
+/** Represents a generic type serializer */
 interface TypeSerializer<TSerialized, TOriginal> {
 
     /**
@@ -28,18 +27,13 @@ interface TypeSerializer<TSerialized, TOriginal> {
      * _Optional._ Property type descriminator function.
      * Used to narrow type constructor function (e.g. for union types)
      * @param value Property value
-     * @returns Property type constructor function
+     * @returns Constructor function of a property type
      */
     discriminate?(this: void, value: TOriginal): Constructable.Default<TOriginal>;
 
 }
 
 namespace TypeSerializer {
-
-    /** Try to pick a (possibly partial) type serializer for given property */
-    export function partialFor(proto: Object, propertyName: string): Partial<JsonTypeSerializer<any>> {
-        return JsonTypeSerializer.partialFor(proto, propertyName);
-    }
 
     /** Combine type serializer partials to final type serializer */
     export function combine<TSerialized, TOriginal>(
