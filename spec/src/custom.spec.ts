@@ -4,9 +4,9 @@ import { deflate, inflate, Serialize } from './@lib/serialazy';
 
 const { expect } = chai;
 
-describe('custom serializer', () => {
+describe('custom property serializer', () => {
 
-    it('is able to use custom up/down transformations', () => {
+    it('is able to use custom type serializer', () => {
 
         class Book {
 

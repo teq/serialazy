@@ -38,13 +38,13 @@ describe('"optional" option behavior', () => {
         it('serializes to undefined', () => {
             const patient = new Patient(undefined);
             const serialized = deflate(patient);
-            expect(serialized.married).to.equal(undefined);
+            expect(serialized).to.not.haveOwnProperty('married');
         });
 
         it('deserializes to undefined', () => {
             const deserialized = inflate(Patient, { married: undefined });
             expect(deserialized instanceof Patient).to.equal(true);
-            expect(deserialized.married).to.equal(undefined);
+            expect(deserialized).to.not.haveOwnProperty('married');
         });
 
     });
