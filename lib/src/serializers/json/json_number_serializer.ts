@@ -1,3 +1,4 @@
+import JsonTypeSerializer from './json_type_serializer';
 
 function expectNumberOrNil(maybeNumber: any): number {
     if (typeof(maybeNumber) === 'number') {
@@ -12,7 +13,9 @@ function expectNumberOrNil(maybeNumber: any): number {
 }
 
 /** JSON serializer for numbers */
-export default {
+const jsonNumberSerializer: JsonTypeSerializer<number> = {
     down: (originalValue: any) => expectNumberOrNil(originalValue),
     up: (serializedValue: any) => expectNumberOrNil(serializedValue)
 };
+
+export default jsonNumberSerializer;

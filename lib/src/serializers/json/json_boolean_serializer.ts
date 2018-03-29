@@ -1,3 +1,4 @@
+import JsonTypeSerializer from './json_type_serializer';
 
 function expectBooleanOrNil(maybeBoolean: any): boolean {
     if (typeof(maybeBoolean) === 'boolean') {
@@ -12,7 +13,9 @@ function expectBooleanOrNil(maybeBoolean: any): boolean {
 }
 
 /** JSON serializer for booleans */
-export default {
+const jsonBooleanSerializer: JsonTypeSerializer<boolean> = {
     down: (originalValue: any) => expectBooleanOrNil(originalValue),
     up: (serializedValue: any) => expectBooleanOrNil(serializedValue)
 };
+
+export default jsonBooleanSerializer;

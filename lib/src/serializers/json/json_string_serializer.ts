@@ -1,3 +1,4 @@
+import JsonTypeSerializer from './json_type_serializer';
 
 function expectStringOrNil(maybeString: any): string {
     if (typeof(maybeString) === 'string') {
@@ -12,7 +13,9 @@ function expectStringOrNil(maybeString: any): string {
 }
 
 /** JSON serializer for strings */
-export default {
+const jsonStringSerializer: JsonTypeSerializer<string> = {
     down: (originalValue: any) => expectStringOrNil(originalValue),
     up: (serializedValue: any) => expectStringOrNil(serializedValue)
 };
+
+export default jsonStringSerializer;

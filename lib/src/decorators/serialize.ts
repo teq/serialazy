@@ -1,7 +1,6 @@
 import JsonPropertySerializer from '../serializers/json/json_property_serializer';
 import JsonTypeSerializer from '../serializers/json/json_type_serializer';
 import Metadata from '../serializers/metadata';
-import PropertySerializer from '../serializers/property_serializer';
 import TypeSerializer from '../serializers/type_serializer';
 import Constructable from '../types/constructable';
 import JsonType from '../types/json_type';

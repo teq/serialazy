@@ -27,7 +27,7 @@ namespace JsonTypeSerializer {
             return jsonNumberSerializer;
         } else if (type === Boolean) {
             return jsonBooleanSerializer;
-        } else if (isSerializable(type)) {
+        } else if (isSerializable(type)) { // non-primitive serializable
             return jsonSerializableSerializer(type);
         } else {
             // Unable to pick type serializer, expecting user to provide custom one
