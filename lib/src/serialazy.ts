@@ -5,8 +5,8 @@ import Constructable from './types/constructable';
 import { JsonMap } from './types/json_type';
 
 /**
- * Deflate a serializable class instance to a JSON-compatible type
- * @param serializable Serializable class instance
+ * Deflate a serializable type to a JSON-compatible type
+ * @param serializable Serializable type
  * @returns JSON-compatible type which can be safely passed to `JSON.serialize`
  */
 export function deflate(serializable: any): JsonMap {
@@ -36,10 +36,10 @@ export function deflate(serializable: any): JsonMap {
 }
 
 /**
- * Construct/inflate class instance from JSON-compatible object
- * @param ctor Serializable class constructor function
+ * Construct/inflate a serializable type from JSON-compatible object
+ * @param ctor Serializable type constructor function
  * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
- * @returns Serializable class instance
+ * @returns Serializable instance
  */
 export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
 
@@ -72,25 +72,37 @@ export function inflate<T>(ctor: Constructable<T>, serialized: JsonMap): T {
 }
 
 /**
- * Check if target is a serializable class constructor or an instance of serializable class
+ * Check if target is a serializable value or type
  * @param target Target to check
  */
 export function isSerializable(target: any): boolean {
 
-    if (target === null || target === undefined) {
-        throw new Error('Expecting `target` to be not null/undefined');
+    if (target === undefined) { // undefined is not a valid JSON value
+        return false;
+    } else if (target === null) {
+        return true;
+    } else if (typeof(target) === 'function' && target.prototype) { // treat target as a constructor function
+        if (target === Boolean || target === Number || target === String) { // primitive
+            return true;
+        } else { // non-primitive type
+            return !!Metadata.getOwnOrInheritedMetaFor(target.prototype);
+        }
+    } else { // treat target as a value
+        if (
+            typeof(target) === 'boolean' || target instanceof Boolean ||
+            typeof(target) === 'number' || target instanceof Number ||
+            typeof(target) === 'string' || target instanceof String
+        ) { // primitive
+            return true;
+        } else { // non-primitive type
+            return !!Metadata.getOwnOrInheritedMetaFor(Object.getPrototypeOf(target));
+        }
     }
-
-    const meta = (typeof(target) === 'function' && target.prototype) ?
-        Metadata.getOwnOrInheritedMetaFor(target.prototype) // treat target as a constructor function
-        : Metadata.getOwnOrInheritedMetaFor(Object.getPrototypeOf(target)); // treat target as an instance
-
-    return !!meta; // target is serializable if it has own or inherited metadata
 
 }
 
 /**
- * Asserts that target is a serializable class constructor or an instance of serializable class
+ * Asserts that target is a serializable value or type
  * @param target Target to check
  */
 export function assertSerializable(target: any): void {
