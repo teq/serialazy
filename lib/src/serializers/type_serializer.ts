@@ -45,10 +45,9 @@ namespace TypeSerializer {
         if (!down || !up) {
             const typeName = type && type.name ? type.name : '<unknown>';
             throw new Error(
-                `No serializer for type "${typeName}". ` +
+                `No serializer found for type "${typeName}". ` +
                 'Hint: Use serializable type or provide a custom serializer. ' +
-                'Try to specify property type explicitely, default serializer may be failing to pick it because of: ' +
-                'https://github.com/Microsoft/TypeScript/issues/18995. '
+                'Specify property type explicitely, (details: https://github.com/Microsoft/TypeScript/issues/18995)'
             );
         }
 
