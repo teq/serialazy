@@ -18,20 +18,4 @@ interface PropertySerializer<TSerialized, TOriginal> {
 
 }
 
-/** Contains property serializer implementations */
-namespace PropertySerializer {
-
-    /** Represents a dummy property serializer which does nothing */
-    export class Dummy implements PropertySerializer<any, any> {
-
-        public down(serializable: any, serialized: any) { /* do nothing */ }
-
-        public up(serializable: any, serialized: any) { /* do nothing */ }
-
-        public assign(destination: any, source: any) { return destination; }
-
-    }
-
-}
-
 export default PropertySerializer;

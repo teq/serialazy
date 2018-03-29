@@ -41,18 +41,6 @@ namespace Serialize {
         };
     }
 
-    /**
-     * _DEPRECATED._
-     * Decorator used to explicitely mark **instance** member as non-serializable. Can be used to erase inherited serializer.
-     * TODO: Remove this method. It breaks inheritance.
-     */
-    export function Skip() {
-        return (proto: Object, propertyName: string) => {
-            const propertySerializer = new PropertySerializer.Dummy();
-            Metadata.getOrCreateFor(proto).ownSerializers.set(propertyName, propertySerializer);
-        };
-    }
-
     /** Decorator used to define a custom serializer for a given type. */
     export function Type<TSerialized extends JsonType, TOriginal>(
         customTypeSerializer: TypeSerializer<TSerialized, TOriginal> | Provider<TypeSerializer<TSerialized, TOriginal>>,

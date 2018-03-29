@@ -1,3 +1,7 @@
+* [BREAKING] Removed `@Serialize.Skip()` decorator which was used to "erase" property serializers inherited from parent class.
+  This practice breaks inheritance. E.g.: We have `B extends A`, B "shadows" some property serializers from A. If we'll try to
+  serialize an instance of B and then deserialize it as an instance of A, we'll have an error because of undefined props.
+
 v1.3.1
 ------
 

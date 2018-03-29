@@ -19,18 +19,6 @@ describe('class inheritance', () => {
         @Serialize() public height: number;
     }
 
-    class Square extends Rectangle {
-        @Serialize.Skip() public width: number;
-        @Serialize.Skip() public height: number;
-        @Serialize() public get size(): number {
-            return this.width;
-        }
-        public set size(value) {
-            this.width = value;
-            this.height = value;
-        }
-    }
-
     it('allows to inherit all property serialializers of base classes', () => {
         const rectangle = new Rectangle();
         rectangle.position = [23, 34];
@@ -44,19 +32,6 @@ describe('class inheritance', () => {
         });
         const deserialized = inflate(Rectangle, serialized);
         expect(deserialized).to.deep.equal(rectangle);
-    });
-
-    it('allows child class to "shadow" serializers of base classes', () => {
-        const square = new Square();
-        square.position = [45, 56];
-        square.size = 34;
-        const serialized = deflate(square);
-        expect(serialized).to.deep.equal({
-            position: '45,56',
-            size: 34
-        });
-        const deserialized = inflate(Square, serialized);
-        expect(deserialized).to.deep.equal(square);
     });
 
     describe('when parent is serializable and child has no explicit serializers', () => {
