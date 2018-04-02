@@ -1,4 +1,3 @@
-import { deepMerge, isSerializable } from "../../serialazy";
 import { JsonMap, JsonType } from "../../types/json_type";
 import Provider from "../../types/provider";
 import PropertySerializer from "../property_serializer";
@@ -52,37 +51,6 @@ export class JsonPropertySerializer implements PropertySerializer<JsonMap, any> 
         } catch (error) {
             throw new Error(`Unable to deserialize property "${propertyName}": ${error.message}`);
         }
-
-    }
-
-    public assign(destination: any, source: any) {
-
-        if (destination === null || destination === undefined) {
-            throw new Error('Expecting `destination` to be not null/undefined');
-        }
-
-        if (source === null || source === undefined) {
-            throw new Error('Expecting `source` to be not null/undefined');
-        }
-
-        const type = (() => { // fetch type
-            if (this.typeSerializer.discriminate) {
-                if (source[this.propertyName] === null || source[this.propertyName] === undefined) {
-                    throw new Error('Unable to discriminate property type when property value is null/undefined');
-                }
-                return this.typeSerializer.discriminate(source[this.propertyName]);
-            } else {
-                return this.typeSerializer.type;
-            }
-        })();
-
-        if (type && isSerializable(type)) { // what if it's an Array/Map of serializables ???
-            destination[this.propertyName] = deepMerge(new type(), source[this.propertyName]);
-        } else {
-            destination[this.propertyName] = source[this.propertyName];
-        }
-
-        return destination;
 
     }
 

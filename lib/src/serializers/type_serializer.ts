@@ -26,10 +26,10 @@ interface TypeSerializer<TSerialized, TOriginal> {
     /**
      * _Optional._ Property type descriminator function.
      * Used to narrow type constructor function (e.g. for union types)
-     * @param value Property value
-     * @returns Constructor function of a property type
+     * @param serialized Serialized value
+     * @returns Original type constructor function
      */
-    discriminate?(this: void, value: TOriginal): Constructable.Default<TOriginal>;
+    discriminate?(this: void, serialized: TSerialized): Constructable.Default<TOriginal>;
 
 }
 

@@ -1,3 +1,4 @@
+* [BREAKING] Removed `deepMerge` function.
 * [BREAKING] Updated `isSerializable`. Additionaly to previous behaviour now it returns true for primitives
   (boolean/Boolean, number/Number, string/String), both instances and constructor functions. Returns true for null value.
 * [BREAKING] Removed `@Serialize.Skip()` decorator which was used to "erase" property serializers inherited from parent class.

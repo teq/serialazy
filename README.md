@@ -292,11 +292,3 @@ expect(isSerializable(123)).to.equal(false); // not serializable
 expect(isSerializable('test')).to.equal(false); // not serializable
 
 ```
-
-### `deepMerge` function
-
-```ts
-
-// TODO: Add example...
-
-```
