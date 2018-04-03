@@ -18,7 +18,7 @@ interface TypeSerializer<TSerialized, TOriginal> {
     up(this: void, serializedValue: TSerialized): TOriginal;
 
     /**
-     * _Optional._ Property type constructor function.
+     * _Optional._ Original type constructor function.
      * Default: Value of `design:type` for given property.
      */
     type?: Constructable.Default<TOriginal>;

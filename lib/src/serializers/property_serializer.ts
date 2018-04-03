@@ -2,7 +2,7 @@
 /** Reporesents a generic property serializer */
 interface PropertySerializer<TSerialized, TOriginal> {
 
-    /** Serializes target property in `serializable` and writes value to `serialized` */
+    /** Serializes target property from `serializable` and writes value to `serialized` */
     down(serializable: TOriginal, serialized: TSerialized): void;
 
     /** Deserializes target property from `serialized` and writes value to `serializable` */

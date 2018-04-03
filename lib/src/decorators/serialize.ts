@@ -11,7 +11,7 @@ function Serialize(
     options?: JsonPropertySerializer.Options
 ) {
     return (proto: Object, propertyName: string) => {
-        const typeSerializerProvider = () => TypeSerializer.combine([JsonTypeSerializer.pickFor(proto, propertyName)]);
+        const typeSerializerProvider = () => TypeSerializer.combine([JsonTypeSerializer.pickForProp(proto, propertyName)]);
         const propertySerializer = new JsonPropertySerializer(propertyName, typeSerializerProvider, options);
         Metadata.getOrCreateFor(proto).ownSerializers.set(propertyName, propertySerializer);
     };
@@ -25,7 +25,7 @@ namespace Serialize {
         options?: JsonPropertySerializer.Options
     ) {
         return (proto: Object, propertyName: string) => {
-            const defaultTypeSerializerProvider = () => JsonTypeSerializer.pickFor(proto, propertyName);
+            const defaultTypeSerializerProvider = () => JsonTypeSerializer.pickForProp(proto, propertyName);
             const customTypeSerializerProvider = typeof(customTypeSerializer) === 'function' ? customTypeSerializer : () => customTypeSerializer;
             const combinedTypeSerializerProvider = () => {
                 try {

@@ -13,9 +13,9 @@ function expectStringOrNil(maybeString: any): string {
 }
 
 /** JSON serializer for strings */
-const jsonStringSerializer: JsonTypeSerializer<string> = {
+const jsonStringTypeSerializer: JsonTypeSerializer<string> = {
     down: (originalValue: any) => expectStringOrNil(originalValue),
     up: (serializedValue: any) => expectStringOrNil(serializedValue)
 };
 
-export default jsonStringSerializer;
+export default jsonStringTypeSerializer;

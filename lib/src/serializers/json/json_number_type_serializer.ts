@@ -13,9 +13,9 @@ function expectNumberOrNil(maybeNumber: any): number {
 }
 
 /** JSON serializer for numbers */
-const jsonNumberSerializer: JsonTypeSerializer<number> = {
+const jsonNumberTypeSerializer: JsonTypeSerializer<number> = {
     down: (originalValue: any) => expectNumberOrNil(originalValue),
     up: (serializedValue: any) => expectNumberOrNil(serializedValue)
 };
 
-export default jsonNumberSerializer;
+export default jsonNumberTypeSerializer;
