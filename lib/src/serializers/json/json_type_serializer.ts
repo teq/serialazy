@@ -1,10 +1,9 @@
-import { isSerializable } from '../../serialazy';
 import Constructable from '../../types/constructable';
 import JsonType from '../../types/json_type';
+import Metadata from '../metadata';
 import TypeSerializer from '../type_serializer';
 import jsonBooleanTypeSerializer from './json_boolean_type_serializer';
 import jsonNumberTypeSerializer from './json_number_type_serializer';
-import jsonSerializableTypeSerializer from './json_serializable_type_serializer';
 import jsonStringTypeSerializer from './json_string_type_serializer';
 
 /** JSON type serializer */
@@ -12,23 +11,59 @@ type JsonTypeSerializer<TOriginal> = TypeSerializer<JsonType, TOriginal>;
 
 namespace JsonTypeSerializer {
 
+    /** Try to pick a (possibly partial) type serializer for given value */
+    export function pickForValue(value: any): Partial<JsonTypeSerializer<any>> {
+
+        let serializer: Partial<JsonTypeSerializer<any>> = {};
+
+        if (value === null || value === undefined) {
+            throw new Error('Expecting value to be not null/undefined');
+        } else if (typeof(value) === 'string' || value instanceof String) {
+            serializer = jsonStringTypeSerializer;
+        } else if (typeof(value) === 'number' || value instanceof Number) {
+            serializer = jsonNumberTypeSerializer;
+        } else if (typeof(value) === 'boolean' || value instanceof Boolean) {
+            serializer = jsonBooleanTypeSerializer;
+        } else { // non-primitive
+            const type = value.constructor;
+            if (typeof(type) !== 'function') {
+                throw new Error(`Expecting non-primitive value to have a constructor function`);
+            }
+            const meta = Metadata.getOwnOrInheritedMetaFor(Object.getPrototypeOf(value));
+            if (meta) {
+                serializer = meta.getTypeSerializer();
+            } else { // unable to pick a type serializer
+                serializer = { type };
+            }
+        }
+
+        return serializer;
+
+    }
+
     /** Try to pick a (possibly partial) type serializer for given type */
     export function pickForType(type: Constructable.Default<any>): Partial<JsonTypeSerializer<any>> {
 
-        if (!type) {
-            throw new Error('Expecting a type');
+        let serializer: Partial<JsonTypeSerializer<any>> = {};
+
+        if (typeof(type) !== 'function') {
+            throw new Error('Expecting a type constructor function');
         } else if (type === String) {
-            return jsonStringTypeSerializer;
+            serializer = jsonStringTypeSerializer;
         } else if (type === Number) {
-            return jsonNumberTypeSerializer;
+            serializer = jsonNumberTypeSerializer;
         } else if (type === Boolean) {
-            return jsonBooleanTypeSerializer;
-        } else if (isSerializable(type)) { // non-primitive serializable
-            return jsonSerializableTypeSerializer(type);
-        } else {
-            // Unable to pick type serializer, expecting user to provide custom one
-            return { type };
+            serializer = jsonBooleanTypeSerializer;
+        } else { // non-primitive
+            const meta = Metadata.getOwnOrInheritedMetaFor(type.prototype);
+            if (meta) {
+                serializer = meta.getTypeSerializer();
+            } else { // unable to pick a type serializer
+                serializer = { type };
+            }
         }
+
+        return serializer;
 
     }
 

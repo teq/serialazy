@@ -11,15 +11,22 @@ function Serialize(
     options?: JsonPropertySerializer.Options
 ) {
     return (proto: Object, propertyName: string) => {
-        const typeSerializerProvider = () => TypeSerializer.combine([JsonTypeSerializer.pickForProp(proto, propertyName)]);
-        const propertySerializer = new JsonPropertySerializer(propertyName, typeSerializerProvider, options);
-        Metadata.getOrCreateFor(proto).ownSerializers.set(propertyName, propertySerializer);
+        const compiledTypeSerializerProvider = () => {
+            try {
+                return TypeSerializer.compile([JsonTypeSerializer.pickForProp(proto, propertyName)]);
+            } catch (error) {
+                const className = proto.constructor.name;
+                throw new Error(`Unable to construct a type serializer for property "${className}.${propertyName}": ${error.message}`);
+            }
+        };
+        const propertySerializer = new JsonPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
+        Metadata.getOrCreateFor(proto).setPropertySerializer(propertyName, propertySerializer);
     };
 }
 
 namespace Serialize {
 
-    /** Decorator used to mark **instance** member for serialization with custom serializer */
+    /** Decorator used to mark property for serialization with custom serializer */
     export function Custom<TSerialized extends JsonType, TOriginal>(
         customTypeSerializer: TypeSerializer<TSerialized, TOriginal> | Provider<TypeSerializer<TSerialized, TOriginal>>,
         options?: JsonPropertySerializer.Options
@@ -27,16 +34,16 @@ namespace Serialize {
         return (proto: Object, propertyName: string) => {
             const defaultTypeSerializerProvider = () => JsonTypeSerializer.pickForProp(proto, propertyName);
             const customTypeSerializerProvider = typeof(customTypeSerializer) === 'function' ? customTypeSerializer : () => customTypeSerializer;
-            const combinedTypeSerializerProvider = () => {
+            const compiledTypeSerializerProvider = () => {
                 try {
-                    return TypeSerializer.combine([defaultTypeSerializerProvider(), customTypeSerializerProvider()]);
+                    return TypeSerializer.compile([defaultTypeSerializerProvider(), customTypeSerializerProvider()]);
                 } catch (error) {
                     const className = proto.constructor.name;
-                    throw new Error(`Unable to construct a type serializer for "${className}.${propertyName}": ${error.message}`);
+                    throw new Error(`Unable to construct a type serializer for property "${className}.${propertyName}": ${error.message}`);
                 }
             };
-            const propertySerializer = new JsonPropertySerializer(propertyName, combinedTypeSerializerProvider, options);
-            Metadata.getOrCreateFor(proto).ownSerializers.set(propertyName, propertySerializer);
+            const propertySerializer = new JsonPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
+            Metadata.getOrCreateFor(proto).setPropertySerializer(propertyName, propertySerializer);
         };
     }
 
@@ -45,7 +52,9 @@ namespace Serialize {
         customTypeSerializer: TypeSerializer<TSerialized, TOriginal> | Provider<TypeSerializer<TSerialized, TOriginal>>,
     ) {
         return (ctor: Constructable.Default<TOriginal>) => {
-            return ctor;
+            const customTypeSerializerProvider = typeof(customTypeSerializer) === 'function' ? customTypeSerializer : () => customTypeSerializer;
+            const proto = ctor.prototype;
+            Metadata.getOrCreateFor(proto).setTypeSerializer(customTypeSerializerProvider);
         };
     }
 

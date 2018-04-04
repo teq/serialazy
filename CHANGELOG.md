@@ -1,3 +1,5 @@
+* `deflate/inflate` can accept primitives (string/number/boolean/null)
+* [BREAKING] Removed `isSerializable` function.
 * [BREAKING] Removed `deepMerge` function.
 * [BREAKING] Updated `isSerializable`. Additionaly to previous behaviour now it returns true for primitives
   (boolean/Boolean, number/Number, string/String), both instances and constructor functions. Returns true for null value.

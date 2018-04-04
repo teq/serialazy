@@ -35,18 +35,18 @@ interface TypeSerializer<TSerialized, TOriginal> {
 
 namespace TypeSerializer {
 
-    /** Combine type serializer partials to final type serializer */
-    export function combine<TSerialized, TOriginal>(
+    /** Compile type serializer partials to final type serializer */
+    export function compile<TSerialized, TOriginal>(
         partials: Array<Partial<TypeSerializer<TSerialized, TOriginal>>>
     ): TypeSerializer<TSerialized, TOriginal> {
 
-        const { down, up, type, discriminate } = partials.reduce((combined, partial) => ({ ...combined, ...partial }), {});
+        const { down, up, type, discriminate } = partials.reduce((compiled, partial) => ({ ...compiled, ...partial }), {});
 
         if (!down || !up) {
             const typeName = type && type.name ? type.name : '<unknown>';
             throw new Error(
-                `No serializer found for type "${typeName}". ` +
-                'Hint: Use serializable type or provide a custom serializer. ' +
+                `No serializer found for type: "${typeName}". ` +
+                'Hints: Use serializable type or provide a custom serializer. ' +
                 'Specify property type explicitely, (details: https://github.com/Microsoft/TypeScript/issues/18995)'
             );
         }

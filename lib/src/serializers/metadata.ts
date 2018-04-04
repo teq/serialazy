@@ -1,5 +1,7 @@
 import Constructable from '../types/constructable';
+import Provider from '../types/provider';
 import PropertySerializer from './property_serializer';
+import TypeSerializer from './type_serializer';
 
 /**
  * There may be multiple "serialazy" instances in project (from different dependencies)
@@ -18,24 +20,74 @@ export default class Metadata {
 
     private version = METADATA_VERSION;
 
+    private propSerializers = new Map<string, PropertySerializer<any, any>>();
+
+    private typeSerializerProvider: Provider<TypeSerializer<any, any>> = null;
+
     private constructor(
         private proto: Object,
         public readonly ctor = proto.constructor as Constructable.Default<any>,
         public readonly name = ctor.name
     ) {} // constructable via `getOrCreateFor`
 
-    /** Contains serializable's own metadata */
-    public ownSerializers = new Map<string, PropertySerializer<any, any>>();
+    public getTypeSerializer() {
+        if (this.typeSerializerProvider) {
+            return this.typeSerializerProvider();
+        } else {
+            return {
+                type: this.ctor,
+                down: (serializable: any) => {
+                    const serialized = {};
+                    try {
+                        this.aggregateSerializers().forEach(serializer => serializer.down(serializable, serialized));
+                    } catch (error) {
+                        throw new Error(`Unable to serialize an instance of a class "${this.name}": ${error.message}`);
+                    }
+                    return serialized;
+                },
+                up: (serialized: any) => {
+                    const serializable = new this.ctor();
+                    try {
+                        this.aggregateSerializers().forEach(serializer => serializer.up(serializable, serialized));
+                    } catch (error) {
+                        throw new Error(`Unable to deserialize an instance of a class "${this.name}": ${error.message}`);
+                    }
+                    return serializable;
+                }
+            };
+        }
+
+    }
+
+    public setTypeSerializer(typeSerializerProvider: Provider<TypeSerializer<any, any>>) {
+        if (this.typeSerializerProvider) {
+            throw new Error('Unable to redefine custom serializer');
+        }
+        if (this.propSerializers.size > 0) {
+            throw new Error();
+        }
+        if (Metadata.seekForInheritedMetaFor(this.proto)) {
+            throw new Error();
+        }
+        this.typeSerializerProvider = typeSerializerProvider;
+    }
+
+    public setPropertySerializer(propName: string, propSerializer: PropertySerializer<any, any>) {
+        if (this.typeSerializerProvider) {
+            throw new Error();
+        }
+        this.propSerializers.set(propName, propSerializer);
+    }
 
     /** Aggregates all serializers: own and inherited */
-    public aggregateSerializers(): ReadonlyMap<string, PropertySerializer<any, any>> {
+    private aggregateSerializers(): Map<string, PropertySerializer<any, any>> {
 
-        const parentMeta = Metadata.seekForInheritedMetaFor(this.proto);
+        const inheritedMeta = Metadata.seekForInheritedMetaFor(this.proto);
 
-        if (parentMeta) {
-            return new Map([...parentMeta.aggregateSerializers(), ...this.ownSerializers]);
+        if (inheritedMeta) {
+            return new Map([...inheritedMeta.aggregateSerializers(), ...this.propSerializers]);
         } else {
-            return new Map(this.ownSerializers); // clone
+            return new Map(this.propSerializers); // clone
         }
 
     }

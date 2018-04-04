@@ -65,11 +65,11 @@ describe('default serializer for serializables (serializable objects)', () => {
         const book = new Book('The Story of the Sealed Room', new Author('Arthur Conan Doyle'));
 
         it('should fail to serialize', () => {
-            expect(() => deflate(book)).to.throw('No serializer found for type "Author"');
+            expect(() => deflate(book)).to.throw('No serializer found for type: "Author"');
         });
 
         it('should fail to deserialize', () => {
-            expect(() => inflate(Book, bookObj)).to.throw('No serializer found for type "Author"');
+            expect(() => inflate(Book, bookObj)).to.throw('No serializer found for type: "Author"');
         });
 
     });
