@@ -1,10 +1,10 @@
 import chai = require('chai');
 
-import { deflate, Serialize } from './@lib/serialazy';
+import { deflate, inflate, Serialize } from './@lib/serialazy';
 
 const { expect } = chai;
 
-describe.skip('custom type serializer', () => {
+describe('custom type serializer', () => {
 
     @Serialize.Type({
         down: (val: Point) => `(${val.x},${val.y})`,
@@ -26,13 +26,12 @@ describe.skip('custom type serializer', () => {
         expect(serialized).to.equal('(2,3)');
     });
 
-    // it('is able to deserialize a type instance', () => {
-    //     const serialized = '(4,5)';
-    //     const point = inflate(Point, serialized);
-    //     expect(point).to.deep.equal({ x: 4, y: 5 });
-    // });
+    it('is able to deserialize a type instance', () => {
+        const serialized = '(4,5)';
+        const point = inflate(Point, serialized);
+        expect(point).to.deep.equal({ x: 4, y: 5 });
+    });
 
-
-    // What to do with property serializers ???
+    // TODO: test inheritance restrictions for type/property serializables
 
 });

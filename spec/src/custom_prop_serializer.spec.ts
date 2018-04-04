@@ -39,7 +39,7 @@ describe('custom property serializer', () => {
 
     });
 
-    it('is able to accept options', () => {
+    it('accepts options', () => {
 
         class Book {
 
