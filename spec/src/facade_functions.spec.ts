@@ -4,7 +4,7 @@ import { deflate } from './@lib/serialazy';
 
 const { expect } = chai;
 
-describe('inflate/deflate functions', () => {
+describe('facade functions', () => {
 
     it('should fail to serialize a class instance which is not serializable', () => {
         class Dummy {}

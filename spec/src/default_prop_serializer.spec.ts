@@ -4,7 +4,7 @@ import { deflate, inflate, Serialize } from './@lib/serialazy';
 
 const { expect } = chai;
 
-describe('default serializer', () => {
+describe('default property serializer', () => {
 
     describe('for boolean properties', () => {
 
