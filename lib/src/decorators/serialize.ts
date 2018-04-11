@@ -1,6 +1,7 @@
 import JsonPropertySerializer from '../serializers/json/json_property_serializer';
 import JsonTypeSerializer from '../serializers/json/json_type_serializer';
-import Metadata from '../serializers/metadata';
+import CustomTypeMetadata from '../serializers/metadata/custom_type_metadata';
+import PropertyBagMetadata from '../serializers/metadata/property_bag_metadata';
 import TypeSerializer from '../serializers/type_serializer';
 import Constructable from '../types/constructable';
 import JsonType from '../types/json_type';
@@ -20,7 +21,7 @@ function Serialize(
             }
         };
         const propertySerializer = new JsonPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
-        Metadata.getOrCreateFor(proto).setPropertySerializer(propertyName, propertySerializer);
+        PropertyBagMetadata.getOrCreateFor(proto).addPropertySerializer(propertySerializer);
     };
 }
 
@@ -43,7 +44,7 @@ namespace Serialize {
                 }
             };
             const propertySerializer = new JsonPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
-            Metadata.getOrCreateFor(proto).setPropertySerializer(propertyName, propertySerializer);
+            PropertyBagMetadata.getOrCreateFor(proto).addPropertySerializer(propertySerializer);
         };
     }
 
@@ -54,7 +55,7 @@ namespace Serialize {
         return (ctor: Constructable.Default<TOriginal>) => {
             const customTypeSerializerProvider = typeof(customTypeSerializer) === 'function' ? customTypeSerializer : () => customTypeSerializer;
             const proto = ctor.prototype;
-            Metadata.getOrCreateFor(proto).setTypeSerializer(customTypeSerializerProvider);
+            CustomTypeMetadata.getOrCreateFor(proto).setTypeSerializer(customTypeSerializerProvider);
         };
     }
 

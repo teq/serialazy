@@ -1,6 +1,6 @@
 import Constructable from '../../types/constructable';
 import JsonType from '../../types/json_type';
-import Metadata from '../metadata';
+import SerializableTypeMetadata from '../metadata/serializable_type_metadata';
 import TypeSerializer from '../type_serializer';
 import jsonBooleanTypeSerializer from './json_boolean_type_serializer';
 import jsonNumberTypeSerializer from './json_number_type_serializer';
@@ -29,7 +29,7 @@ namespace JsonTypeSerializer {
             if (typeof(type) !== 'function') {
                 throw new Error(`Expecting non-primitive value to have a constructor function`);
             }
-            const meta = Metadata.getOwnOrInheritedMetaFor(Object.getPrototypeOf(value));
+            const meta = SerializableTypeMetadata.getOwnOrInheritedMetaFor(Object.getPrototypeOf(value));
             if (meta) {
                 serializer = meta.getTypeSerializer();
             } else { // unable to pick a type serializer
@@ -55,7 +55,7 @@ namespace JsonTypeSerializer {
         } else if (type === Boolean) {
             serializer = jsonBooleanTypeSerializer;
         } else { // non-primitive
-            const meta = Metadata.getOwnOrInheritedMetaFor(type.prototype);
+            const meta = SerializableTypeMetadata.getOwnOrInheritedMetaFor(type.prototype);
             if (meta) {
                 serializer = meta.getTypeSerializer();
             } else { // unable to pick a type serializer
