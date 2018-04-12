@@ -8,7 +8,7 @@ describe('options behavior', () => {
 
     describe('for "name" option', () => {
 
-        describe('when option is null/undefined/empty', () => {
+        describe('when option is null/undefined/empty (default)', () => {
 
             class Patient {
                 @Serialize({ name: undefined }) public name: string;
@@ -56,7 +56,7 @@ describe('options behavior', () => {
 
     describe('for "nullable" option', () => {
 
-        describe('when value is null and option is false/null/undefined (default)', () => {
+        describe('when value is null and option is null/undefined/false (default)', () => {
 
             class Patient {
                 @Serialize() public married: boolean;

@@ -27,8 +27,8 @@ describe('custom type serializer', () => {
     });
 
     it('is able to deserialize a type instance', () => {
-        const serialized = '(4,5)';
-        const point = inflate(Point, serialized);
+        const point = inflate(Point, '(4,5)');
+        expect(point).to.be.instanceOf(Point);
         expect(point).to.deep.equal({ x: 4, y: 5 });
     });
 

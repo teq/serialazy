@@ -13,9 +13,7 @@ export function deflate(serializable: any): JsonType {
 
     let serialized: JsonType;
 
-    if (serializable === undefined) {
-        throw new Error('Unable to serialize an undefined value');
-    } else if (serializable === null) {
+    if (serializable === null || serializable === undefined) {
         serialized = serializable;
     } else {
         const { down } = JsonTypeSerializer.pickForValue(serializable);

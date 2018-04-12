@@ -6,7 +6,7 @@ const { expect } = chai;
 
 describe('custom property serializer', () => {
 
-    it('is able to use custom type serializer', () => {
+    it('accepts custom type serializer', () => {
 
         class Book {
 
