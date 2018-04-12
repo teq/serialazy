@@ -21,7 +21,7 @@ function Serialize(
             }
         };
         const propertySerializer = new JsonPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
-        PropertyBagMetadata.getOrCreateFor(proto).addPropertySerializer(propertySerializer);
+        PropertyBagMetadata.getOrCreateFor(proto).setPropertySerializer(propertyName, propertySerializer);
     };
 }
 
@@ -44,7 +44,7 @@ namespace Serialize {
                 }
             };
             const propertySerializer = new JsonPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
-            PropertyBagMetadata.getOrCreateFor(proto).addPropertySerializer(propertySerializer);
+            PropertyBagMetadata.getOrCreateFor(proto).setPropertySerializer(propertyName, propertySerializer);
         };
     }
 

@@ -6,7 +6,7 @@ export default class PropertyBagMetadata extends SerializableTypeMetadata {
 
     public readonly type = SerializableTypeMetadata.Type.PROP_BAG;
 
-    private propSerializers = new Set<PropertySerializer<any, any>>();
+    private propSerializers = new Map<string, PropertySerializer<any, any>>();
 
     /** Get type serializer from a property bag metadata */
     public getTypeSerializer() {
@@ -40,19 +40,22 @@ export default class PropertyBagMetadata extends SerializableTypeMetadata {
     }
 
     /** Add property serializer */
-    public addPropertySerializer(propSerializer: PropertySerializer<any, any>) {
-        this.propSerializers.add(propSerializer);
+    public setPropertySerializer(propName: string, propSerializer: PropertySerializer<any, any>) {
+        if (this.aggregateSerializers().has(propName)) {
+            throw new Error(`Unable to redefine/shadow serializer for property: ${propName}`);
+        }
+        this.propSerializers.set(propName, propSerializer);
     }
 
     /** Aggregates all property serializers: own and inherited */
-    private aggregateSerializers(): Set<PropertySerializer<any, any>> {
+    private aggregateSerializers(): Map<string, PropertySerializer<any, any>> {
 
         const inheritedMeta = SerializableTypeMetadata.seekForInheritedMetaFor<PropertyBagMetadata>(this.proto);
 
         if (inheritedMeta) {
-            return new Set([...inheritedMeta.aggregateSerializers(), ...this.propSerializers]);
+            return new Map([...inheritedMeta.aggregateSerializers(), ...this.propSerializers]);
         } else {
-            return new Set(this.propSerializers); // clone
+            return new Map(this.propSerializers); // clone
         }
 
     }
@@ -65,7 +68,7 @@ export default class PropertyBagMetadata extends SerializableTypeMetadata {
         if (!metadata) {
             const inherited = this.seekForInheritedMetaFor(proto);
             if (inherited && inherited.type === SerializableTypeMetadata.Type.CUSTOM) {
-                throw new Error('Can\'t define property serializers on type which inherits from a type with custom serializer');
+                throw new Error('A property-bag serializable can\'t inherit from a type with custom serializer');
             }
             metadata = new PropertyBagMetadata(proto);
             this.setFor(proto, metadata);

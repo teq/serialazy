@@ -9,8 +9,8 @@ describe('custom type serializer', () => {
     @Serialize.Type({
         down: (val: Point) => `(${val.x},${val.y})`,
         up: (val) => {
-            const match = val.match(/^\((\d)+,(\d)+\)$/);
-            expect(match).to.not.equal(null);
+            const match = val.match(/^\((\d+),(\d+)\)$/);
+            if (!match) { throw new Error(`Invalid point: ${val}`); }
             const [, xStr, yStr] = match;
             return Object.assign(new Point(), { x: Number.parseInt(xStr), y: Number.parseInt(yStr) });
         }
@@ -32,6 +32,14 @@ describe('custom type serializer', () => {
         expect(point).to.deep.equal({ x: 4, y: 5 });
     });
 
-    // TODO: test inheritance restrictions for type/property serializables
+    it('should fail to apply on a class which has property serializers', () => {
+        expect(() => {
+            @Serialize.Type({ down: null, up: null })
+            // tslint:disable-next-line:no-unused-variable
+            class Test {
+                @Serialize() public prop: string;
+            }
+        }).to.throw('Can\'t define a custom serializer on type which has property serializers');
+    });
 
 });

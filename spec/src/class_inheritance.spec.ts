@@ -6,12 +6,22 @@ const { expect } = chai;
 
 describe('class inheritance', () => {
 
+    @Serialize.Type({
+        down: (val: Point) => `(${val.x},${val.y})`,
+        up: (val) => {
+            const match = val.match(/^\((\d+),(\d+)\)$/);
+            if (!match) { throw new Error(`Invalid point: ${val}`); }
+            const [, xStr, yStr] = match;
+            return Object.assign(new Point(), { x: Number.parseInt(xStr), y: Number.parseInt(yStr) });
+        }
+    })
+    class Point {
+        public x: number;
+        public y: number;
+    }
+
     class Shape {
-        @Serialize.Custom({
-            down: (pos: [number, number]) => pos.join(','),
-            up: str => str.split(',').map(s => Number.parseFloat(s))
-        })
-        public position: [number, number];
+        @Serialize() public position: Point;
     }
 
     class Rectangle extends Shape {
@@ -19,34 +29,72 @@ describe('class inheritance', () => {
         @Serialize() public height: number;
     }
 
-    it('allows to inherit all property serialializers of base classes', () => {
-        const rectangle = new Rectangle();
-        rectangle.position = [23, 34];
-        rectangle.width = 5;
-        rectangle.height = 6;
-        const serialized = deflate(rectangle);
-        expect(serialized).to.deep.equal({
-            position: '23,34',
-            width: 5,
-            height: 6
+    describe('for property-bag serializables', () => {
+
+        it('should fail when trying to inherit from custom type serializable', () => {
+
+            expect(() => {
+                // tslint:disable-next-line:no-unused-variable
+                class TaggedPoint extends Point {
+                    @Serialize() public tag: string;
+                }
+            }).to.throw('A property-bag serializable can\'t inherit from a type with custom serializer');
+
         });
-        const deserialized = inflate(Rectangle, serialized);
-        expect(deserialized).to.deep.equal(rectangle);
+
+        it('allows to inherit property serialializers from ancestor classes', () => {
+
+            const rectangle = Object.assign(new Rectangle(), {
+                position: Object.assign(new Point(), { x: 23, y: 34 }),
+                width: 5,
+                height: 6
+            });
+
+            const serialized = deflate(rectangle);
+            expect(serialized).to.deep.equal({
+                position: '(23,34)',
+                width: 5,
+                height: 6
+            });
+
+            const deserialized = inflate(Rectangle, serialized);
+            expect(deserialized).to.deep.equal(rectangle);
+
+        });
+
+        it('should fail when child class trying to shadow parent class serializable properties', () => {
+
+            expect(() => {
+                // tslint:disable-next-line:no-unused-variable
+                class MyRectangle extends Rectangle {
+                    @Serialize() public width: number;
+                }
+            }).to.throw('Unable to redefine/shadow serializer for property: width');
+
+        });
+
     });
 
-    describe('when parent is serializable and child has no explicit serializers', () => {
+    describe('for custom type serializables', () => {
 
-        class TaggedRectangle extends Rectangle {
-            public tag: string;
-        }
+        it('should fail when trying to inherit from any serializable', () => {
 
-        it('should result in child to inherit all parent\'s serializers', () => {
-
-            const original = Object.assign(new TaggedRectangle(), { position: [1, 2], width: 3, height: 4, tag: 'test' });
-            const serialized = deflate(original);
-            expect(serialized).to.deep.equal({ position: '1,2', width: 3, height: 4 }); // NOTE: no `tag` in serialized object
-            const deserialized = inflate(TaggedRectangle, serialized);
-            expect(deserialized).to.deep.equal({ position: [1, 2], width: 3, height: 4 }); // NOTE: no `tag` in deserialized instance
+            [
+                () => {
+                    @Serialize.Type({ down: null, up: null })
+                    // tslint:disable-next-line:no-unused-variable
+                    class TaggedPoint extends Point {
+                        public tag: string;
+                    }
+                },
+                () => {
+                    @Serialize.Type({ down: null, up: null })
+                    // tslint:disable-next-line:no-unused-variable
+                    class TaggedRectangle extends Rectangle {
+                        public tag: string;
+                    }
+                }
+            ].forEach(f => expect(f).to.throw('Can\'t define a custom serializer on type which inherits from another serializable'));
 
         });
 
