@@ -1,7 +1,7 @@
 {
   "name": "serialazy",
-  "version": "2.0.0-alpha.1",
-  "description": "A simple TypeScript class serialization library",
+  "version": "2.0.0",
+  "description": "A TypeScript class serialization library",
   "keywords": [
     "serialize",
     "deserialize",

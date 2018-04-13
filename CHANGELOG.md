@@ -1,11 +1,9 @@
-* `deflate/inflate` can accept primitives (string/number/boolean/null)
-* [BREAKING] Removed `isSerializable` function.
-* [BREAKING] Removed `deepMerge` function.
-* [BREAKING] Updated `isSerializable`. Additionaly to previous behaviour now it returns true for primitives
-  (boolean/Boolean, number/Number, string/String), both instances and constructor functions. Returns true for null value.
-* [BREAKING] Removed `@Serialize.Skip()` decorator which was used to "erase" property serializers inherited from parent class.
-  This practice breaks inheritance. E.g.: We have `B extends A`, B "shadows" some property serializers from A. If we'll try to
-  serialize an instance of B and then deserialize it as an instance of A, we'll have an error because of undefined props.
+v2.0.0
+------
+
+* Added `@Serialize.Type()` decorator which allows to define custom serializers for types
+* `deflate/inflate` can accept primitives (string, number, boolean and their "boxed" variants, null, undefined)
+* [BREAKING] Removed `isSerializable`, `deepMerge` facade functions and `@Serialize.Skip()` decorator.
 
 v1.3.1
 ------
