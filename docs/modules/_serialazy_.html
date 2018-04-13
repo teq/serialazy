@@ -73,10 +73,8 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_serialazy_.html#deepmerge" class="tsd-kind-icon">deep<wbr>Merge</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_serialazy_.html#deflate" class="tsd-kind-icon">deflate</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_serialazy_.html#inflate" class="tsd-kind-icon">inflate</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_serialazy_.html#isserializable" class="tsd-kind-icon">is<wbr>Serializable</a></li>
 							</ul>
 						</section>
 					</div>
@@ -84,68 +82,22 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-					<a name="deepmerge" class="tsd-anchor"></a>
-					<h3>deep<wbr>Merge</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">deep<wbr>Merge&lt;T&gt;<span class="tsd-signature-symbol">(</span>destination<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/a2dc7cc/lib/src/serialazy.ts#L98">serialazy.ts:98</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Traverse recursively all serializable properties of <code>destination</code>, merge them
-										with corresponding properties of <code>source</code> and return resulting object.
-									NOTE: This function mutates <code>destination</code></p>
-								</div>
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T</h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>destination: <span class="tsd-signature-type">T</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Destination serializable class instance</p>
-									</div>
-								</li>
-								<li>
-									<h5>source: <span class="tsd-signature-type">T</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Source class instance or plain object (may be non-serializable) to take property values from</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
-							<p>Destination class instance</p>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="deflate" class="tsd-anchor"></a>
 					<h3>deflate</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">deflate<span class="tsd-signature-symbol">(</span>serializable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-signature-type">JsonMap</a></li>
+						<li class="tsd-signature tsd-kind-icon">deflate<span class="tsd-signature-symbol">(</span>serializable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_types_json_type_.html#jsontype" class="tsd-signature-type">JsonType</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/a2dc7cc/lib/src/serialazy.ts#L12">serialazy.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/teq/serialazy/blob/cab093d/lib/src/serialazy.ts#L12">serialazy.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Deflate class instance to a JSON-compatible object</p>
+									<p>Deflate a serializable type to a JSON-compatible type</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -153,12 +105,12 @@
 								<li>
 									<h5>serializable: <span class="tsd-signature-type">any</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Serializable class instance</p>
+										<p>Serializable type</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-signature-type">JsonMap</a></h4>
-							<p>JSON-compatible object which can be safely passed to <code>JSON.serialize</code></p>
+							<h4 class="tsd-returns-title">Returns <a href="_types_json_type_.html#jsontype" class="tsd-signature-type">JsonType</a></h4>
+							<p>JSON-compatible type which can be safely passed to <code>JSON.serialize</code></p>
 						</li>
 					</ul>
 				</section>
@@ -166,18 +118,18 @@
 					<a name="inflate" class="tsd-anchor"></a>
 					<h3>inflate</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">inflate&lt;T&gt;<span class="tsd-signature-symbol">(</span>ctor<span class="tsd-signature-symbol">: </span><a href="_types_constructable_.constructable.html" class="tsd-signature-type">Constructable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, serialized<span class="tsd-signature-symbol">: </span><a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-signature-type">JsonMap</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+						<li class="tsd-signature tsd-kind-icon">inflate&lt;T&gt;<span class="tsd-signature-symbol">(</span>ctor<span class="tsd-signature-symbol">: </span><a href="_types_constructable_.constructable.html#default" class="tsd-signature-type">Default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, serialized<span class="tsd-signature-symbol">: </span><a href="_types_json_type_.html#jsontype" class="tsd-signature-type">JsonType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/a2dc7cc/lib/src/serialazy.ts#L43">serialazy.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/teq/serialazy/blob/cab093d/lib/src/serialazy.ts#L36">serialazy.ts:36</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Construct/inflate class instance from JSON-compatible object</p>
+									<p>Construct/inflate a serializable type from JSON-compatible object</p>
 								</div>
 							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -189,51 +141,20 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>ctor: <a href="_types_constructable_.constructable.html" class="tsd-signature-type">Constructable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>ctor: <a href="_types_constructable_.constructable.html#default" class="tsd-signature-type">Default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Serializable class constructor function</p>
+										<p>Serializable type constructor function</p>
 									</div>
 								</li>
 								<li>
-									<h5>serialized: <a href="../interfaces/_types_json_type_.jsonmap.html" class="tsd-signature-type">JsonMap</a></h5>
+									<h5>serialized: <a href="_types_json_type_.html#jsontype" class="tsd-signature-type">JsonType</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>JSON-compatible object (e.g. returned from <code>JSON.parse</code>)</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
-							<p>Serializable class instance</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="isserializable" class="tsd-anchor"></a>
-					<h3>is<wbr>Serializable</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Serializable<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/a2dc7cc/lib/src/serialazy.ts#L76">serialazy.ts:76</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Check if target is a serializable class constructor or an instance of serializable class</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>target: <span class="tsd-signature-type">any</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Target to check</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>Serializable instance</p>
 						</li>
 					</ul>
 				</section>
@@ -252,22 +173,28 @@
 						<a href="_serialazy_.html">"serialazy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_boolean_serializer_.html">"serializers/json/json_<wbr>boolean_<wbr>serializer"</a>
+						<a href="_serializers_json_json_boolean_type_serializer_.html">"serializers/json/json_<wbr>boolean_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_number_serializer_.html">"serializers/json/json_<wbr>number_<wbr>serializer"</a>
+						<a href="_serializers_json_json_number_type_serializer_.html">"serializers/json/json_<wbr>number_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_serializable_serializer_.html">"serializers/json/json_<wbr>serializable_<wbr>serializer"</a>
+						<a href="_serializers_json_json_property_serializer_.html">"serializers/json/json_<wbr>property_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_string_serializer_.html">"serializers/json/json_<wbr>string_<wbr>serializer"</a>
+						<a href="_serializers_json_json_string_type_serializer_.html">"serializers/json/json_<wbr>string_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="_serializers_json_json_type_serializer_.html">"serializers/json/json_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_metadata_.html">"serializers/metadata"</a>
+						<a href="_serializers_metadata_custom_type_metadata_.html">"serializers/metadata/custom_<wbr>type_<wbr>metadata"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_metadata_property_bag_metadata_.html">"serializers/metadata/property_<wbr>bag_<wbr>metadata"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_metadata_serializable_type_metadata_.html">"serializers/metadata/serializable_<wbr>type_<wbr>metadata"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="_serializers_property_serializer_.html">"serializers/property_<wbr>serializer"</a>
@@ -288,17 +215,11 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_serialazy_.html#deepmerge" class="tsd-kind-icon">deep<wbr>Merge</a>
-					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_serialazy_.html#deflate" class="tsd-kind-icon">deflate</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="_serialazy_.html#inflate" class="tsd-kind-icon">inflate</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="_serialazy_.html#isserializable" class="tsd-kind-icon">is<wbr>Serializable</a>
 					</li>
 				</ul>
 			</nav>

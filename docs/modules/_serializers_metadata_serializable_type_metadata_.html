@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;serializers/metadata&quot; | serialazy</title>
+	<title>&quot;serializers/metadata/serializable_type_metadata&quot; | serialazy</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_serializers_metadata_.html">&quot;serializers/metadata&quot;</a>
+					<a href="_serializers_metadata_serializable_type_metadata_.html">&quot;serializers/metadata/serializable_type_metadata&quot;</a>
 				</li>
 			</ul>
-			<h1>External module &quot;serializers/metadata&quot;</h1>
+			<h1>External module &quot;serializers/metadata/serializable_type_metadata&quot;</h1>
 		</div>
 	</div>
 </header>
@@ -73,13 +73,14 @@
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/_serializers_metadata_.metadata.html" class="tsd-kind-icon">Metadata</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/_serializers_metadata_serializable_type_metadata_.serializabletypemetadata.html" class="tsd-kind-icon">Serializable<wbr>Type<wbr>Metadata</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Variables</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_serializers_metadata_.html#metadata_key" class="tsd-kind-icon">METADATA_<wbr>KEY</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_serializers_metadata_serializable_type_metadata_.html#metadata_key" class="tsd-kind-icon">METADATA_<wbr>KEY</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_serializers_metadata_serializable_type_metadata_.html#metadata_version" class="tsd-kind-icon">METADATA_<wbr>VERSION</a></li>
 							</ul>
 						</section>
 					</div>
@@ -90,12 +91,34 @@
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 					<a name="metadata_key" class="tsd-anchor"></a>
 					<h3>METADATA_<wbr>KEY</h3>
-					<div class="tsd-signature tsd-kind-icon">METADATA_<wbr>KEY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol"> =&nbsp;Symbol(&#x27;Metadata containing info about serializable object&#x27;)</span></div>
+					<div class="tsd-signature tsd-kind-icon">METADATA_<wbr>KEY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol"> =&nbsp;Symbol.for(&#x27;com.github.teq.serialazy.metadata&#x27;)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/teq/serialazy/blob/a2dc7cc/lib/src/serializers/metadata.ts#L4">serializers/metadata.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/teq/serialazy/blob/cab093d/lib/src/serializers/metadata/serializable_type_metadata.ts#L8">serializers/metadata/serializable_type_metadata.ts:8</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>There may be multiple &quot;serialazy&quot; instances in project (from different dependencies)
+							We use global symbol to make sure that all of them can access the same metadata.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="metadata_version" class="tsd-anchor"></a>
+					<h3>METADATA_<wbr>VERSION</h3>
+					<div class="tsd-signature tsd-kind-icon">METADATA_<wbr>VERSION<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">2</span><span class="tsd-signature-symbol"> =&nbsp;2</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/teq/serialazy/blob/cab093d/lib/src/serializers/metadata/serializable_type_metadata.ts#L14">serializers/metadata/serializable_type_metadata.ts:14</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>We need to make sure that metadata is compatible with all &quot;serialazy&quot; instances.
+							This version is increased in case of incompatible changes in <code>Metadata</code> class.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -112,22 +135,28 @@
 						<a href="_serialazy_.html">"serialazy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_boolean_serializer_.html">"serializers/json/json_<wbr>boolean_<wbr>serializer"</a>
+						<a href="_serializers_json_json_boolean_type_serializer_.html">"serializers/json/json_<wbr>boolean_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_number_serializer_.html">"serializers/json/json_<wbr>number_<wbr>serializer"</a>
+						<a href="_serializers_json_json_number_type_serializer_.html">"serializers/json/json_<wbr>number_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_serializable_serializer_.html">"serializers/json/json_<wbr>serializable_<wbr>serializer"</a>
+						<a href="_serializers_json_json_property_serializer_.html">"serializers/json/json_<wbr>property_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_string_serializer_.html">"serializers/json/json_<wbr>string_<wbr>serializer"</a>
+						<a href="_serializers_json_json_string_type_serializer_.html">"serializers/json/json_<wbr>string_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="_serializers_json_json_type_serializer_.html">"serializers/json/json_<wbr>type_<wbr>serializer"</a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_metadata_custom_type_metadata_.html">"serializers/metadata/custom_<wbr>type_<wbr>metadata"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_metadata_property_bag_metadata_.html">"serializers/metadata/property_<wbr>bag_<wbr>metadata"</a>
+					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_serializers_metadata_.html">"serializers/metadata"</a>
+						<a href="_serializers_metadata_serializable_type_metadata_.html">"serializers/metadata/serializable_<wbr>type_<wbr>metadata"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="_serializers_property_serializer_.html">"serializers/property_<wbr>serializer"</a>
@@ -149,10 +178,13 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_serializers_metadata_.metadata.html" class="tsd-kind-icon">Metadata</a>
+						<a href="../classes/_serializers_metadata_serializable_type_metadata_.serializabletypemetadata.html" class="tsd-kind-icon">Serializable<wbr>Type<wbr>Metadata</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_serializers_metadata_.html#metadata_key" class="tsd-kind-icon">METADATA_<wbr>KEY</a>
+						<a href="_serializers_metadata_serializable_type_metadata_.html#metadata_key" class="tsd-kind-icon">METADATA_<wbr>KEY</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_serializers_metadata_serializable_type_metadata_.html#metadata_version" class="tsd-kind-icon">METADATA_<wbr>VERSION</a>
 					</li>
 				</ul>
 			</nav>

@@ -71,19 +71,71 @@
 					<li>Support for optional / nullable / mapped (different property name in serialized object) properties</li>
 					<li>Recursive serialization (circular references not handled yet)</li>
 					<li>Child class inherits serializers from parent</li>
-					<li>Custom (user defined) property serialization functions</li>
+					<li>Custom (user defined) serialization functions for properties and types</li>
 					<li>TypeScript-friendly API based on decorators</li>
 				</ul>
 				<p>Planned:</p>
 				<ul>
 					<li>Circular references</li>
-					<li>Various &#39;serialization backends&#39;, not just JSON</li>
 				</ul>
 				<h2 id="requirements">Requirements</h2>
-				<p>Library can be consumed <em>only</em> from <strong>TypeScript</strong> projects because it makes use of TypeScript experimental feature which emits type metadata to the resulting JS. Make sure that you enabled <code>--emitDecoratorMetadata</code> in your <code>tsconfig.json</code>.</p>
+				<p>Library can be consumed <em>only</em> from <strong>TypeScript</strong> projects because it makes use of TypeScript experimental feature which emits type metadata to the resulting JS. Make sure that you enabled <code>experimentalDecorators</code> and <code>emitDecoratorMetadata</code> in your <code>tsconfig.json</code>.</p>
 				<h2 id="installation">Installation</h2>
 				<p><code>npm i --save serialazy</code></p>
 				<h2 id="usage">Usage</h2>
+				<pre><code class="lang-ts"><span class="hljs-keyword">const</span> serialized = deflate(serializable); <span class="hljs-comment">// serialize</span>
+<span class="hljs-keyword">const</span> clonedSerializable = inflate(SerializableType, serialized); <span class="hljs-comment">// deserialize</span>
+</code></pre>
+				<p>Where:</p>
+				<ul>
+					<li><code>serialized</code> is a JSON-compatible value which can be safely passed to <code>JSON.stringify</code></li>
+					<li><code>SerializableType</code> is a constructor function for serializable type (String/Number/Boolean for primitives)</li>
+					<li><code>serializable</code> is a primitive (string, number, boolean and their &quot;boxed&quot; variants, null, undefined), or a <em>non-primitive serializable</em></li>
+				</ul>
+				<p>There are 2 types of <em>non-primitive serializables</em>:</p>
+				<h3 id="1-a-property-bag-">1. A &quot;property bag&quot;</h3>
+				<p>Is a JS class with properties decorated with <code>@Serialize()</code> / <code>@Serialize.Custom()</code>.</p>
+				<ul>
+					<li><em>Always</em> serializes to a plain JS object</li>
+					<li>Can extend (inherit from) another property bag, but will throw en error if child class &quot;shadows&quot; a property from a base class.</li>
+				</ul>
+				<p>Example:</p>
+				<pre><code class="lang-ts">
+<span class="hljs-comment">// A "property bag" serializable</span>
+<span class="hljs-keyword">class</span> Person {
+    <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> name: <span class="hljs-built_in">string</span>;
+    <span class="hljs-meta">@Serialize</span>.Custom({
+        down: <span class="hljs-function">(<span class="hljs-params">date: <span class="hljs-built_in">Date</span></span>) =&gt;</span> date.toISOString(),
+        up: <span class="hljs-function">(<span class="hljs-params">isoDateStr: <span class="hljs-built_in">string</span></span>) =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(isoDateStr)
+    })
+    <span class="hljs-keyword">public</span> birthday: <span class="hljs-built_in">Date</span>;
+}
+
+<span class="hljs-comment">// Actor inherits all property serializers from Person</span>
+<span class="hljs-keyword">class</span> Actor <span class="hljs-keyword">extends</span> Person {
+    <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> hasOscar: <span class="hljs-built_in">boolean</span>;
+}
+</code></pre>
+				<h3 id="2-type-class-with-custom-serializer">2. Type (class) with custom serializer</h3>
+				<p>A JS class decorated with <code>@Serialize.Type()</code>.</p>
+				<ul>
+					<li>Serializes to any JSON-compatible value</li>
+					<li>Can not be a base class for other serializables</li>
+					<li>Can not inherit from other serializables</li>
+				</ul>
+				<p>Example:</p>
+				<pre><code class="lang-ts">
+<span class="hljs-comment">// Point class serializes to a tuple "[number, number]"</span>
+<span class="hljs-meta">@Serialize</span>.Type({
+    down: <span class="hljs-function">(<span class="hljs-params">point: Point</span>) =&gt;</span> [point.x, point.y],
+    up: <span class="hljs-function">(<span class="hljs-params">tuple</span>) =&gt;</span> <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Point(), { x: tuple[<span class="hljs-number">0</span>], y: tuple[<span class="hljs-number">1</span>] })
+})
+<span class="hljs-keyword">class</span> Point {
+    <span class="hljs-keyword">public</span> x: <span class="hljs-built_in">number</span>;
+    <span class="hljs-keyword">public</span> y: <span class="hljs-built_in">number</span>;
+}
+</code></pre>
+				<h2 id="examples">Examples</h2>
 				<h3 id="simplest-case">Simplest case</h3>
 				<pre><code class="lang-ts">
 <span class="hljs-keyword">import</span> { deflate, inflate, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'serialazy'</span>;
@@ -128,7 +180,7 @@ expect(deserialized).to.deep.equal({
     pages: <span class="hljs-number">123</span>
 });
 </code></pre>
-				<h3 id="serializer-options">Serializer options</h3>
+				<h3 id="property-serializer-options">Property serializer options</h3>
 				<pre><code class="lang-ts">
 <span class="hljs-keyword">import</span> { deflate, inflate, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'serialazy'</span>;
 
@@ -264,19 +316,24 @@ expect(deserialized).to.deep.equal(book);
 </code></pre>
 				<h3 id="class-inheritance">Class inheritance</h3>
 				<pre><code class="lang-ts">
-<span class="hljs-keyword">import</span> { deflate, inflate, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'serialazy'</span>;
+<span class="hljs-keyword">import</span> { deflate, inflate, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'./@lib/serialazy'</span>;
 
 <span class="hljs-keyword">import</span> chai = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chai'</span>);
 <span class="hljs-keyword">const</span> { expect } = chai;
 
-<span class="hljs-comment">// *** Class definition</span>
+<span class="hljs-comment">// *** Class definitions</span>
+
+<span class="hljs-meta">@Serialize</span>.Type({
+    down: <span class="hljs-function">(<span class="hljs-params">point: Point</span>) =&gt;</span> [point.x, point.y],
+    up: <span class="hljs-function">(<span class="hljs-params">tuple</span>) =&gt;</span> <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Point(), { x: tuple[<span class="hljs-number">0</span>], y: tuple[<span class="hljs-number">1</span>] })
+})
+<span class="hljs-keyword">class</span> Point {
+    <span class="hljs-keyword">public</span> x: <span class="hljs-built_in">number</span>;
+    <span class="hljs-keyword">public</span> y: <span class="hljs-built_in">number</span>;
+}
+
 <span class="hljs-keyword">class</span> Shape {
-    <span class="hljs-comment">// Serializes [number, number] tuple to "x,y" string</span>
-    <span class="hljs-meta">@Serialize</span>.Custom({
-        down: <span class="hljs-function">(<span class="hljs-params">pos: [<span class="hljs-built_in">number</span>, <span class="hljs-built_in">number</span>]</span>) =&gt;</span> pos.join(<span class="hljs-string">','</span>),
-        up: <span class="hljs-function"><span class="hljs-params">str</span> =&gt;</span> str.split(<span class="hljs-string">','</span>).map(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> <span class="hljs-built_in">Number</span>.parseFloat(s))
-    })
-    <span class="hljs-keyword">public</span> position: [<span class="hljs-built_in">number</span>, <span class="hljs-built_in">number</span>];
+    <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> position: Point;
 }
 
 <span class="hljs-keyword">class</span> Circle <span class="hljs-keyword">extends</span> Shape { <span class="hljs-comment">// inherits props &amp; serializers from Shape</span>
@@ -285,7 +342,7 @@ expect(deserialized).to.deep.equal(book);
 
 <span class="hljs-comment">// *** Create instance</span>
 <span class="hljs-keyword">const</span> circle = <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Circle(), {
-    position: [<span class="hljs-number">23</span>, <span class="hljs-number">34</span>],
+    position: <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Point(), { x: <span class="hljs-number">23</span>, y: <span class="hljs-number">34</span> }),
     radius: <span class="hljs-number">11</span>
 });
 
@@ -293,7 +350,7 @@ expect(deserialized).to.deep.equal(book);
 <span class="hljs-keyword">const</span> serialized = deflate(circle);
 
 expect(serialized).to.deep.equal({
-    position: <span class="hljs-string">'23,34'</span>,
+    position: [<span class="hljs-number">23</span>, <span class="hljs-number">34</span>],
     radius: <span class="hljs-number">11</span>
 });
 
@@ -302,36 +359,6 @@ expect(serialized).to.deep.equal({
 
 expect(deserialized <span class="hljs-keyword">instanceof</span> Circle).to.equal(<span class="hljs-literal">true</span>);
 expect(deserialized).to.deep.equal(circle);
-</code></pre>
-				<h3 id="-isserializable-function"><code>isSerializable</code> function</h3>
-				<p>Checks if target is an instance of serializable class or serializable class constructor function</p>
-				<pre><code class="lang-ts">
-<span class="hljs-keyword">import</span> { isSerializable, Serialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'./@lib/serialazy'</span>;
-
-<span class="hljs-keyword">import</span> chai = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chai'</span>);
-<span class="hljs-keyword">const</span> { expect } = chai;
-
-<span class="hljs-comment">// *** Class definition</span>
-
-<span class="hljs-keyword">class</span> Book {
-    <span class="hljs-meta">@Serialize</span>() <span class="hljs-keyword">public</span> title: <span class="hljs-built_in">string</span>;
-}
-
-<span class="hljs-keyword">class</span> Author {
-    <span class="hljs-keyword">public</span> name: <span class="hljs-built_in">string</span>;
-}
-
-<span class="hljs-comment">// *** Check</span>
-
-expect(isSerializable(<span class="hljs-keyword">new</span> Book())).to.equal(<span class="hljs-literal">true</span>); <span class="hljs-comment">// instance of serializable class =&gt; TRUE</span>
-expect(isSerializable(Book)).to.equal(<span class="hljs-literal">true</span>); <span class="hljs-comment">// serializable class constructor =&gt; TRUE</span>
-expect(isSerializable(<span class="hljs-keyword">new</span> Author())).to.equal(<span class="hljs-literal">false</span>); <span class="hljs-comment">// not serializable instance =&gt; FALSE</span>
-expect(isSerializable(<span class="hljs-number">123</span>)).to.equal(<span class="hljs-literal">false</span>); <span class="hljs-comment">// not serializable</span>
-expect(isSerializable(<span class="hljs-string">'test'</span>)).to.equal(<span class="hljs-literal">false</span>); <span class="hljs-comment">// not serializable</span>
-</code></pre>
-				<h3 id="-deepmerge-function"><code>deepMerge</code> function</h3>
-				<pre><code class="lang-ts">
-<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> Add example...</span>
 </code></pre>
 			</div>
 		</div>
@@ -348,22 +375,28 @@ expect(isSerializable(<span class="hljs-string">'test'</span>)).to.equal(<span c
 						<a href="modules/_serialazy_.html">"serialazy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_serializers_json_json_boolean_serializer_.html">"serializers/json/json_<wbr>boolean_<wbr>serializer"</a>
+						<a href="modules/_serializers_json_json_boolean_type_serializer_.html">"serializers/json/json_<wbr>boolean_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_serializers_json_json_number_serializer_.html">"serializers/json/json_<wbr>number_<wbr>serializer"</a>
+						<a href="modules/_serializers_json_json_number_type_serializer_.html">"serializers/json/json_<wbr>number_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_serializers_json_json_serializable_serializer_.html">"serializers/json/json_<wbr>serializable_<wbr>serializer"</a>
+						<a href="modules/_serializers_json_json_property_serializer_.html">"serializers/json/json_<wbr>property_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_serializers_json_json_string_serializer_.html">"serializers/json/json_<wbr>string_<wbr>serializer"</a>
+						<a href="modules/_serializers_json_json_string_type_serializer_.html">"serializers/json/json_<wbr>string_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_serializers_json_json_type_serializer_.html">"serializers/json/json_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_serializers_metadata_.html">"serializers/metadata"</a>
+						<a href="modules/_serializers_metadata_custom_type_metadata_.html">"serializers/metadata/custom_<wbr>type_<wbr>metadata"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_metadata_property_bag_metadata_.html">"serializers/metadata/property_<wbr>bag_<wbr>metadata"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_serializers_metadata_serializable_type_metadata_.html">"serializers/metadata/serializable_<wbr>type_<wbr>metadata"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_serializers_property_serializer_.html">"serializers/property_<wbr>serializer"</a>
