@@ -1,7 +1,7 @@
 {
   "name": "serialazy",
-  "version": "1.3.1",
-  "description": "A simple TypeScript class serialization library",
+  "version": "2.0.0",
+  "description": "A TypeScript class serialization library",
   "keywords": [
     "serialize",
     "deserialize",
@@ -47,7 +47,7 @@
     "chai-as-promised": "^7.1.1",
     "mocha": "^3.5.3",
     "tslint": "^5.7.0",
-    "typedoc": "^0.9.0",
+    "typedoc": "^0.11.1",
     "typescript": "^2.5.3"
   }
 }

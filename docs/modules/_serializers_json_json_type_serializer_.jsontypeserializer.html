@@ -83,7 +83,9 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html#partialfor" class="tsd-kind-icon">partial<wbr>For</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html#pickforprop" class="tsd-kind-icon">pick<wbr>For<wbr>Prop</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html#pickfortype" class="tsd-kind-icon">pick<wbr>For<wbr>Type</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html#pickforvalue" class="tsd-kind-icon">pick<wbr>For<wbr>Value</a></li>
 							</ul>
 						</section>
 					</div>
@@ -92,18 +94,23 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-					<a name="partialfor" class="tsd-anchor"></a>
-					<h3>partial<wbr>For</h3>
+					<a name="pickforprop" class="tsd-anchor"></a>
+					<h3>pick<wbr>For<wbr>Prop</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">partial<wbr>For<span class="tsd-signature-symbol">(</span>proto<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span>, propertyName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html" class="tsd-signature-type">JsonTypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">pick<wbr>For<wbr>Prop<span class="tsd-signature-symbol">(</span>proto<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span>, propertyName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html" class="tsd-signature-type">JsonTypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/teq/serialazy/blob/a2dc7cc/lib/src/serializers/json/json_type_serializer.ts#L15">serializers/json/json_type_serializer.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/teq/serialazy/blob/cab093d/lib/src/serializers/json/json_type_serializer.ts#L71">serializers/json/json_type_serializer.ts:71</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Try to pick a (possibly partial) type serializer for given property</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -111,6 +118,62 @@
 								</li>
 								<li>
 									<h5>propertyName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html" class="tsd-signature-type">JsonTypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="pickfortype" class="tsd-anchor"></a>
+					<h3>pick<wbr>For<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">pick<wbr>For<wbr>Type<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><a href="_types_constructable_.constructable.html#default" class="tsd-signature-type">Default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html" class="tsd-signature-type">JsonTypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/teq/serialazy/blob/cab093d/lib/src/serializers/json/json_type_serializer.ts#L45">serializers/json/json_type_serializer.ts:45</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Try to pick a (possibly partial) type serializer for given type</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <a href="_types_constructable_.constructable.html#default" class="tsd-signature-type">Default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html" class="tsd-signature-type">JsonTypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="pickforvalue" class="tsd-anchor"></a>
+					<h3>pick<wbr>For<wbr>Value</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">pick<wbr>For<wbr>Value<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html" class="tsd-signature-type">JsonTypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/teq/serialazy/blob/cab093d/lib/src/serializers/json/json_type_serializer.ts#L15">serializers/json/json_type_serializer.ts:15</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Try to pick a (possibly partial) type serializer for given value</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">any</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_serializers_json_json_type_serializer_.jsontypeserializer.html" class="tsd-signature-type">JsonTypeSerializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -132,16 +195,16 @@
 						<a href="_serialazy_.html">"serialazy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_boolean_serializer_.html">"serializers/json/json_<wbr>boolean_<wbr>serializer"</a>
+						<a href="_serializers_json_json_boolean_type_serializer_.html">"serializers/json/json_<wbr>boolean_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_number_serializer_.html">"serializers/json/json_<wbr>number_<wbr>serializer"</a>
+						<a href="_serializers_json_json_number_type_serializer_.html">"serializers/json/json_<wbr>number_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_serializable_serializer_.html">"serializers/json/json_<wbr>serializable_<wbr>serializer"</a>
+						<a href="_serializers_json_json_property_serializer_.html">"serializers/json/json_<wbr>property_<wbr>serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_json_json_string_serializer_.html">"serializers/json/json_<wbr>string_<wbr>serializer"</a>
+						<a href="_serializers_json_json_string_type_serializer_.html">"serializers/json/json_<wbr>string_<wbr>type_<wbr>serializer"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="_serializers_json_json_type_serializer_.html">"serializers/json/json_<wbr>type_<wbr>serializer"</a>
@@ -152,7 +215,13 @@
 						</ul>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_serializers_metadata_.html">"serializers/metadata"</a>
+						<a href="_serializers_metadata_custom_type_metadata_.html">"serializers/metadata/custom_<wbr>type_<wbr>metadata"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_metadata_property_bag_metadata_.html">"serializers/metadata/property_<wbr>bag_<wbr>metadata"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_serializers_metadata_serializable_type_metadata_.html">"serializers/metadata/serializable_<wbr>type_<wbr>metadata"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="_serializers_property_serializer_.html">"serializers/property_<wbr>serializer"</a>
@@ -174,7 +243,13 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="_serializers_json_json_type_serializer_.jsontypeserializer.html#partialfor" class="tsd-kind-icon">partial<wbr>For</a>
+						<a href="_serializers_json_json_type_serializer_.jsontypeserializer.html#pickforprop" class="tsd-kind-icon">pick<wbr>For<wbr>Prop</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_serializers_json_json_type_serializer_.jsontypeserializer.html#pickfortype" class="tsd-kind-icon">pick<wbr>For<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_serializers_json_json_type_serializer_.jsontypeserializer.html#pickforvalue" class="tsd-kind-icon">pick<wbr>For<wbr>Value</a>
 					</li>
 				</ul>
 			</nav>

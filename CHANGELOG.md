@@ -1,3 +1,10 @@
+v2.0.0
+------
+
+* Added `@Serialize.Type()` decorator which allows to define custom serializers for types
+* `deflate/inflate` can accept primitives (string, number, boolean and their "boxed" variants, null, undefined)
+* [BREAKING] Removed `isSerializable`, `deepMerge` facade functions and `@Serialize.Skip()` decorator.
+
 v1.3.1
 ------
 

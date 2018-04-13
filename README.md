@@ -6,22 +6,87 @@ Features:
 - Support for optional / nullable / mapped (different property name in serialized object) properties
 - Recursive serialization (circular references not handled yet)
 - Child class inherits serializers from parent
-- Custom (user defined) property serialization functions
+- Custom (user defined) serialization functions for properties and types
 - TypeScript-friendly API based on decorators
 
 Planned:
 - Circular references
-- Various 'serialization backends', not just JSON
 
 ## Requirements
 
-Library can be consumed _only_ from **TypeScript** projects because it makes use of TypeScript experimental feature which emits type metadata to the resulting JS. Make sure that you enabled `--emitDecoratorMetadata` in your `tsconfig.json`.
+Library can be consumed _only_ from **TypeScript** projects because it makes use of TypeScript experimental feature which emits type metadata to the resulting JS. Make sure that you enabled `experimentalDecorators` and `emitDecoratorMetadata` in your `tsconfig.json`.
 
 ## Installation
 
 `npm i --save serialazy`
 
 ## Usage
+
+```ts
+const serialized = deflate(serializable); // serialize
+const clonedSerializable = inflate(SerializableType, serialized); // deserialize
+```
+
+Where:
+- `serialized` is a JSON-compatible value which can be safely passed to `JSON.stringify`
+- `SerializableType` is a constructor function for serializable type (String/Number/Boolean for primitives)
+- `serializable` is a primitive (string, number, boolean and their "boxed" variants, null, undefined), or a _non-primitive serializable_
+
+There are 2 types of _non-primitive serializables_:
+
+### 1. A "property bag"
+
+Is a JS class with properties decorated with `@Serialize()` / `@Serialize.Custom()`.
+
+- _Always_ serializes to a plain JS object
+- Can extend (inherit from) another property bag, but will throw en error if child class "shadows" a property from a base class.
+
+Example:
+
+```ts
+
+// A "property bag" serializable
+class Person {
+    @Serialize() public name: string;
+    @Serialize.Custom({
+        down: (date: Date) => date.toISOString(),
+        up: (isoDateStr: string) => new Date(isoDateStr)
+    })
+    public birthday: Date;
+}
+
+// Actor inherits all property serializers from Person
+class Actor extends Person {
+    @Serialize() public hasOscar: boolean;
+}
+
+```
+
+### 2. Type (class) with custom serializer
+
+A JS class decorated with `@Serialize.Type()`.
+
+- Serializes to any JSON-compatible value
+- Can not be a base class for other serializables
+- Can not inherit from other serializables
+
+Example:
+
+```ts
+
+// Point class serializes to a tuple "[number, number]"
+@Serialize.Type({
+    down: (point: Point) => [point.x, point.y],
+    up: (tuple) => Object.assign(new Point(), { x: tuple[0], y: tuple[1] })
+})
+class Point {
+    public x: number;
+    public y: number;
+}
+
+```
+
+## Examples
 
 ### Simplest case
 
@@ -71,7 +136,7 @@ expect(deserialized).to.deep.equal({
 
 ```
 
-### Serializer options
+### Property serializer options
 
 ```ts
 
@@ -221,19 +286,24 @@ expect(deserialized).to.deep.equal(book);
 
 ```ts
 
-import { deflate, inflate, Serialize } from 'serialazy';
+import { deflate, inflate, Serialize } from './@lib/serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
 
-// *** Class definition
+// *** Class definitions
+
+@Serialize.Type({
+    down: (point: Point) => [point.x, point.y],
+    up: (tuple) => Object.assign(new Point(), { x: tuple[0], y: tuple[1] })
+})
+class Point {
+    public x: number;
+    public y: number;
+}
+
 class Shape {
-    // Serializes [number, number] tuple to "x,y" string
-    @Serialize.Custom({
-        down: (pos: [number, number]) => pos.join(','),
-        up: str => str.split(',').map(s => Number.parseFloat(s))
-    })
-    public position: [number, number];
+    @Serialize() public position: Point;
 }
 
 class Circle extends Shape { // inherits props & serializers from Shape
@@ -242,7 +312,7 @@ class Circle extends Shape { // inherits props & serializers from Shape
 
 // *** Create instance
 const circle = Object.assign(new Circle(), {
-    position: [23, 34],
+    position: Object.assign(new Point(), { x: 23, y: 34 }),
     radius: 11
 });
 
@@ -250,7 +320,7 @@ const circle = Object.assign(new Circle(), {
 const serialized = deflate(circle);
 
 expect(serialized).to.deep.equal({
-    position: '23,34',
+    position: [23, 34],
     radius: 11
 });
 
@@ -259,44 +329,5 @@ const deserialized = inflate(Circle, serialized);
 
 expect(deserialized instanceof Circle).to.equal(true);
 expect(deserialized).to.deep.equal(circle);
-
-```
-
-### `isSerializable` function
-
-Checks if target is an instance of serializable class or serializable class constructor function
-
-```ts
-
-import { isSerializable, Serialize } from './@lib/serialazy';
-
-import chai = require('chai');
-const { expect } = chai;
-
-// *** Class definition
-
-class Book {
-    @Serialize() public title: string;
-}
-
-class Author {
-    public name: string;
-}
-
-// *** Check
-
-expect(isSerializable(new Book())).to.equal(true); // instance of serializable class => TRUE
-expect(isSerializable(Book)).to.equal(true); // serializable class constructor => TRUE
-expect(isSerializable(new Author())).to.equal(false); // not serializable instance => FALSE
-expect(isSerializable(123)).to.equal(false); // not serializable
-expect(isSerializable('test')).to.equal(false); // not serializable
-
-```
-
-### `deepMerge` function
-
-```ts
-
-// TODO: Add example...
 
 ```
