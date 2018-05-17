@@ -1,4 +1,4 @@
-import Constructable from '../types/constructable';
+import Constructor from '../types/constructor';
 
 /** Represents a generic type serializer */
 interface TypeSerializer<TSerialized, TOriginal> {
@@ -21,7 +21,7 @@ interface TypeSerializer<TSerialized, TOriginal> {
      * _Optional._ Original type constructor function.
      * Default: Value of `design:type` for given property.
      */
-    type?: Constructable.Default<TOriginal>;
+    type?: Constructor.Default<TOriginal>;
 
     /**
      * _Optional._ Property type descriminator function.
@@ -29,7 +29,7 @@ interface TypeSerializer<TSerialized, TOriginal> {
      * @param serialized Serialized value
      * @returns Original type constructor function
      */
-    discriminate?(this: void, serialized: TSerialized): Constructable.Default<TOriginal>;
+    discriminate?(this: void, serialized: TSerialized): Constructor.Default<TOriginal>;
 
 }
 

@@ -1,10 +1,10 @@
 
 /** Represents constructor function which _may_ require arguments */
-type Constructable<T> = new (...args: any[]) => T;
+type Constructor<T> = new (...args: any[]) => T;
 
-namespace Constructable {
+namespace Constructor {
     /** Represents default constructor function which doesn't require arguments */
     export type Default<T> = new () => T;
 }
 
-export default Constructable;
+export default Constructor;

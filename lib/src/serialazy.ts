@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
 import JsonTypeSerializer from './serializers/json/json_type_serializer';
-import Constructable from './types/constructable';
+import Constructor from './types/constructor';
 import { JsonType } from './types/json_type';
 
 /**
@@ -33,7 +33,7 @@ export function deflate(serializable: any): JsonType {
  * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
  * @returns Serializable instance
  */
-export function inflate<T>(ctor: Constructable.Default<T>, serialized: JsonType): T {
+export function inflate<T>(ctor: Constructor.Default<T>, serialized: JsonType): T {
 
     if (typeof(ctor) !== 'function') {
         throw new Error('Expecting a constructor function');

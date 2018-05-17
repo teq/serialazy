@@ -3,7 +3,7 @@ import JsonTypeSerializer from '../serializers/json/json_type_serializer';
 import CustomTypeMetadata from '../serializers/metadata/custom_type_metadata';
 import PropertyBagMetadata from '../serializers/metadata/property_bag_metadata';
 import TypeSerializer from '../serializers/type_serializer';
-import Constructable from '../types/constructable';
+import Constructor from '../types/constructor';
 import JsonType from '../types/json_type';
 import Provider from '../types/provider';
 
@@ -52,7 +52,7 @@ namespace Serialize {
     export function Type<TSerialized extends JsonType, TOriginal>(
         customTypeSerializer: TypeSerializer<TSerialized, TOriginal> | Provider<TypeSerializer<TSerialized, TOriginal>>,
     ) {
-        return (ctor: Constructable.Default<TOriginal>) => {
+        return (ctor: Constructor.Default<TOriginal>) => {
             const customTypeSerializerProvider = typeof(customTypeSerializer) === 'function' ? customTypeSerializer : () => customTypeSerializer;
             const proto = ctor.prototype;
             CustomTypeMetadata.getOrCreateFor(proto).setTypeSerializer(customTypeSerializerProvider);

@@ -1,4 +1,4 @@
-import Constructable from '../../types/constructable';
+import Constructor from '../../types/constructor';
 import TypeSerializer from '../type_serializer';
 
 /**
@@ -20,7 +20,7 @@ abstract class SerializableTypeMetadata {
     public abstract readonly type: SerializableTypeMetadata.Type;
 
     /** Type constructor */
-    public readonly ctor: Constructable.Default<any>;
+    public readonly ctor: Constructor.Default<any>;
 
     /** Type name */
     public readonly name: string;
@@ -30,7 +30,7 @@ abstract class SerializableTypeMetadata {
     protected constructor(
         protected proto: Object
     ) { // constructable via `getOrCreateFor`
-        this.ctor = proto.constructor as Constructable.Default<any>;
+        this.ctor = proto.constructor as Constructor.Default<any>;
         this.name = this.ctor.name;
     }
 
