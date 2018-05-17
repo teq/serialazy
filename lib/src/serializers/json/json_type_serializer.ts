@@ -42,7 +42,7 @@ namespace JsonTypeSerializer {
     }
 
     /** Try to pick a (possibly partial) type serializer for given type */
-    export function pickForType(type: Constructor.Default<any>): Partial<JsonTypeSerializer<any>> {
+    export function pickForType(type: Constructor<any>): Partial<JsonTypeSerializer<any>> {
 
         let serializer: Partial<JsonTypeSerializer<any>> = {};
 
@@ -70,7 +70,7 @@ namespace JsonTypeSerializer {
     /** Try to pick a (possibly partial) type serializer for given property */
     export function pickForProp(proto: Object, propertyName: string): Partial<JsonTypeSerializer<any>> {
 
-        const type: Constructor.Default<any> = Reflect.getMetadata('design:type', proto, propertyName);
+        const type: Constructor<any> = Reflect.getMetadata('design:type', proto, propertyName);
 
         if (type === undefined) {
             throw new Error('Unable to fetch type information. Hint: Enable TS options: "emitDecoratorMetadata" and "experimentalDecorators"');

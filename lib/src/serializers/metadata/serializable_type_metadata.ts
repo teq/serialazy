@@ -20,7 +20,7 @@ abstract class SerializableTypeMetadata {
     public abstract readonly type: SerializableTypeMetadata.Type;
 
     /** Type constructor */
-    public readonly ctor: Constructor.Default<any>;
+    public readonly ctor: Constructor<any>;
 
     /** Type name */
     public readonly name: string;
@@ -30,7 +30,7 @@ abstract class SerializableTypeMetadata {
     protected constructor(
         protected proto: Object
     ) { // constructable via `getOrCreateFor`
-        this.ctor = proto.constructor as Constructor.Default<any>;
+        this.ctor = proto.constructor as Constructor<any>;
         this.name = this.ctor.name;
     }
 

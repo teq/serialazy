@@ -21,7 +21,7 @@ interface TypeSerializer<TSerialized, TOriginal> {
      * _Optional._ Original type constructor function.
      * Default: Value of `design:type` for given property.
      */
-    type?: Constructor.Default<TOriginal>;
+    type?: Constructor<TOriginal>;
 
     /**
      * _Optional._ Property type descriminator function.
@@ -29,7 +29,7 @@ interface TypeSerializer<TSerialized, TOriginal> {
      * @param serialized Serialized value
      * @returns Original type constructor function
      */
-    discriminate?(this: void, serialized: TSerialized): Constructor.Default<TOriginal>;
+    discriminate?(this: void, serialized: TSerialized): Constructor<TOriginal>;
 
 }
 

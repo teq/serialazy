@@ -52,7 +52,7 @@ namespace Serialize {
     export function Type<TSerialized extends JsonType, TOriginal>(
         customTypeSerializer: TypeSerializer<TSerialized, TOriginal> | Provider<TypeSerializer<TSerialized, TOriginal>>,
     ) {
-        return (ctor: Constructor.Default<TOriginal>) => {
+        return (ctor: Constructor<TOriginal>) => {
             const customTypeSerializerProvider = typeof(customTypeSerializer) === 'function' ? customTypeSerializer : () => customTypeSerializer;
             const proto = ctor.prototype;
             CustomTypeMetadata.getOrCreateFor(proto).setTypeSerializer(customTypeSerializerProvider);

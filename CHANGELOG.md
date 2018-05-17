@@ -1,3 +1,6 @@
+* Removed `Constructor.Default` type along with restriction for serializable type constructor to have a "default" version
+  (which is able to construct serializable if no arguments passed)
+
 v2.0.0
 ------
 
