@@ -19,17 +19,9 @@ interface TypeSerializer<TSerialized, TOriginal> {
 
     /**
      * _Optional._ Original type constructor function.
-     * Default: Value of `design:type` for given property.
+     * Default: Value of `design:type` metadata for given property.
      */
     type?: Constructor<TOriginal>;
-
-    /**
-     * _Optional._ Property type descriminator function.
-     * Used to narrow type constructor function (e.g. for union types)
-     * @param serialized Serialized value
-     * @returns Original type constructor function
-     */
-    discriminate?(this: void, serialized: TSerialized): Constructor<TOriginal>;
 
 }
 
@@ -40,7 +32,7 @@ namespace TypeSerializer {
         partials: Array<Partial<TypeSerializer<TSerialized, TOriginal>>>
     ): TypeSerializer<TSerialized, TOriginal> {
 
-        const { down, up, type, discriminate } = partials.reduce((compiled, partial) => ({ ...compiled, ...partial }), {});
+        const { down, up, type } = partials.reduce((compiled, partial) => ({ ...compiled, ...partial }), {});
 
         if (!down || !up) {
             const typeName = type && type.name ? type.name : '<unknown>';
@@ -51,7 +43,7 @@ namespace TypeSerializer {
             );
         }
 
-        return { down, up, type, discriminate };
+        return { down, up, type };
 
     }
 
