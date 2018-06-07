@@ -10,7 +10,7 @@ describe('custom property serializer', () => {
 
         class Book {
 
-            @Serialize.Custom({
+            @Serialize({
                 down: (val: Map<number, string>) => val ? Array.from(val).map(([page, title]) => ({ page, title })) : null,
                 up: (val) => val ? new Map(val.map<[number, string]>(ch => [ch.page, ch.title])) : null,
             })
@@ -43,7 +43,7 @@ describe('custom property serializer', () => {
 
         class Book {
 
-            @Serialize.Custom(
+            @Serialize(
                 { down: (val: Date) => val ? val.toISOString() : null, up: (val) => val ? new Date(val) : null },
                 { name: 'publishDate' }
             )
