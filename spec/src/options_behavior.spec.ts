@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable } from './@lib/serialazy';
+import { deserialize, Serializable, serialize } from './@lib/serialazy';
 
 const { expect } = chai;
 
@@ -23,9 +23,9 @@ describe('options behavior', () => {
 
             it('doesn\'t affect property name in resulting serialized object', () => {
                 const patient = new Patient('Joe', 35, 'None');
-                const serialized = deflate(patient);
+                const serialized = serialize(patient);
                 expect(serialized).to.deep.equal({ name: 'Joe', age: 35, notes: 'None' });
-                const deserialized = inflate(Patient, serialized);
+                const deserialized = deserialize(Patient, serialized);
                 expect(deserialized).to.deep.equal(patient);
             });
 
@@ -44,9 +44,9 @@ describe('options behavior', () => {
 
             it('overrides property name in resulting serialized object', () => {
                 const patient = new Patient('John', 35);
-                const serialized = deflate(patient);
+                const serialized = serialize(patient);
                 expect(serialized).to.deep.equal({ name: 'John', years: 35 });
-                const deserialized = inflate(Patient, serialized);
+                const deserialized = deserialize(Patient, serialized);
                 expect(deserialized).to.deep.equal(patient);
             });
 
@@ -67,11 +67,11 @@ describe('options behavior', () => {
 
             it('should fail to serialize', () => {
                 const patient = new Patient(null);
-                expect(() => deflate(patient)).to.throw('Unable to serialize property "married": Value is null');
+                expect(() => serialize(patient)).to.throw('Unable to serialize property "married": Value is null');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate(Patient, { married: null })).to.throw('Unable to deserialize property "married": Value is null');
+                expect(() => deserialize(Patient, { married: null })).to.throw('Unable to deserialize property "married": Value is null');
             });
 
         });
@@ -87,12 +87,12 @@ describe('options behavior', () => {
 
             it('serializes to null', () => {
                 const patient = new Patient(null);
-                const serialized = deflate(patient);
+                const serialized = serialize(patient);
                 expect(serialized).to.deep.equal({ married: null });
             });
 
             it('deserializes to null', () => {
-                const deserialized = inflate(Patient, { married: null });
+                const deserialized = deserialize(Patient, { married: null });
                 expect(deserialized instanceof Patient).to.equal(true);
                 expect(deserialized).to.deep.equal({ married: null });
             });
@@ -114,11 +114,11 @@ describe('options behavior', () => {
 
             it('should fail to serialize', () => {
                 const patient = new Patient(undefined);
-                expect(() => deflate(patient)).to.throw('Unable to serialize property "married": Value is undefined');
+                expect(() => serialize(patient)).to.throw('Unable to serialize property "married": Value is undefined');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate(Patient, { married: undefined })).to.throw('Unable to deserialize property "married": Value is undefined');
+                expect(() => deserialize(Patient, { married: undefined })).to.throw('Unable to deserialize property "married": Value is undefined');
             });
 
         });
@@ -134,12 +134,12 @@ describe('options behavior', () => {
 
             it('serializes to undefined', () => {
                 const patient = new Patient(undefined);
-                const serialized = deflate(patient);
+                const serialized = serialize(patient);
                 expect(serialized).to.not.haveOwnProperty('married');
             });
 
             it('deserializes to undefined', () => {
-                const deserialized = inflate(Patient, { married: undefined });
+                const deserialized = deserialize(Patient, { married: undefined });
                 expect(deserialized instanceof Patient).to.equal(true);
                 expect(deserialized).to.not.haveOwnProperty('married');
             });

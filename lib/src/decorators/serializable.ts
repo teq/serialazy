@@ -81,8 +81,8 @@ namespace Serializable {
 
     }
 
-    export const Prop = JSON.Prop;
-    export const Type = JSON.Type;
+    export const Prop = JSON.Prop; // alias
+    export const Type = JSON.Type; // alias
 
 }
 

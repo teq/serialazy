@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable } from './@lib/serialazy';
+import { deserialize, Serializable, serialize } from './@lib/serialazy';
 
 const { expect } = chai;
 
@@ -50,14 +50,14 @@ describe('class inheritance', () => {
                 height: 6
             });
 
-            const serialized = deflate(rectangle);
+            const serialized = serialize(rectangle);
             expect(serialized).to.deep.equal({
                 position: '(23,34)',
                 width: 5,
                 height: 6
             });
 
-            const deserialized = inflate(Rectangle, serialized);
+            const deserialized = deserialize(Rectangle, serialized);
             expect(deserialized).to.deep.equal(rectangle);
 
         });
