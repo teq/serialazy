@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serialize } from './@lib/serialazy';
+import { deflate, inflate, Serializable } from './@lib/serialazy';
 
 const { expect } = chai;
 
@@ -10,7 +10,7 @@ describe('custom property serializer', () => {
 
         class Book {
 
-            @Serialize({
+            @Serializable.Prop({
                 down: (val: Map<number, string>) => val ? Array.from(val).map(([page, title]) => ({ page, title })) : null,
                 up: (val) => val ? new Map(val.map<[number, string]>(ch => [ch.page, ch.title])) : null,
             })
@@ -43,7 +43,7 @@ describe('custom property serializer', () => {
 
         class Book {
 
-            @Serialize(
+            @Serializable.Prop(
                 { down: (val: Date) => val ? val.toISOString() : null, up: (val) => val ? new Date(val) : null },
                 { name: 'publishDate' }
             )

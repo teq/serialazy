@@ -50,7 +50,7 @@ export function inflate<T>(ctor: Constructor<T>, serialized: JsonType): T {
 }
 
 // Export decorators
-export { default as Serialize} from './decorators/serialize';
+export { default as Serializable } from './decorators/serializable';
 
 // Export types
 import * as Json from './types/json_type';

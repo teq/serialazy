@@ -1,13 +1,13 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serialize } from './@lib/serialazy';
+import { deflate, inflate, Serializable } from './@lib/serialazy';
 
 const { expect } = chai;
 
 describe('facade function', () => {
 
     class Foo {
-        @Serialize() public id: string;
+        @Serializable.Prop() public id: string;
     }
 
     class Bar {

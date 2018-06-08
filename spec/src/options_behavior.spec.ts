@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serialize } from './@lib/serialazy';
+import { deflate, inflate, Serializable } from './@lib/serialazy';
 
 const { expect } = chai;
 
@@ -11,9 +11,9 @@ describe('options behavior', () => {
         describe('when option is null/undefined/empty (default)', () => {
 
             class Patient {
-                @Serialize({ name: undefined }) public name: string;
-                @Serialize({ name: null }) public age: number;
-                @Serialize({ name: '' }) public notes : string;
+                @Serializable.Prop({ name: undefined }) public name: string;
+                @Serializable.Prop({ name: null }) public age: number;
+                @Serializable.Prop({ name: '' }) public notes : string;
                 public constructor(name?: string, age?: number, notes?: string) {
                     if (name !== undefined) { this.name = name; }
                     if (age !== undefined) { this.age = age; }
@@ -34,8 +34,8 @@ describe('options behavior', () => {
         describe('when option is a non-empty string', () => {
 
             class Patient {
-                @Serialize() public name: string;
-                @Serialize({ name: 'years' }) public age: number;
+                @Serializable.Prop() public name: string;
+                @Serializable.Prop({ name: 'years' }) public age: number;
                 public constructor(name?: string, age?: number) {
                     if (name !== undefined) { this.name = name; }
                     if (age !== undefined) { this.age = age; }
@@ -59,7 +59,7 @@ describe('options behavior', () => {
         describe('when value is null and option is null/undefined/false (default)', () => {
 
             class Patient {
-                @Serialize() public married: boolean;
+                @Serializable.Prop() public married: boolean;
                 public constructor(married?: boolean) {
                     if (married !== undefined) { this.married = married; }
                 }
@@ -79,7 +79,7 @@ describe('options behavior', () => {
         describe('when value is null and option is true', () => {
 
             class Patient {
-                @Serialize({ nullable: true }) public married: boolean;
+                @Serializable.Prop({ nullable: true }) public married: boolean;
                 public constructor(married?: boolean) {
                     if (married !== undefined) { this.married = married; }
                 }
@@ -106,7 +106,7 @@ describe('options behavior', () => {
         describe('when value is undefined and option is false/null/undefined (default)', () => {
 
             class Patient {
-                @Serialize() public married: boolean;
+                @Serializable.Prop() public married: boolean;
                 public constructor(married?: boolean) {
                     if (married !== undefined) { this.married = married; }
                 }
@@ -126,7 +126,7 @@ describe('options behavior', () => {
         describe('when value is undefined and option is true', () => {
 
             class Patient {
-                @Serialize({ optional: true }) public married: boolean;
+                @Serializable.Prop({ optional: true }) public married: boolean;
                 public constructor(married?: boolean) {
                     if (married !== undefined) { this.married = married; }
                 }

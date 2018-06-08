@@ -1,12 +1,12 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serialize } from './@lib/serialazy';
+import { deflate, inflate, Serializable } from './@lib/serialazy';
 
 const { expect } = chai;
 
 describe('custom type serializer', () => {
 
-    @Serialize.Type({
+    @Serializable.Type({
         down: (val: Point) => `(${val.x},${val.y})`,
         up: (val) => {
             const match = val.match(/^\((\d+),(\d+)\)$/);
@@ -34,10 +34,10 @@ describe('custom type serializer', () => {
 
     it('should fail to apply on a class which has property serializers', () => {
         expect(() => {
-            @Serialize.Type({ down: null, up: null })
+            @Serializable.Type({ down: null, up: null })
             // tslint:disable-next-line:no-unused-variable
             class Test {
-                @Serialize() public prop: string;
+                @Serializable.Prop() public prop: string;
             }
         }).to.throw('Can\'t define a custom serializer on type which has property serializers');
     });

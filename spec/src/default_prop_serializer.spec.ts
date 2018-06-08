@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serialize } from './@lib/serialazy';
+import { deflate, inflate, Serializable } from './@lib/serialazy';
 
 const { expect } = chai;
 
@@ -9,7 +9,7 @@ describe('default property serializer', () => {
     describe('for boolean properties', () => {
 
         class Patient {
-            @Serialize() public married: boolean;
+            @Serializable.Prop() public married: boolean;
             public constructor(married?: boolean) {
                 if (married !== undefined) { this.married = married; }
             }
@@ -69,7 +69,7 @@ describe('default property serializer', () => {
     describe('for number properties', () => {
 
         class Patient {
-            @Serialize() public age: number;
+            @Serializable.Prop() public age: number;
             public constructor(age?: number) {
                 if (age !== undefined) { this.age = age; }
             }
@@ -129,7 +129,7 @@ describe('default property serializer', () => {
     describe('for string properties', () => {
 
         class Greeter {
-            @Serialize() public message: string;
+            @Serializable.Prop() public message: string;
             public constructor(message?: string) {
                 if (message !== undefined) { this.message = message; }
             }
@@ -196,15 +196,15 @@ describe('default property serializer', () => {
         describe('when a property is serializable', () => {
 
             class Author {
-                @Serialize() public name: string;
+                @Serializable.Prop() public name: string;
                 public constructor(name?: string) {
                     if (name !== undefined) { this.name = name; }
                 }
             }
 
             class Book {
-                @Serialize() public title: string;
-                @Serialize() public author: Author;
+                @Serializable.Prop() public title: string;
+                @Serializable.Prop() public author: Author;
                 public constructor(title?: string, author?: Author) {
                     if (title !== undefined) { this.title = title; }
                     if (author !== undefined) { this.author = author; }
@@ -236,8 +236,8 @@ describe('default property serializer', () => {
             }
 
             class Book {
-                @Serialize() public title: string;
-                @Serialize() public author: Author;
+                @Serializable.Prop() public title: string;
+                @Serializable.Prop() public author: Author;
                 public constructor(title?: string, author?: Author) {
                     if (title !== undefined) { this.title = title; }
                     if (author !== undefined) { this.author = author; }

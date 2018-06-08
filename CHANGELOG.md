@@ -1,3 +1,6 @@
+* [BREAKING] Renamed property/type decorators.
+  `@Serialize()` to `@Serializable.JSON.Prop()` (alias `@Serializable.Prop()`)
+  `@Serialize.Type()` to `@Serializable.JSON.Type()` (alias `@Serializable.Type()`)
 * [BREAKING] Refactored `Serialize.Custom()` to be an overload for `Serialize()`
 * Removed `TypeSerializer.discriminate()` (redundant, was never used)
 * Removed `Constructor.Default` type along with restriction for serializable type constructor to have a "default" version
