@@ -39,7 +39,7 @@ namespace TypeSerializer {
             throw new Error(
                 `No serializer found for type: "${typeName}". ` +
                 'Hints: Use serializable type or provide a custom serializer. ' +
-                'Specify property type explicitely, (details: https://github.com/Microsoft/TypeScript/issues/18995)'
+                'Specify property type explicitly, (details: https://github.com/Microsoft/TypeScript/issues/18995)'
             );
         }
 
