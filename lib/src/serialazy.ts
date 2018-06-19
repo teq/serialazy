@@ -9,7 +9,7 @@ import { JsonType } from './types/json_type';
  * @param serializable Serializable type instance
  * @returns JSON-compatible type which can be safely passed to `JSON.serialize`
  */
-function serialize(serializable: any): JsonType {
+function serializeToJson(serializable: any): JsonType {
 
     let serialized: JsonType;
 
@@ -27,20 +27,13 @@ function serialize(serializable: any): JsonType {
 
 }
 
-
-namespace serialize {
-
-    export const toJSON = serialize; // alias
-
-}
-
 /**
  * Construct/deserialize a serializable type instance from a JSON-compatible object
  * @param ctor Serializable type constructor function
  * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
  * @returns Serializable type instance
  */
-function deserialize<T>(ctor: Constructor<T>, serialized: JsonType): T {
+function deserializeFromJson<T>(ctor: Constructor<T>, serialized: JsonType): T {
 
     if (typeof(ctor) !== 'function') {
         throw new Error('Expecting a constructor function');
@@ -56,18 +49,20 @@ function deserialize<T>(ctor: Constructor<T>, serialized: JsonType): T {
 
 }
 
-namespace deserialize {
-
-    export const fromJSON = deserialize; // alias
-
-}
-
 // Functions
-export { serialize, deserialize };
+export {
+    serializeToJson,
+    serializeToJson as serialize, // alias
+    deserializeFromJson,
+    deserializeFromJson as deserialize // alias
+};
 
 // Decorators
-export { default as Serializable } from './decorators/serializable';
+export {
+    default as JsonSerializable,
+    default as Serializable // alias
+} from './decorators/json_serializable';
 
 // Types
-import * as Json from './types/json_type';
-export { Json };
+// import * as Json from './types/json_type';
+// export { Json };

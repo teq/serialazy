@@ -1,4 +1,5 @@
-import JsonTypeSerializer from './json_type_serializer';
+import Constructor from '../../types/constructor';
+import TypeSerializer from '../type_serializer';
 
 function expectStringOrNil(maybeString: any): string {
     if (typeof(maybeString) === 'string') {
@@ -13,9 +14,12 @@ function expectStringOrNil(maybeString: any): string {
 }
 
 /** JSON serializer for strings */
-const jsonStringTypeSerializer: JsonTypeSerializer<string> = {
+const jsonStringTypeSerializer: TypeSerializer<any, string> = {
     down: (originalValue: any) => expectStringOrNil(originalValue),
     up: (serializedValue: any) => expectStringOrNil(serializedValue)
 };
 
-export default jsonStringTypeSerializer;
+export default Object.assign(jsonStringTypeSerializer, {
+    matchValue: (value: any) => typeof(value) === 'string' || value instanceof String,
+    matchType: (type: Constructor<any>) => type === String
+});

@@ -1,4 +1,5 @@
-import JsonTypeSerializer from './json_type_serializer';
+import Constructor from '../../types/constructor';
+import TypeSerializer from '../type_serializer';
 
 function expectBooleanOrNil(maybeBoolean: any): boolean {
     if (typeof(maybeBoolean) === 'boolean') {
@@ -13,9 +14,12 @@ function expectBooleanOrNil(maybeBoolean: any): boolean {
 }
 
 /** JSON serializer for booleans */
-const jsonBooleanTypeSerializer: JsonTypeSerializer<boolean> = {
+const jsonBooleanTypeSerializer: TypeSerializer<any, boolean> = {
     down: (originalValue: any) => expectBooleanOrNil(originalValue),
-    up: (serializedValue: any) => expectBooleanOrNil(serializedValue)
+    up: (serializedValue: any) => expectBooleanOrNil(serializedValue),
 };
 
-export default jsonBooleanTypeSerializer;
+export default Object.assign(jsonBooleanTypeSerializer, {
+    matchValue: (value: any) => typeof(value) === 'boolean' || value instanceof Boolean,
+    matchType: (type: Constructor<any>) => type === Boolean
+});

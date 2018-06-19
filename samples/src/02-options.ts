@@ -1,4 +1,4 @@
-import { deflate, inflate, Serialize } from './@lib/serialazy';
+import { deserialize, Serializable, serialize } from './@lib/serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -10,9 +10,9 @@ class Book {
     // * `optional` allows property to be `undefined` (default: `false`)
     // * `nullable` allows property to be `null (default: `false`)
     // * `name` allows to override property name
-    @Serialize({ optional: true }) public isbn: string;
+    @Serializable.Prop({ optional: true }) public isbn: string;
 
-    @Serialize({ name: 'summary' }) public description: string;
+    @Serializable.Prop({ name: 'summary' }) public description: string;
 
 }
 
@@ -23,14 +23,14 @@ const book = Object.assign(new Book(), {
 });
 
 // *** Serialize
-const serialized = deflate(book);
+const serialized = serialize(book);
 
 expect(serialized).to.deep.equal({
     summary: 'Descriptive text' // note that "description" is mapped to "summary" in serialized object
 });
 
 // *** Deserialize
-const deserialized = inflate(Book, serialized);
+const deserialized = deserialize(Book, serialized);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal(book);

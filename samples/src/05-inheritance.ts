@@ -1,11 +1,11 @@
-import { deflate, inflate, Serialize } from './@lib/serialazy';
+import { deserialize, Serializable, serialize } from './@lib/serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
 
 // *** Class definitions
 
-@Serialize.Type({
+@Serializable.Type({
     down: (point: Point) => [point.x, point.y],
     up: (tuple) => Object.assign(new Point(), { x: tuple[0], y: tuple[1] })
 })
@@ -15,11 +15,11 @@ class Point {
 }
 
 class Shape {
-    @Serialize() public position: Point;
+    @Serializable.Prop() public position: Point;
 }
 
 class Circle extends Shape { // inherits props & serializers from Shape
-    @Serialize() public radius: number;
+    @Serializable.Prop() public radius: number;
 }
 
 // *** Create instance
@@ -29,7 +29,7 @@ const circle = Object.assign(new Circle(), {
 });
 
 // *** Serialize
-const serialized = deflate(circle);
+const serialized = serialize(circle);
 
 expect(serialized).to.deep.equal({
     position: [23, 34],
@@ -37,7 +37,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = inflate(Circle, serialized);
+const deserialized = deserialize(Circle, serialized);
 
 expect(deserialized instanceof Circle).to.equal(true);
 expect(deserialized).to.deep.equal(circle);

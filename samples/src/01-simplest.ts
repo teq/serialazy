@@ -1,4 +1,4 @@
-import { deflate, inflate, Serialize } from './@lib/serialazy';
+import { deserialize, Serializable, serialize } from './@lib/serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -7,8 +7,8 @@ const { expect } = chai;
 class Book {
 
     // "Serialize" decorator tries to pick a default serializer for given data type
-    @Serialize() public title: string;
-    @Serialize() public pages: number;
+    @Serializable.Prop() public title: string;
+    @Serializable.Prop() public pages: number;
 
     // Properties not decorated by `Serialize` are NOT serialized
     public notes: string;
@@ -23,7 +23,7 @@ const book = Object.assign(new Book(), {
 });
 
 // *** Serialize
-const serialized = deflate(book); // JSON-compatible object (can be safely passed to `JSON.stringify`)
+const serialized = serialize(book); // JSON-compatible object (can be safely passed to `JSON.stringify`)
 
 expect(serialized).to.deep.equal({
     title: 'The Adventure of the Yellow Face',
@@ -32,7 +32,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = inflate(Book, serialized);
+const deserialized = deserialize(Book, serialized);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal({

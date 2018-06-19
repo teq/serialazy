@@ -1,4 +1,4 @@
-import { deflate, inflate, Serialize } from './@lib/serialazy';
+import { deserialize, Serializable, serialize } from './@lib/serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -7,14 +7,14 @@ const { expect } = chai;
 class Book {
 
     // A custom serializer which converts Date to ISO date string
-    @Serialize.Custom({
+    @Serializable.Prop({
         down: (val: Date) => val.toISOString(),
         up: (val) => new Date(val)
     }, { name: 'releaseDate' }) // Note that custom serializer can accept options
     public publicationDate: Date;
 
     // A custom serializer which converts Map to a JSON-compatible array of objects
-    @Serialize.Custom({
+    @Serializable.Prop({
         down: (val: Map<number, string>) => Array.from(val).map(([page, title]) => ({ page, title })),
         up: (val) => new Map(val.map<[number, string]>(ch => [ch.page, ch.title])),
     })
@@ -33,7 +33,7 @@ const book = Object.assign(new Book(), {
 });
 
 // *** Serialize
-const serialized = deflate(book);
+const serialized = serialize(book);
 
 expect(serialized).to.deep.equal({
     releaseDate: '1893-02-01T00:00:00.000Z',
@@ -45,7 +45,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = inflate(Book, serialized);
+const deserialized = deserialize(Book, serialized);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal(book);

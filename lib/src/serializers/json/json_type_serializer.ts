@@ -2,9 +2,7 @@ import Constructor from '../../types/constructor';
 import JsonType from '../../types/json_type';
 import SerializableTypeMetadata from '../metadata/serializable_type_metadata';
 import TypeSerializer from '../type_serializer';
-import jsonBooleanTypeSerializer from './json_boolean_type_serializer';
-import jsonNumberTypeSerializer from './json_number_type_serializer';
-import jsonStringTypeSerializer from './json_string_type_serializer';
+import predefinedJsonSerializers from './';
 
 /** JSON type serializer */
 type JsonTypeSerializer<TOriginal> = TypeSerializer<JsonType, TOriginal>;
@@ -18,16 +16,10 @@ namespace JsonTypeSerializer {
 
         if (value === null || value === undefined) {
             throw new Error('Expecting value to be not null/undefined');
-        } else if (typeof(value) === 'string' || value instanceof String) {
-            serializer = jsonStringTypeSerializer;
-        } else if (typeof(value) === 'number' || value instanceof Number) {
-            serializer = jsonNumberTypeSerializer;
-        } else if (typeof(value) === 'boolean' || value instanceof Boolean) {
-            serializer = jsonBooleanTypeSerializer;
-        } else { // non-primitive
+        } else if (!(serializer = predefinedJsonSerializers.pickForValue(value))) {
             const type = value.constructor;
             if (typeof(type) !== 'function') {
-                throw new Error(`Expecting non-primitive value to have a constructor function`);
+                throw new Error(`Expecting value to have a constructor function`);
             }
             const meta = SerializableTypeMetadata.getOwnOrInheritedMetaFor(Object.getPrototypeOf(value));
             if (meta) {
@@ -48,13 +40,7 @@ namespace JsonTypeSerializer {
 
         if (typeof(type) !== 'function') {
             throw new Error('Expecting a type constructor function');
-        } else if (type === String) {
-            serializer = jsonStringTypeSerializer;
-        } else if (type === Number) {
-            serializer = jsonNumberTypeSerializer;
-        } else if (type === Boolean) {
-            serializer = jsonBooleanTypeSerializer;
-        } else { // non-primitive
+        } else if (!(serializer = predefinedJsonSerializers.pickForType(type))) {
             const meta = SerializableTypeMetadata.getOwnOrInheritedMetaFor(type.prototype);
             if (meta) {
                 serializer = meta.getTypeSerializer();
