@@ -1,5 +1,5 @@
-import Constructor from '../../types/constructor';
 import TypeSerializer from '../type_serializer';
+import Constructor from '../types/constructor';
 
 function expectNumberOrNil(maybeNumber: any): number {
     if (typeof(maybeNumber) === 'number') {

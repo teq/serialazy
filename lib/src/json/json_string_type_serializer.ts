@@ -1,5 +1,5 @@
-import Constructor from '../../types/constructor';
 import TypeSerializer from '../type_serializer';
+import Constructor from '../types/constructor';
 
 function expectStringOrNil(maybeString: any): string {
     if (typeof(maybeString) === 'string') {

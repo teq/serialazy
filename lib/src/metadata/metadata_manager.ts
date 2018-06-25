@@ -18,6 +18,7 @@ function key(backend: string, projection: string) {
 
 }
 
+/** Used to access serializable type metadata */
 export default class MetadataManager {
 
     private readonly key: Symbol;

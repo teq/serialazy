@@ -1,4 +1,4 @@
-import Constructor from '../types/constructor';
+import Constructor from './types/constructor';
 
 /** Represents a generic type serializer */
 interface TypeSerializer<TSerialized, TOriginal> {

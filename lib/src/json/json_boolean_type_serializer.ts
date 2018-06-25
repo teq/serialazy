@@ -1,5 +1,5 @@
-import Constructor from '../../types/constructor';
 import TypeSerializer from '../type_serializer';
+import Constructor from '../types/constructor';
 
 function expectBooleanOrNil(maybeBoolean: any): boolean {
     if (typeof(maybeBoolean) === 'boolean') {

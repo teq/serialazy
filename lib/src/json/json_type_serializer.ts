@@ -1,8 +1,8 @@
-import Constructor from '../../types/constructor';
-import JsonType from '../../types/json_type';
 import MetadataManager from '../metadata/metadata_manager';
 import TypeSerializer from '../type_serializer';
-import predefinedJsonSerializers from './';
+import Constructor from '../types/constructor';
+import JsonType from '../types/json_type';
+import backend from './';
 
 /** JSON type serializer */
 type JsonTypeSerializer<TOriginal> = TypeSerializer<JsonType, TOriginal>;
@@ -16,13 +16,13 @@ namespace JsonTypeSerializer {
 
         if (value === null || value === undefined) {
             throw new Error('Expecting value to be not null/undefined');
-        } else if (!(serializer = predefinedJsonSerializers.pickForValue(value))) {
+        } else if (!(serializer = backend.predefinedSerializers.pickForValue(value))) {
             const type = value.constructor;
             if (typeof(type) !== 'function') {
                 throw new Error(`Expecting value to have a constructor function`);
             }
             const proto = Object.getPrototypeOf(value);
-            const meta = MetadataManager.get().getOwnOrInheritedMetaFor(proto);
+            const meta = MetadataManager.get(backend.name).getOwnOrInheritedMetaFor(proto);
             if (meta) {
                 serializer = meta.getTypeSerializer();
             } else { // unable to pick a type serializer
@@ -41,8 +41,8 @@ namespace JsonTypeSerializer {
 
         if (typeof(type) !== 'function') {
             throw new Error('Expecting a type constructor function');
-        } else if (!(serializer = predefinedJsonSerializers.pickForType(type))) {
-            const meta = MetadataManager.get().getOwnOrInheritedMetaFor(type.prototype);
+        } else if (!(serializer = backend.predefinedSerializers.pickForType(type))) {
+            const meta = MetadataManager.get(backend.name).getOwnOrInheritedMetaFor(type.prototype);
             if (meta) {
                 serializer = meta.getTypeSerializer();
             } else { // unable to pick a type serializer

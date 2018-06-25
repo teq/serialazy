@@ -1,4 +1,4 @@
-import Provider from '../../types/provider';
+import Provider from '../types/provider';
 import TypeSerializer from '../type_serializer';
 import SerializableTypeMetadata from './serializable_type_metadata';
 

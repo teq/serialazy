@@ -1,5 +1,5 @@
-import Constructor from '../../types/constructor';
 import TypeSerializer from '../type_serializer';
+import Constructor from '../types/constructor';
 import MetadataManager from './metadata_manager';
 
 /** Abstract metadata container for serializables */

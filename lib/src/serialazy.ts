@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import JsonTypeSerializer from './serializers/json/json_type_serializer';
+import JsonTypeSerializer from './json/json_type_serializer';
 import Constructor from './types/constructor';
 import { JsonType } from './types/json_type';
 
@@ -61,7 +61,7 @@ export {
 export {
     default as JsonSerializable,
     default as Serializable // alias
-} from './decorators/json_serializable';
+} from './json/json_serializable';
 
 // Types
 // import * as Json from './types/json_type';

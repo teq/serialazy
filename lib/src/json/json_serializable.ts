@@ -1,9 +1,9 @@
-import JsonPropertySerializer from '../serializers/json/json_property_serializer';
-import JsonTypeSerializer from '../serializers/json/json_type_serializer';
-import MetadataManager from '../serializers/metadata/metadata_manager';
-import TypeSerializer from '../serializers/type_serializer';
+import MetadataManager from '../metadata/metadata_manager';
+import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
 import JsonType from '../types/json_type';
+import JsonPropertySerializer from './json_property_serializer';
+import JsonTypeSerializer from './json_type_serializer';
 
 function isTypeSerializer<TSerialized, TOriginal>(target: any): target is TypeSerializer<TSerialized, TOriginal> {
     return typeof target === 'object' && typeof target.down === 'function' && typeof target.up === 'function';
