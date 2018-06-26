@@ -1,5 +1,4 @@
 import PropertySerializer from '../property_serializer';
-import MetadataManager from './metadata_manager';
 import SerializableTypeMetadata from './serializable_type_metadata';
 
 /** Metadata container for serializable property bags */

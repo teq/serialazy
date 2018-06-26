@@ -1,5 +1,5 @@
-import Provider from '../types/provider';
 import TypeSerializer from '../type_serializer';
+import Provider from '../types/provider';
 import SerializableTypeMetadata from './serializable_type_metadata';
 
 /** Metadata container for custom serializable types */

@@ -14,12 +14,22 @@ function expectStringOrNil(maybeString: any): string {
 }
 
 /** JSON serializer for strings */
-const jsonStringTypeSerializer: TypeSerializer<any, string> = {
-    down: (originalValue: any) => expectStringOrNil(originalValue),
-    up: (serializedValue: any) => expectStringOrNil(serializedValue)
-};
+export default class JsonStringTypeSerializer implements TypeSerializer<any, string> {
 
-export default Object.assign(jsonStringTypeSerializer, {
-    matchValue: (value: any) => typeof(value) === 'string' || value instanceof String,
-    matchType: (type: Constructor<any>) => type === String
-});
+    public down(originalValue: any) {
+        return expectStringOrNil(originalValue);
+    }
+
+    public up(serializedValue: any) {
+        return expectStringOrNil(serializedValue);
+    }
+
+    public matchValue(value: any) {
+        return typeof(value) === 'string' || value instanceof String;
+    }
+
+    public matchType(type: Constructor<any>) {
+        return type === String;
+    }
+
+}

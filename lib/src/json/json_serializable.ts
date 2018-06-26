@@ -3,20 +3,22 @@ import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
 import JsonType from '../types/json_type';
 import JsonPropertySerializer from './json_property_serializer';
-import JsonTypeSerializer from './json_type_serializer';
+import jsonSerializationBackend from './json_serialization_backend';
 
 function isTypeSerializer<TSerialized, TOriginal>(target: any): target is TypeSerializer<TSerialized, TOriginal> {
     return typeof target === 'object' && typeof target.down === 'function' && typeof target.up === 'function';
 }
 
+const typeSerializerPicker = new TypeSerializer.Picker(jsonSerializationBackend);
+
 namespace JsonSerializable {
 
-    /** Use default JSON serializer for given property */
+    /** Use default JSON type serializer for given property */
     export function Prop(
         options?: JsonPropertySerializer.Options
     ): (proto: Object, propertyName: string) => void;
 
-    /** Use custom JSON serializer for given property */
+    /** Use custom JSON type serializer for given property */
     export function Prop<TSerialized extends JsonType, TOriginal>(
         customTypeSerializer: TypeSerializer<TSerialized, TOriginal>,
         options?: JsonPropertySerializer.Options
@@ -43,7 +45,7 @@ namespace JsonSerializable {
 
                 try {
 
-                    const defaultTypeSerializer = JsonTypeSerializer.pickForProp(proto, propertyName);
+                    const defaultTypeSerializer = typeSerializerPicker.pickForProp(proto, propertyName);
 
                     if (customTypeSerializer) {
                         return TypeSerializer.compile([defaultTypeSerializer, customTypeSerializer]);

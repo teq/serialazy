@@ -1,7 +1,7 @@
 import PropertySerializer from "../property_serializer";
-import { JsonMap } from "../types/json_type";
+import TypeSerializer from "../type_serializer";
+import { JsonMap, JsonType } from "../types/json_type";
 import Provider from "../types/provider";
-import JsonTypeSerializer from "./json_type_serializer";
 
 /** Represents a JSON property serializer */
 export class JsonPropertySerializer implements PropertySerializer<JsonMap, any> {
@@ -14,7 +14,7 @@ export class JsonPropertySerializer implements PropertySerializer<JsonMap, any> 
      */
     public constructor(
         private propertyName: string,
-        private typeSerializerProvider: Provider<JsonTypeSerializer<any>>,
+        private typeSerializerProvider: Provider<TypeSerializer<JsonType, any>>,
         private options: JsonPropertySerializer.Options = {}
     ) {}
 

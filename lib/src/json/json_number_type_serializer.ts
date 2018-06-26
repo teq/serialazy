@@ -14,12 +14,22 @@ function expectNumberOrNil(maybeNumber: any): number {
 }
 
 /** JSON serializer for numbers */
-const jsonNumberTypeSerializer: TypeSerializer<any, number> = {
-    down: (originalValue: any) => expectNumberOrNil(originalValue),
-    up: (serializedValue: any) => expectNumberOrNil(serializedValue)
-};
+export default class JsonNumberTypeSerializer implements TypeSerializer<any, number> {
 
-export default Object.assign(jsonNumberTypeSerializer, {
-    matchValue: (value: any) => typeof(value) === 'number' || value instanceof Number,
-    matchType: (type: Constructor<any>) => type === Number
-});
+    public down(originalValue: any) {
+        return expectNumberOrNil(originalValue);
+    }
+
+    public up(serializedValue: any) {
+        return expectNumberOrNil(serializedValue);
+    }
+
+    public matchValue(value: any) {
+        return typeof(value) === 'number' || value instanceof Number;
+    }
+
+    public matchType(type: Constructor<any>) {
+        return type === Number;
+    }
+
+}

@@ -1,8 +1,11 @@
 import 'reflect-metadata';
 
-import JsonTypeSerializer from './json/json_type_serializer';
+import jsonSerializationBackend from './json/json_serialization_backend';
+import TypeSerializer from './type_serializer';
 import Constructor from './types/constructor';
 import { JsonType } from './types/json_type';
+
+const typeSerializerPicker = new TypeSerializer.Picker(jsonSerializationBackend);
 
 /**
  * Serialize given serializable type instance to a JSON-compatible type
@@ -16,7 +19,7 @@ function serializeToJson(serializable: any): JsonType {
     if (serializable === null || serializable === undefined) {
         serialized = serializable;
     } else {
-        const { down } = JsonTypeSerializer.pickForValue(serializable);
+        const { down } = typeSerializerPicker.pickForValue(serializable);
         if (!down) {
             throw new Error(`Value is not serializable: ${serializable}`);
         }
@@ -39,7 +42,7 @@ function deserializeFromJson<T>(ctor: Constructor<T>, serialized: JsonType): T {
         throw new Error('Expecting a constructor function');
     }
 
-    const { up } = JsonTypeSerializer.pickForType(ctor);
+    const { up } = typeSerializerPicker.pickForType(ctor);
 
     if (!up) {
         throw new Error(`Type is not serializable: ${ctor.name}`);

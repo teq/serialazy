@@ -14,12 +14,22 @@ function expectBooleanOrNil(maybeBoolean: any): boolean {
 }
 
 /** JSON serializer for booleans */
-const jsonBooleanTypeSerializer: TypeSerializer<any, boolean> = {
-    down: (originalValue: any) => expectBooleanOrNil(originalValue),
-    up: (serializedValue: any) => expectBooleanOrNil(serializedValue),
-};
+export default class JsonBooleanTypeSerializer implements TypeSerializer.Predefined<any, boolean> {
 
-export default Object.assign(jsonBooleanTypeSerializer, {
-    matchValue: (value: any) => typeof(value) === 'boolean' || value instanceof Boolean,
-    matchType: (type: Constructor<any>) => type === Boolean
-});
+    public down(originalValue: any) {
+        return expectBooleanOrNil(originalValue);
+    }
+
+    public up(serializedValue: any) {
+        return expectBooleanOrNil(serializedValue);
+    }
+
+    public matchValue(value: any) {
+        return typeof(value) === 'boolean' || value instanceof Boolean;
+    }
+
+    public matchType(type: Constructor<any>) {
+        return type === Boolean;
+    }
+
+}

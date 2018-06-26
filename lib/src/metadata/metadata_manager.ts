@@ -23,10 +23,7 @@ export default class MetadataManager {
 
     private readonly key: Symbol;
 
-    private constructor(
-        private readonly backend: string,
-        private readonly projection: string
-    ) {
+    private constructor(backend: string, projection: string) {
         this.key = key(backend, projection);
     }
 
