@@ -1,8 +1,8 @@
 import JsonType from '../json/json_type';
 import MetadataManager from '../metadata/metadata_manager';
+import ObjectPropertySerializer from '../object_property_serializer';
 import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
-import JsonPropertySerializer from './json_property_serializer';
 import jsonSerializationBackend from './json_serialization_backend';
 
 function isTypeSerializer<TSerialized, TOriginal>(target: any): target is TypeSerializer<TSerialized, TOriginal> {
@@ -15,22 +15,22 @@ namespace JsonSerializable {
 
     /** Use default JSON type serializer for given property */
     export function Prop(
-        options?: JsonPropertySerializer.Options
+        options?: ObjectPropertySerializer.Options
     ): (proto: Object, propertyName: string) => void;
 
     /** Use custom JSON type serializer for given property */
     export function Prop<TSerialized extends JsonType, TOriginal>(
         customTypeSerializer: TypeSerializer<TSerialized, TOriginal>,
-        options?: JsonPropertySerializer.Options
+        options?: ObjectPropertySerializer.Options
     ): (proto: Object, propertyName: string) => void;
 
     export function Prop<TSerialized extends JsonType, TOriginal>(
-        optionsOrCustomTypeSerializer: JsonPropertySerializer.Options | TypeSerializer<TSerialized, TOriginal>,
-        maybeOptions?: JsonPropertySerializer.Options
+        optionsOrCustomTypeSerializer: ObjectPropertySerializer.Options | TypeSerializer<TSerialized, TOriginal>,
+        maybeOptions?: ObjectPropertySerializer.Options
     ) {
 
         let customTypeSerializer: TypeSerializer<TSerialized, TOriginal> = null;
-        let options: JsonPropertySerializer.Options = null;
+        let options: ObjectPropertySerializer.Options = null;
 
         if (isTypeSerializer(optionsOrCustomTypeSerializer)) {
             customTypeSerializer = optionsOrCustomTypeSerializer;
@@ -60,7 +60,7 @@ namespace JsonSerializable {
 
             };
 
-            const propertySerializer = new JsonPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
+            const propertySerializer = new ObjectPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
             MetadataManager.get().getOrCreatePropertyBagMetaFor(proto).setPropertySerializer(propertyName, propertySerializer);
 
         };

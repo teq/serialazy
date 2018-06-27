@@ -1,10 +1,14 @@
-import { JsonMap, JsonType } from "../json/json_type";
-import PropertySerializer from "../property_serializer";
-import TypeSerializer from "../type_serializer";
-import Provider from "../types/provider";
+import PropertySerializer from "./property_serializer";
+import TypeSerializer from "./type_serializer";
+import Provider from "./types/provider";
 
-/** Represents a JSON property serializer */
-export class JsonPropertySerializer implements PropertySerializer<JsonMap, any> {
+/** Represents a bag of serialized properties */
+export interface PropertyBag<TSerialized> {
+    [prop: string]: TSerialized;
+}
+
+/** Represents an object property serializer */
+class ObjectPropertySerializer<TSerialized> implements PropertySerializer<PropertyBag<TSerialized>, any> {
 
     /**
      * Construct a new property serializer
@@ -14,15 +18,15 @@ export class JsonPropertySerializer implements PropertySerializer<JsonMap, any> 
      */
     public constructor(
         private propertyName: string,
-        private typeSerializerProvider: Provider<TypeSerializer<JsonType, any>>,
-        private options: JsonPropertySerializer.Options = {}
+        private typeSerializerProvider: Provider<TypeSerializer<TSerialized, any>>,
+        private options: ObjectPropertySerializer.Options = {}
     ) {}
 
     private get typeSerializer() {
         return this.typeSerializerProvider();
     }
 
-    public down(serializable: any, serialized: JsonMap) {
+    public down(serializable: any, serialized: PropertyBag<TSerialized>) {
 
         const [propertyName, mappedName] = [this.propertyName, this.options.name || this.propertyName];
 
@@ -38,7 +42,7 @@ export class JsonPropertySerializer implements PropertySerializer<JsonMap, any> 
 
     }
 
-    public up(serializable: any, serialized: JsonMap) {
+    public up(serializable: any, serialized: PropertyBag<TSerialized>) {
 
         const [propertyName, mappedName] = [this.propertyName, this.options.name || this.propertyName];
 
@@ -72,9 +76,9 @@ export class JsonPropertySerializer implements PropertySerializer<JsonMap, any> 
 
 }
 
-export namespace JsonPropertySerializer {
+namespace ObjectPropertySerializer {
 
-    /** JSON property serializer options */
+    /** Object property serializer options */
     export interface Options {
         /** Indicates if property can be undefined. Default: false */
         optional?: boolean;
@@ -86,4 +90,4 @@ export namespace JsonPropertySerializer {
 
 }
 
-export default JsonPropertySerializer;
+export default ObjectPropertySerializer;
