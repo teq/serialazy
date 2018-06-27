@@ -1,4 +1,4 @@
-import { Serializable } from '../@lib/serialazy';
+import { Serializable } from '../@lib/serialazy_json';
 
 import Parent from './circular_parent';
 

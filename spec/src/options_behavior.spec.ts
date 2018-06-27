@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deserialize, Serializable, serialize } from './@lib/serialazy';
+import { deserialize, Serializable, serialize } from './@lib/serialazy_json';
 
 const { expect } = chai;
 

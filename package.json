@@ -1,7 +1,7 @@
 {
   "name": "serialazy",
   "version": "2.0.0",
-  "description": "A TypeScript class serialization library",
+  "description": "A TypeScript class serialization library (JSON backend)",
   "keywords": [
     "serialize",
     "deserialize",
@@ -17,8 +17,8 @@
   "bugs": {
     "url": "https://github.com/teq/serialazy/issues"
   },
-  "main": "./lib/dist/serialazy.js",
-  "types": "./lib/dist/serialazy.d.ts",
+  "main": "./lib/dist/serialazy_json.js",
+  "types": "./lib/dist/serialazy_json.d.ts",
   "scripts": {
     "lint": "tslint -p ./lib && tslint -p ./spec && tslint -p ./samples",
     "apidoc": "typedoc --target ES6 --module commonjs --excludePrivate --out ./docs ./lib/src && touch ./docs/.nojekyll",
