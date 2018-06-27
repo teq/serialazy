@@ -1,6 +1,6 @@
+import { JsonMap, JsonType } from "../json/json_type";
 import PropertySerializer from "../property_serializer";
 import TypeSerializer from "../type_serializer";
-import { JsonMap, JsonType } from "../types/json_type";
 import Provider from "../types/provider";
 
 /** Represents a JSON property serializer */

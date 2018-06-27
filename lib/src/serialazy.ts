@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 
 import jsonSerializationBackend from './json/json_serialization_backend';
+import JsonType from './json/json_type';
 import TypeSerializer from './type_serializer';
 import Constructor from './types/constructor';
-import { JsonType } from './types/json_type';
 
 const typeSerializerPicker = new TypeSerializer.Picker(jsonSerializationBackend);
 
@@ -21,7 +21,7 @@ function serializeToJson(serializable: any): JsonType {
     } else {
         const { down } = typeSerializerPicker.pickForValue(serializable);
         if (!down) {
-            throw new Error(`Value is not serializable: ${serializable}`);
+            throw new Error(`Unable to serialize a value: ${serializable}`);
         }
         serialized = down(serializable);
     }
@@ -45,7 +45,7 @@ function deserializeFromJson<T>(ctor: Constructor<T>, serialized: JsonType): T {
     const { up } = typeSerializerPicker.pickForType(ctor);
 
     if (!up) {
-        throw new Error(`Type is not serializable: ${ctor.name}`);
+        throw new Error(`Unable to deserialize an instance of "${ctor.name}" from: ${serialized}`);
     }
 
     return up(serialized);
@@ -66,6 +66,8 @@ export {
     default as Serializable // alias
 } from './json/json_serializable';
 
-// Types
-// import * as Json from './types/json_type';
-// export { Json };
+// Internals (for backend implementations)
+export * from './metadata';
+export { default as PropertySerializer } from './property_serializer';
+export { default as SerializationBackend } from './serialization_backend';
+export { default as TypeSerializer } from './type_serializer';

@@ -1,7 +1,7 @@
+import JsonType from '../json/json_type';
 import MetadataManager from '../metadata/metadata_manager';
 import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
-import JsonType from '../types/json_type';
 import JsonPropertySerializer from './json_property_serializer';
 import jsonSerializationBackend from './json_serialization_backend';
 

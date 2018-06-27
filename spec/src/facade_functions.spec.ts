@@ -47,7 +47,7 @@ describe('facade function', () => {
 
         it('should fail to serialize non-primitives which are not serializable', () => {
             const bar = Object.assign(new Bar(), { id: 'bar' });
-            expect(() => serialize(bar)).to.throw("Value is not serializable");
+            expect(() => serialize(bar)).to.throw("Unable to serialize a value");
         });
 
     });
@@ -80,7 +80,7 @@ describe('facade function', () => {
         });
 
         it('should fail to deserialize non-primitives which are not serializable', () => {
-            expect(() => deserialize(Bar, { id: 'bar' })).to.throw('Type is not serializable: Bar');
+            expect(() => deserialize(Bar, { id: 'bar' })).to.throw('Unable to deserialize an instance of "Bar"');
         });
 
     });
