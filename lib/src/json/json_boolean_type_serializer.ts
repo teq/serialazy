@@ -1,5 +1,6 @@
 import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
+import JsonTypeSerializer from './json_type_serializer';
 
 function expectBooleanOrNil(maybeBoolean: any): boolean {
     if (typeof(maybeBoolean) === 'boolean') {
@@ -14,7 +15,9 @@ function expectBooleanOrNil(maybeBoolean: any): boolean {
 }
 
 /** JSON serializer for booleans */
-export default class JsonBooleanTypeSerializer implements TypeSerializer.Predefined<any, boolean> {
+export default class JsonBooleanTypeSerializer
+    implements JsonTypeSerializer<boolean>, TypeSerializer.Matchable
+{
 
     public down(originalValue: any) {
         return expectBooleanOrNil(originalValue);

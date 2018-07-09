@@ -3,13 +3,11 @@ import MetadataManager from '../metadata/metadata_manager';
 import ObjectPropertySerializer from '../object_property_serializer';
 import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
-import jsonSerializationBackend from './json_serialization_backend';
+import JsonTypeSerializer from './json_type_serializer';
 
 function isTypeSerializer<TSerialized, TOriginal>(target: any): target is TypeSerializer<TSerialized, TOriginal> {
     return typeof target === 'object' && typeof target.down === 'function' && typeof target.up === 'function';
 }
-
-const typeSerializerPicker = new TypeSerializer.Picker(jsonSerializationBackend);
 
 namespace JsonSerializable {
 
@@ -45,7 +43,7 @@ namespace JsonSerializable {
 
                 try {
 
-                    const defaultTypeSerializer = typeSerializerPicker.pickForProp(proto, propertyName);
+                    const defaultTypeSerializer = JsonTypeSerializer.pickForProp(proto, propertyName);
 
                     if (customTypeSerializer) {
                         return TypeSerializer.compile([defaultTypeSerializer, customTypeSerializer]);

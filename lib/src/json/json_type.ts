@@ -6,9 +6,9 @@ export type JsonPrimitive = string | number | boolean | null;
 export interface JsonArray extends Array<JsonType> {}
 
 /** JSON object */
-export interface JsonMap { [prop: string]: JsonType; }
+export interface JsonObject { [prop: string]: JsonType; }
 
 /** JSON-compatible type */
-export type JsonType = JsonPrimitive | JsonArray | JsonMap;
+export type JsonType = JsonPrimitive | JsonArray | JsonObject;
 
 export default JsonType;

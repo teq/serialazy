@@ -1,5 +1,6 @@
 import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
+import JsonTypeSerializer from './json_type_serializer';
 
 function expectNumberOrNil(maybeNumber: any): number {
     if (typeof(maybeNumber) === 'number') {
@@ -14,7 +15,9 @@ function expectNumberOrNil(maybeNumber: any): number {
 }
 
 /** JSON serializer for numbers */
-export default class JsonNumberTypeSerializer implements TypeSerializer<any, number> {
+export default class JsonNumberTypeSerializer
+    implements JsonTypeSerializer<number>, TypeSerializer.Matchable
+{
 
     public down(originalValue: any) {
         return expectNumberOrNil(originalValue);

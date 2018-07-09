@@ -1,5 +1,3 @@
-import MetadataManager from './metadata/metadata_manager';
-import SerializationBackend from './serialization_backend';
 import Constructor from './types/constructor';
 
 /** Represents a generic type serializer */
@@ -29,81 +27,14 @@ interface TypeSerializer<TSerialized, TOriginal> {
 
 namespace TypeSerializer {
 
-    /** Represents a predefined type serializer (has matching methods) */
-    export interface Predefined<TSerialized, TOriginal> extends TypeSerializer<TSerialized, TOriginal> {
+    /** Represents a type which can be matched against a value or a type */
+    export interface Matchable {
 
-        /** Check if type serializer matches given value */
+        /** Check if it matches given value */
         matchValue(value: any): boolean;
 
-        /** Check if type serializer matches given type */
+        /** Check if it matches given type */
         matchType(type: Constructor<any>): boolean;
-
-    }
-
-    /** A helper class which picks a type serializer for given type/value */
-    export class Picker<TSerialized> {
-
-        public constructor(
-            private backend: SerializationBackend<TSerialized>
-        ) {}
-
-        /** Try to pick a (possibly partial) type serializer for given value */
-        public pickForValue(value: any): Partial<TypeSerializer<TSerialized, any>> {
-
-            let serializer: Partial<TypeSerializer<TSerialized, any>> = {};
-
-            if (value === null || value === undefined) {
-                throw new Error('Expecting value to be not null/undefined');
-            } else if (!(serializer = this.backend.predefinedSerializers.find(s => s.matchValue(value)))) {
-                const type = value.constructor;
-                if (typeof(type) !== 'function') {
-                    throw new Error(`Expecting value to have a constructor function`);
-                }
-                const proto = Object.getPrototypeOf(value);
-                const meta = MetadataManager.get(this.backend.name).getOwnOrInheritedMetaFor(proto);
-                if (meta) {
-                    serializer = meta.getTypeSerializer();
-                } else { // unable to pick a type serializer
-                    serializer = { type };
-                }
-            }
-
-            return serializer;
-
-        }
-
-        /** Try to pick a (possibly partial) type serializer for given type */
-        public pickForType(type: Constructor<any>): Partial<TypeSerializer<TSerialized, any>> {
-
-            let serializer: Partial<TypeSerializer<TSerialized, any>> = {};
-
-            if (typeof(type) !== 'function') {
-                throw new Error('Expecting a type constructor function');
-            } else if (!(serializer = this.backend.predefinedSerializers.find(s => s.matchType(type)))) {
-                const meta = MetadataManager.get(this.backend.name).getOwnOrInheritedMetaFor(type.prototype);
-                if (meta) {
-                    serializer = meta.getTypeSerializer();
-                } else { // unable to pick a type serializer
-                    serializer = { type };
-                }
-            }
-
-            return serializer;
-
-        }
-
-        /** Try to pick a (possibly partial) type serializer for given property */
-        public pickForProp(proto: Object, propertyName: string): Partial<TypeSerializer<TSerialized, any>> {
-
-            const type: Constructor<any> = Reflect.getMetadata('design:type', proto, propertyName);
-
-            if (type === undefined) {
-                throw new Error('Unable to fetch type information. Hint: Enable TS options: "emitDecoratorMetadata" and "experimentalDecorators"');
-            }
-
-            return this.pickForType(type);
-
-        }
 
     }
 

@@ -1,5 +1,6 @@
 import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
+import JsonTypeSerializer from './json_type_serializer';
 
 function expectStringOrNil(maybeString: any): string {
     if (typeof(maybeString) === 'string') {
@@ -14,7 +15,9 @@ function expectStringOrNil(maybeString: any): string {
 }
 
 /** JSON serializer for strings */
-export default class JsonStringTypeSerializer implements TypeSerializer<any, string> {
+export default class JsonStringTypeSerializer
+    implements JsonTypeSerializer<string>, TypeSerializer.Matchable
+{
 
     public down(originalValue: any) {
         return expectStringOrNil(originalValue);
