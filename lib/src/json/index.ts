@@ -1,6 +1,7 @@
 import Constructor from "../types/constructor";
 import JsonType from "./json_type";
 import JsonTypeSerializer from "./json_type_serializer";
+import './predefined';
 
 /**
  * Serialize given serializable type instance to a JSON-compatible type
