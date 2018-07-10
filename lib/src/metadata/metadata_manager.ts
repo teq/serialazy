@@ -31,10 +31,10 @@ export default class MetadataManager {
 
     /**
      * Get metadata manager instance
-     * @param backend Serialization backend. _(Default: 'json')_
+     * @param backend Serialization backend.
      * @param projection Serialization projection. _(Default: 'default')_
      */
-    public static get(backend = 'json', projection = 'default') {
+    public static get(backend: string, projection = 'default') {
         let instance = this.instances.get(key(backend, projection));
         if (!instance) {
             instance = new this(backend, projection);

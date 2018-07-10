@@ -59,7 +59,7 @@ namespace JsonSerializable {
             };
 
             const propertySerializer = new ObjectPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
-            MetadataManager.get().getOrCreatePropertyBagMetaFor(proto).setPropertySerializer(propertyName, propertySerializer);
+            MetadataManager.get('json').getOrCreatePropertyBagMetaFor(proto).setPropertySerializer(propertyName, propertySerializer);
 
         };
 
@@ -72,7 +72,7 @@ namespace JsonSerializable {
         return (ctor: Constructor<TOriginal>) => {
             const customTypeSerializerProvider = () => customTypeSerializer;
             const proto = ctor.prototype;
-            MetadataManager.get().getOrCreateCustomTypeMetaFor(proto).setTypeSerializer(customTypeSerializerProvider);
+            MetadataManager.get('json').getOrCreateCustomTypeMetaFor(proto).setTypeSerializer(customTypeSerializerProvider);
         };
     }
 
