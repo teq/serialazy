@@ -17,8 +17,8 @@
   "bugs": {
     "url": "https://github.com/teq/serialazy/issues"
   },
-  "main": "./lib/dist/serialazy_json.js",
-  "types": "./lib/dist/serialazy_json.d.ts",
+  "main": "./lib/dist/index.js",
+  "types": "./lib/dist/index.d.ts",
   "scripts": {
     "lint": "tslint -p ./lib && tslint -p ./spec && tslint -p ./samples",
     "apidoc": "typedoc --target ES6 --module commonjs --excludePrivate --out ./docs ./lib/src && touch ./docs/.nojekyll",
@@ -30,7 +30,7 @@
     "build_spec": "npm run clean_spec && cd ./spec && tsc",
     "build_samples": "npm run clean_samples && cd ./samples && tsc",
     "build_all": "npm run build_lib && npm run build_spec && npm run build_samples",
-    "test": "npm run build_spec && node ./spec/bin/run.js",
+    "test": "npm run build_lib && npm run build_spec && node ./spec/bin/run.js",
     "prepublishOnly": "npm run lint && npm run test && npm run build_lib"
   },
   "author": "Andrey Tselischev <vorteq@gmail.com>",

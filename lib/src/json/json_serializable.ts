@@ -1,4 +1,4 @@
-import JsonType from '../json/json_type';
+import JsonType from './json_type';
 import MetadataManager from '../metadata/metadata_manager';
 import ObjectPropertySerializer from '../object_property_serializer';
 import TypeSerializer from '../type_serializer';
