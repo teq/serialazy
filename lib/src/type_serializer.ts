@@ -9,14 +9,14 @@ interface TypeSerializer<TSerialized, TOriginal> {
      * @param original Original property value
      * @returns Serialized property value
      */
-    down(original: TOriginal): TSerialized;
+    down(this: void, original: TOriginal): TSerialized;
 
     /**
      * Property value deserializer
      * @param serialized Serialized property value
      * @returns Original property value
      */
-    up(serialized: TSerialized): TOriginal;
+    up(this: void, serialized: TSerialized): TOriginal;
 
     /**
      * _Optional._ Original type constructor function.
@@ -93,21 +93,12 @@ namespace TypeSerializer {
             'Specify property type explicitly, (details: https://github.com/Microsoft/TypeScript/issues/18995)'
         );
 
-        const { down, up, type } = partials.reduce((compiled, partial) => {
+        const { down, up, type } = Object.assign({
+            down: () => { throw new Error(`Serializer function ("down") for type "${typeName}" is not defined. ` + hints); },
+            up: () => { throw new Error(`Deserializer function ("up") for type "${typeName}" is not defined. ` + hints); }
+        }, ...partials) as TypeSerializer<TSerialized, TOriginal>;
 
-            const typeName = partial.type && partial.type.name ? partial.type.name : '<unknown>';
-
-            return Object.assign(compiled, {
-                down: (original: TOriginal) => partial.down ? partial.down(original) : (() => {
-                    throw new Error(`Serializer function ("down") for type "${typeName}" is not defined. ` + hints);
-                })(),
-                up: (serialized: TSerialized) => partial.up ? partial.up(serialized) : (() => {
-                    throw new Error(`Deserializer function ("up") for type "${typeName}" is not defined. ` + hints);
-                })(),
-                type: partial.type
-            });
-
-        }, {});
+        const typeName = type && type.name ? type.name : '<unknown>';
 
         return { down, up, type };
 
