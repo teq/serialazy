@@ -39,6 +39,50 @@ describe('custom property serializer', () => {
 
     });
 
+    it('overrides default type serializer of given property', () => {
+
+        class Author {
+            @Serializable.Prop() public name: string;
+        }
+
+        class Book {
+            @Serializable.Prop() public title: string;
+
+            @Serializable.Prop({ // should override debault `Author` type serializer
+                down: (author: Author) => author.name,
+                up: (name: string) => Object.assign(new Author(), { name })
+            })
+            public author: Author;
+
+            @Serializable.Prop({ // should override default `boolean` type serializer
+                down: (val: boolean) => val ? 1 : 0,
+                up: (val) => val ? true : false
+            })
+            public read: boolean;
+        }
+
+        const book = Object.assign(new Book(), {
+            read: false,
+            title: 'asd',
+            author: Object.assign(new Author(), {
+                name: 'asdasd'
+            })
+        });
+
+        const serialized = serialize(book);
+
+        expect(serialized).to.deep.equal({
+            read: 0,
+            title: 'asd',
+            author: 'asdasd'
+        });
+
+        const deserialized = deserialize(Book, serialized);
+
+        expect(deserialized).to.deep.equal(book);
+
+    });
+
     it('accepts options', () => {
 
         class Book {

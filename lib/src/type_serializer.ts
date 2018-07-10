@@ -50,11 +50,13 @@ namespace TypeSerializer {
         /** Try to pick a (possibly partial) type serializer for given value */
         public pickForValue(value: any): Partial<TypeSerializer<TSerialized, any>> {
 
-            let serializer: Partial<TypeSerializer<TSerialized, any>> = {};
-
             if (value === null || value === undefined) {
                 throw new Error('Expecting value to be not null/undefined');
-            } else if (!(serializer = this.predefinedSerializers.find(s => s.matchValue(value)))) {
+            }
+
+            let serializer: Partial<TypeSerializer<TSerialized, any>> = {};
+
+            if (!(serializer = this.predefinedSerializers.find(s => s.matchValue(value)))) {
                 const type = value.constructor;
                 if (typeof(type) !== 'function') {
                     throw new Error(`Expecting value to have a constructor function`);
@@ -75,11 +77,13 @@ namespace TypeSerializer {
         /** Try to pick a (possibly partial) type serializer for given type */
         public pickForType(type: Constructor<any>): Partial<TypeSerializer<TSerialized, any>> {
 
-            let serializer: Partial<TypeSerializer<TSerialized, any>> = {};
-
             if (typeof(type) !== 'function') {
                 throw new Error('Expecting a type constructor function');
-            } else if (!(serializer = this.predefinedSerializers.find(s => s.matchType(type)))) {
+            }
+
+            let serializer: Partial<TypeSerializer<TSerialized, any>> = {};
+
+            if (!(serializer = this.predefinedSerializers.find(s => s.matchType(type)))) {
                 const meta = MetadataManager.get(this.backend).getOwnOrInheritedMetaFor(type.prototype);
                 if (meta) {
                     serializer = meta.getTypeSerializer();
