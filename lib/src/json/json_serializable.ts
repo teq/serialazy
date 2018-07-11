@@ -1,15 +1,11 @@
-import JsonType from './json_type';
-import MetadataManager from '../metadata/metadata_manager';
 import ObjectPropertySerializer from '../object_property_serializer';
+import ObjectSerializable from '../object_serializable';
 import TypeSerializer from '../type_serializer';
-import Constructor from '../types/constructor';
-import JsonTypeSerializer from './json_type_serializer';
-
-function isTypeSerializer<TSerialized, TOriginal>(target: any): target is TypeSerializer<TSerialized, TOriginal> {
-    return typeof target === 'object' && typeof target.down === 'function' && typeof target.up === 'function';
-}
+import JsonType from './json_type';
 
 namespace JsonSerializable {
+
+    const jsonSerializable = new ObjectSerializable<JsonType>('json');
 
     /** Use default JSON type serializer for given property */
     export function Prop(
@@ -26,54 +22,17 @@ namespace JsonSerializable {
         optionsOrCustomTypeSerializer: ObjectPropertySerializer.Options | TypeSerializer<TSerialized, TOriginal>,
         maybeOptions?: ObjectPropertySerializer.Options
     ) {
-
-        let customTypeSerializer: TypeSerializer<TSerialized, TOriginal> = null;
-        let options: ObjectPropertySerializer.Options = null;
-
-        if (isTypeSerializer(optionsOrCustomTypeSerializer)) {
-            customTypeSerializer = optionsOrCustomTypeSerializer;
-            options = maybeOptions;
-        } else {
-            options = optionsOrCustomTypeSerializer;
-        }
-
-        return (proto: Object, propertyName: string) => {
-
-            const compiledTypeSerializerProvider = () => {
-
-                try {
-
-                    const defaultTypeSerializer = JsonTypeSerializer.pickForProp(proto, propertyName);
-
-                    if (customTypeSerializer) {
-                        return TypeSerializer.compile([defaultTypeSerializer, customTypeSerializer]);
-                    } else {
-                        return TypeSerializer.compile([defaultTypeSerializer]);
-                    }
-
-                } catch (error) {
-                    const className = proto.constructor.name;
-                    throw new Error(`Unable to construct a type serializer for property "${className}.${propertyName}": ${error.message}`);
-                }
-
-            };
-
-            const propertySerializer = new ObjectPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
-            MetadataManager.get('json').getOrCreatePropertyBagMetaFor(proto).setPropertySerializer(propertyName, propertySerializer);
-
-        };
-
+        return jsonSerializable.propertyDecorator(
+            optionsOrCustomTypeSerializer as TypeSerializer<TSerialized, TOriginal>,
+            maybeOptions as ObjectPropertySerializer.Options
+        );
     }
 
     /** Use custom JSON serializer for given type */
     export function Type<TSerialized extends JsonType, TOriginal>(
         customTypeSerializer: TypeSerializer<TSerialized, TOriginal>,
     ) {
-        return (ctor: Constructor<TOriginal>) => {
-            const customTypeSerializerProvider = () => customTypeSerializer;
-            const proto = ctor.prototype;
-            MetadataManager.get('json').getOrCreateCustomTypeMetaFor(proto).setTypeSerializer(customTypeSerializerProvider);
-        };
+        return jsonSerializable.typeDecorator(customTypeSerializer);
     }
 
 }

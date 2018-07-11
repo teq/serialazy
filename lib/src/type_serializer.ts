@@ -1,4 +1,4 @@
-import { MetadataManager } from './metadata';
+import MetadataManager from './metadata/metadata_manager';
 import Constructor from './types/constructor';
 
 /** Represents a generic type serializer */

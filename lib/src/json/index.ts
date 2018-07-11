@@ -1,7 +1,9 @@
+import TypeSerializer from "../type_serializer";
 import Constructor from "../types/constructor";
 import JsonType from "./json_type";
-import JsonTypeSerializer from "./json_type_serializer";
 import './predefined';
+
+const picker = new TypeSerializer.Picker<JsonType>('json');
 
 /**
  * Serialize given serializable type instance to a JSON-compatible type
@@ -15,7 +17,7 @@ function serializeToJson(serializable: any): JsonType {
     if (serializable === null || serializable === undefined) {
         serialized = serializable;
     } else {
-        const { down } = JsonTypeSerializer.pickForValue(serializable);
+        const { down } = picker.pickForValue(serializable);
         if (!down) {
             throw new Error(`Unable to serialize a value: ${serializable}`);
         }
@@ -38,7 +40,7 @@ function deserializeFromJson<T>(ctor: Constructor<T>, serialized: JsonType): T {
         throw new Error('Expecting a constructor function');
     }
 
-    const { up } = JsonTypeSerializer.pickForType(ctor);
+    const { up } = picker.pickForType(ctor);
 
     if (!up) {
         throw new Error(`Unable to deserialize an instance of "${ctor.name}" from: ${serialized}`);
