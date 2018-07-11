@@ -63,9 +63,9 @@ describe('custom property serializer', () => {
 
         const book = Object.assign(new Book(), {
             read: false,
-            title: 'asd',
+            title: 'Doctor Zhivago',
             author: Object.assign(new Author(), {
-                name: 'asdasd'
+                name: 'Boris Pasternak'
             })
         });
 
@@ -73,8 +73,8 @@ describe('custom property serializer', () => {
 
         expect(serialized).to.deep.equal({
             read: 0,
-            title: 'asd',
-            author: 'asdasd'
+            title: 'Doctor Zhivago',
+            author: 'Boris Pasternak'
         });
 
         const deserialized = deserialize(Book, serialized);
