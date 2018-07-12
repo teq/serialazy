@@ -42,4 +42,6 @@ describe('custom type serializer', () => {
         }).to.throw('Can\'t define a custom serializer on type which has property serializers');
     });
 
+    it('overrides default (predefined) type serializer');
+
 });

@@ -9,20 +9,14 @@ describe('custom property serializer', () => {
     it('accepts custom type serializer', () => {
 
         class Book {
-
             @Serializable.Prop({
                 down: (val: Map<number, string>) => val ? Array.from(val).map(([page, title]) => ({ page, title })) : null,
                 up: (val) => val ? new Map(val.map<[number, string]>(ch => [ch.page, ch.title])) : null,
             })
             public contents: Map<number, string>;
-
-            public constructor (contents?: Map<number, string>) {
-                if (contents) { this.contents = contents; }
-            }
-
         }
 
-        const book = new Book(new Map([[1, 'Chapter 1'], [21, 'Chapter 2']]));
+        const book = Object.assign(new Book(), { contents: new Map([[1, 'Chapter 1'], [21, 'Chapter 2']]) });
 
         const bookObj = serialize(book);
 
@@ -39,7 +33,7 @@ describe('custom property serializer', () => {
 
     });
 
-    it('overrides default type serializer of given property', () => {
+    it('overrides default (predefined) type serializer of given property', () => {
 
         class Author {
             @Serializable.Prop() public name: string;
@@ -86,20 +80,14 @@ describe('custom property serializer', () => {
     it('accepts options', () => {
 
         class Book {
-
             @Serializable.Prop(
                 { down: (val: Date) => val ? val.toISOString() : null, up: (val) => val ? new Date(val) : null },
                 { name: 'publishDate' }
             )
             public releaseDate: Date;
-
-            public constructor (releaseDate?: Date) {
-                if (releaseDate) { this.releaseDate = releaseDate; }
-            }
-
         }
 
-        const book = new Book(new Date('1893'));
+        const book = Object.assign(new Book(), { releaseDate: new Date('1893') });
 
         const bookObj = serialize(book);
 
