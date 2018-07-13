@@ -26,12 +26,12 @@
     "clean_spec": "rm -rf ./spec/bin",
     "clean_samples": "rm -rf ./samples/bin",
     "clean_all": "npm run clean_lib && npm run clean_spec && npm run clean_samples",
-    "build_lib": "npm run clean_lib && cd ./lib && tsc",
-    "build_spec": "npm run clean_spec && cd ./spec && tsc",
-    "build_samples": "npm run clean_samples && cd ./samples && tsc",
+    "build_lib": "cd ./lib && tsc",
+    "build_spec": "cd ./spec && tsc",
+    "build_samples": "cd ./samples && tsc",
     "build_all": "npm run build_lib && npm run build_spec && npm run build_samples",
     "test": "npm run build_lib && npm run build_spec && node ./spec/bin/run.js",
-    "prepublishOnly": "npm run lint && npm run test && npm run build_lib"
+    "prepublishOnly": "npm run lint && npm run clean_all && npm run build_all && node ./spec/bin/run.js"
   },
   "author": "Andrey Tselischev <vorteq@gmail.com>",
   "license": "MIT",
