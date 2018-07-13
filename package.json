@@ -1,5 +1,5 @@
 {
-  "name": "serialazy",
+  "name": "@teqlab/serialazy",
   "version": "3.0.0",
   "description": "A TypeScript class serialization library (JSON backend)",
   "keywords": [
