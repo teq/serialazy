@@ -1,4 +1,4 @@
-import { deserialize, Serializable, serialize } from '../..';
+import { deserialize, Serializable, serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;

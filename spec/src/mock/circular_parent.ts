@@ -1,4 +1,4 @@
-import { Serializable } from '../../..';
+import { Serializable } from 'serialazy';
 
 import Child from './circular_child';
 

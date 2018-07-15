@@ -3,9 +3,16 @@
   "compilerOptions": {
 
     /* Basic Options */
-    "declaration": true,                      /* Generates corresponding '.d.ts' file. */
+    "declaration": false,                     /* Generates corresponding '.d.ts' file. */
     "sourceMap": true,                        /* Generates corresponding '.map' file. */
-    "outDir": "./bin"                         /* Redirect output structure to the directory. */
+    "outDir": "bin",                          /* Redirect output structure to the directory. */
+    "rootDir": "src",                         /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+
+    /* Module Resolution Options */
+    "baseUrl": "..",                          /* Base directory to resolve non-absolute module names. */
+    "paths": {                                /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+      "serialazy": ["lib/dist"]
+    }
 
   }
 }
