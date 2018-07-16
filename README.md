@@ -1,10 +1,8 @@
-**Serialazy** is an uniform library for TypeScript class serialization with support of various backends.
+**Serialazy** is an uniform library for TypeScript class serialization which supports various serialization backends.
 Default backend is JSON (implemented in this package). Other backends:
 * [BSON/mongodb](https://github.com/teq/serialazy-bson)
 
-<aside class="notice">
-* Version 3.x.x introduces breaking changes in API and is not compatible with 2.x.x.
-</aside>
+> **Note:** Version 3.x.x introduces breaking changes in API and is not compatible with 2.x.x.
 
 ## Overview
 
