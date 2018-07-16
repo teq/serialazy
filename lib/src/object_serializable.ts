@@ -7,7 +7,7 @@ function isTypeSerializer<TSerialized, TOriginal>(target: any): target is TypeSe
     return typeof target === 'object' && typeof target.down === 'function' && typeof target.up === 'function';
 }
 
-/** Implements decorators for object-serializables */
+/** Implements decorators for serializables which serialize to object-like (property bag) structures */
 export default class ObjectSerializable<TSerialized> {
 
     private picker: TypeSerializer.Picker<TSerialized>;

@@ -5,16 +5,16 @@ import Constructor from './types/constructor';
 interface TypeSerializer<TSerialized, TOriginal> {
 
     /**
-     * Property value serializer
-     * @param original Original property value
-     * @returns Serialized property value
+     * Serializer function
+     * @param original Original value
+     * @returns Serialized value
      */
     down(this: void, original: TOriginal): TSerialized;
 
     /**
-     * Property value deserializer
-     * @param serialized Serialized property value
-     * @returns Original property value
+     * Deserializer function
+     * @param serialized Serialized value
+     * @returns Original value
      */
     up(this: void, serialized: TSerialized): TOriginal;
 
@@ -28,10 +28,11 @@ interface TypeSerializer<TSerialized, TOriginal> {
 
 namespace TypeSerializer {
 
-    /** A helper class to pick a type serializer */
+    /** A helper class which picks a type serializer for given value or type */
     export class Picker<TSerialized> {
 
         public constructor(
+            /** Serialization backend name ('json', 'mongodb', etc.) */
             private backend: string,
         ) {}
 

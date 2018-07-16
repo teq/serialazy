@@ -7,7 +7,7 @@ export interface PropertyBag<TSerialized> {
     [prop: string]: TSerialized;
 }
 
-/** Represents an object property serializer */
+/** Represents a property serializer for serializables which serialize to object-like (property bag) structures */
 class ObjectPropertySerializer<TSerialized> implements PropertySerializer<PropertyBag<TSerialized>, any> {
 
     /**
