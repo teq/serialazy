@@ -9,14 +9,14 @@ interface TypeSerializer<TSerialized, TOriginal> {
      * @param original Original value
      * @returns Serialized value
      */
-    down(this: void, original: TOriginal): TSerialized;
+    down?(this: void, original: TOriginal): TSerialized;
 
     /**
      * Deserializer function
      * @param serialized Serialized value
      * @returns Original value
      */
-    up(this: void, serialized: TSerialized): TOriginal;
+    up?(this: void, serialized: TSerialized): TOriginal;
 
     /**
      * _Optional._ Original type constructor function.
@@ -37,7 +37,7 @@ namespace TypeSerializer {
         ) {}
 
         /** Try to pick a (possibly partial) type serializer for given value */
-        public pickForValue(value: any): Partial<TypeSerializer<TSerialized, any>> {
+        public pickForValue(value: any): TypeSerializer<TSerialized, any> {
 
             if (value === null || value === undefined) {
                 throw new Error('Expecting value to be not null/undefined');
@@ -57,7 +57,7 @@ namespace TypeSerializer {
         }
 
         /** Try to pick a (possibly partial) type serializer for given type */
-        public pickForType(type: Constructor<any>): Partial<TypeSerializer<TSerialized, any>> {
+        public pickForType(type: Constructor<any>): TypeSerializer<TSerialized, any> {
 
             if (typeof(type) !== 'function') {
                 throw new Error('Expecting a type constructor function');
@@ -70,7 +70,7 @@ namespace TypeSerializer {
         }
 
         /** Try to pick a (possibly partial) type serializer for given property */
-        public pickForProp(proto: Object, propertyName: string): Partial<TypeSerializer<TSerialized, any>> {
+        public pickForProp(proto: Object, propertyName: string): TypeSerializer<TSerialized, any> {
 
             const type: Constructor<any> = Reflect.getMetadata('design:type', proto, propertyName);
 
@@ -86,7 +86,7 @@ namespace TypeSerializer {
 
     /** Compile type serializer partials to a final type serializer */
     export function compile<TSerialized, TOriginal>(
-        partials: Array<Partial<TypeSerializer<TSerialized, TOriginal>>>
+        partials: Array<TypeSerializer<TSerialized, TOriginal>>
     ): TypeSerializer<TSerialized, TOriginal> {
 
         const hints = (
@@ -96,7 +96,8 @@ namespace TypeSerializer {
 
         const { down, up, type } = Object.assign({
             down: () => { throw new Error(`Serializer function ("down") for type "${typeName}" is not defined. ` + hints); },
-            up: () => { throw new Error(`Deserializer function ("up") for type "${typeName}" is not defined. ` + hints); }
+            up: () => { throw new Error(`Deserializer function ("up") for type "${typeName}" is not defined. ` + hints); },
+            type: null
         }, ...partials) as TypeSerializer<TSerialized, TOriginal>;
 
         const typeName = type && type.name ? type.name : '<unknown>';

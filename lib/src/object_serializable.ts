@@ -4,7 +4,7 @@ import TypeSerializer from "./type_serializer";
 import Constructor from "./types/constructor";
 
 function isTypeSerializer<TSerialized, TOriginal>(target: any): target is TypeSerializer<TSerialized, TOriginal> {
-    return typeof target === 'object' && typeof target.down === 'function' && typeof target.up === 'function';
+    return typeof target === 'object' && (typeof target.down === 'function' || typeof target.up === 'function');
 }
 
 /** Implements decorators for serializables which serialize to object-like (property bag) structures */
