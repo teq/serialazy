@@ -39,9 +39,29 @@ describe('custom type serializer', () => {
             class Test {
                 @Serializable.Prop() public prop: string;
             }
-        }).to.throw('Can\'t define a custom serializer on type which has property serializers');
+        }).to.throw('Can\'t define a custom type serializer on a "property bag" serializable');
     });
 
-    it('overrides default (predefined) type serializer');
+    it('should fail to apply on a class which inherits from another serializable', () => {
+        // TODO: allow it?
+        expect(() => {
+            @Serializable.Type({ down: (val: TaggedPoint) => `(${val.x},${val.y}),${val.tag}` })
+            class TaggedPoint extends Point {
+                public tag: string;
+            }
+        }).to.throw('Can\'t define a custom serializer on type which inherits from another serializable');
+    });
+
+    it('can be re-defined', () => {
+
+        Serializable.Type({
+            down: (val: Point) => [val.x, val.y]
+        })(Point);
+
+        const point = Object.assign(new Point(), { x: 2, y: 3 });
+        const serialized = serialize(point);
+        expect(serialized).to.deep.equal([2, 3]);
+
+    });
 
 });

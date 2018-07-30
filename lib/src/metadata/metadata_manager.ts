@@ -4,11 +4,11 @@ import SerializableTypeMetadata from "./serializable_type_metadata";
 
 /**
  * We need to make sure that metadata is compatible with all "serialazy" instances.
- * This version is increased in case of incompatible changes in `Metadata` class.
+ * This version is increased in case of incompatible changes in metadata public props/methods.
  */
 const METADATA_VERSION = 3;
 
-/** Generates metadata unique symbol for given `backend` and `projection` */
+/** Get metadata unique symbol for given `backend` and `projection` */
 function key(backend: string, projection: string) {
 
     // There may be multiple "serialazy" instances in project (from different dependencies)
@@ -38,6 +38,7 @@ export default class MetadataManager {
         let instance = this.instances.get(key(backend, projection));
         if (!instance) {
             instance = new this(backend, projection);
+            this.instances.set(key(backend, projection), instance);
         }
         return instance;
     }
@@ -102,7 +103,7 @@ export default class MetadataManager {
             metadata = new CustomTypeMetadata(proto, METADATA_VERSION, this);
             this.setOwnMetaFor(proto, metadata);
         } else if (!(metadata instanceof CustomTypeMetadata)) {
-            throw new Error('Can\'t define a custom serializer on type which has property serializers');
+            throw new Error('Can\'t define a custom type serializer on a "property bag" serializable');
         }
 
         return metadata;

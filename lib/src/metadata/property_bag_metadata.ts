@@ -37,7 +37,7 @@ export default class PropertyBagMetadata extends SerializableTypeMetadata {
 
     }
 
-    /** Add property serializer */
+    /** Add or update a property serializer */
     public setPropertySerializer(propName: string, propSerializer: PropertySerializer<any, any>) {
 
         if (this.aggregateSerializers().has(propName)) {
