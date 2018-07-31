@@ -1,4 +1,5 @@
 import PropertySerializer from '../property_serializer';
+import TypeSerializer from '../type_serializer';
 import GenericMetadata from './generic_metadata';
 
 /** Metadata container for serializable property bags */
@@ -11,7 +12,7 @@ export default class PropertyBagMetadata extends GenericMetadata {
     private propSerializers = new Map<string, PropertySerializer<any, any>>();
 
     /** Get type serializer from a property bag metadata */
-    public getTypeSerializer() {
+    public getTypeSerializer(): TypeSerializer<any, any> {
 
         return {
 

@@ -12,7 +12,7 @@ export default class CustomTypeMetadata extends GenericMetadata {
     private typeSerializerProvider: Provider<TypeSerializer<any, any>> = null;
 
     /** Get type serializer from a custom type metadata */
-    public getTypeSerializer() {
+    public getTypeSerializer(): TypeSerializer<any, any> {
 
         if (!this.typeSerializerProvider) {
             throw new Error('Type serializer is not specified');
