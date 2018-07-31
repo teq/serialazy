@@ -2,8 +2,8 @@ import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
 import MetadataManager from './metadata_manager';
 
-/** Abstract metadata container for serializables */
-export default abstract class SerializableTypeMetadata {
+/** Generic metadata container for serializables */
+export default abstract class GenericMetadata {
 
     /** Type constructor */
     public readonly ctor: Constructor<any>;

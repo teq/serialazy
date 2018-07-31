@@ -1,6 +1,7 @@
 import CustomTypeMetadata from "./custom_type_metadata";
 import PropertyBagMetadata from "./property_bag_metadata";
-import SerializableTypeMetadata from "./serializable_type_metadata";
+
+type Metadata = CustomTypeMetadata | PropertyBagMetadata;
 
 /**
  * We need to make sure that metadata is compatible with all "serialazy" instances.
@@ -44,13 +45,13 @@ export default class MetadataManager {
     }
 
     /** Get own metadata for given prototype if it's exists or return a null */
-    public getOwnMetaFor<TMetadata extends SerializableTypeMetadata>(proto: Object): TMetadata {
+    public getOwnMetaFor(proto: Object): Metadata {
 
         if (proto === null || proto === undefined) {
             throw new Error('Expecting prototype object to be not null/undefined');
         }
 
-        const metadata: TMetadata = Reflect.getOwnMetadata(this.key, proto) || null;
+        const metadata: Metadata = Reflect.getOwnMetadata(this.key, proto) || null;
 
         if (metadata) {
             const version = metadata.version || 0;
@@ -67,23 +68,23 @@ export default class MetadataManager {
     }
 
     /** Get own metadata or seek prototype chain for nearest ancestor which has metadata. */
-    public getOwnOrInheritedMetaFor<TMetadata extends SerializableTypeMetadata>(proto: Object): TMetadata {
-        return this.getOwnMetaFor<TMetadata>(proto) || this.seekInheritedMetaFor<TMetadata>(proto);
+    public getOwnOrInheritedMetaFor(proto: Object): Metadata {
+        return this.getOwnMetaFor(proto) || this.seekInheritedMetaFor(proto);
     }
 
     /** Get own metadata for given prototype */
-    public setOwnMetaFor(proto: Object, metadata: SerializableTypeMetadata): void {
+    public setOwnMetaFor(proto: Object, metadata: Metadata): void {
         Reflect.defineMetadata(this.key, metadata, proto);
     }
 
     /** Seek prototype chain for next inherited serializable's metadata */
-    public seekInheritedMetaFor<TMetadata extends SerializableTypeMetadata>(proto: Object): TMetadata {
+    public seekInheritedMetaFor(proto: Object): Metadata {
 
-        let result: TMetadata = null;
+        let result: Metadata = null;
 
         while (proto && !result) {
             proto = Object.getPrototypeOf(proto);
-            result = proto ? this.getOwnMetaFor<TMetadata>(proto) : null;
+            result = proto ? this.getOwnMetaFor(proto) : null;
         }
 
         return result;
@@ -93,7 +94,7 @@ export default class MetadataManager {
     /** Get or create own custom type metadata for given prototype */
     public getOrCreateCustomTypeMetaFor(proto: Object): CustomTypeMetadata {
 
-        let metadata = this.getOwnMetaFor<CustomTypeMetadata>(proto);
+        let metadata = this.getOwnMetaFor(proto);
 
         if (!metadata) {
             const inherited = this.seekInheritedMetaFor(proto);
@@ -102,7 +103,7 @@ export default class MetadataManager {
             }
             metadata = new CustomTypeMetadata(proto, METADATA_VERSION, this);
             this.setOwnMetaFor(proto, metadata);
-        } else if (!(metadata instanceof CustomTypeMetadata)) {
+        } else if (metadata.kind !== CustomTypeMetadata.kind) {
             throw new Error('Can\'t define a custom type serializer on a "property bag" serializable');
         }
 
@@ -113,16 +114,16 @@ export default class MetadataManager {
     /** Get own metadata for given prototype if it's exists or create an empty metadata container */
     public getOrCreatePropertyBagMetaFor(proto: Object): PropertyBagMetadata {
 
-        let metadata = this.getOwnMetaFor<PropertyBagMetadata>(proto);
+        let metadata = this.getOwnMetaFor(proto);
 
         if (!metadata) {
             const inherited = this.seekInheritedMetaFor(proto);
-            if (inherited && !(inherited instanceof PropertyBagMetadata)) {
+            if (inherited && inherited.kind !== PropertyBagMetadata.kind) {
                 throw new Error('A property-bag serializable can\'t inherit from a type with custom serializer');
             }
             metadata = new PropertyBagMetadata(proto, METADATA_VERSION, this);
             this.setOwnMetaFor(proto, metadata);
-        } else if (!(metadata instanceof PropertyBagMetadata)) {
+        } else if (metadata.kind !== PropertyBagMetadata.kind) {
             throw new Error('Can\'t define property serializers on type which has a custom serializer');
         }
 

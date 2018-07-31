@@ -1,8 +1,12 @@
 import PropertySerializer from '../property_serializer';
-import SerializableTypeMetadata from './serializable_type_metadata';
+import GenericMetadata from './generic_metadata';
 
 /** Metadata container for serializable property bags */
-export default class PropertyBagMetadata extends SerializableTypeMetadata {
+export default class PropertyBagMetadata extends GenericMetadata {
+
+    public static readonly kind = Symbol.for('com.github.teq.serialazy.propertyBagMetadata');
+
+    public readonly kind: typeof PropertyBagMetadata.kind = PropertyBagMetadata.kind;
 
     private propSerializers = new Map<string, PropertySerializer<any, any>>();
 
@@ -51,7 +55,7 @@ export default class PropertyBagMetadata extends SerializableTypeMetadata {
     /** Aggregates all property serializers: own and inherited */
     private aggregateSerializers(): Map<string, PropertySerializer<any, any>> {
 
-        const inheritedMeta = this.manager.seekInheritedMetaFor<PropertyBagMetadata>(this.proto);
+        const inheritedMeta = this.manager.seekInheritedMetaFor(this.proto) as PropertyBagMetadata;
 
         if (inheritedMeta) {
             return new Map([...inheritedMeta.aggregateSerializers(), ...this.propSerializers]);

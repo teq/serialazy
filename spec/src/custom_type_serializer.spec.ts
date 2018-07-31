@@ -35,7 +35,6 @@ describe('custom type serializer', () => {
     it('should fail to apply on a class which has property serializers', () => {
         expect(() => {
             @Serializable.Type({ down: null, up: null })
-            // tslint:disable-next-line:no-unused-variable
             class Test {
                 @Serializable.Prop() public prop: string;
             }
