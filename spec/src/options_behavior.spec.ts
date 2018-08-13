@@ -49,37 +49,78 @@ describe('options behavior', () => {
 
         describe('when value is null and option is null/undefined/false (default)', () => {
 
-            class Book {
-                @Serializable.Prop() public read: boolean;
+            class Doctor {
+                @Serializable.Prop() public name: string;
+            }
+
+            class Patient {
+                @Serializable.Prop() public age: number;
+                @Serializable.Prop() public doctor: Doctor;
             }
 
             it('should fail to serialize', () => {
-                const book = Object.assign(new Book(), { read: null });
-                expect(() => serialize(book)).to.throw('Unable to serialize property "read": Value is null');
+
+                const doctor = Object.assign(new Doctor(), { name: null });
+                expect(
+                    () => serialize(doctor)
+                ).to.throw('Unable to serialize property "name": Value is null');
+
+                const patient = Object.assign(new Patient(), { age: 35, doctor: null });
+                expect(
+                    () => serialize(patient)
+                ).to.throw('Unable to serialize property "doctor": Value is null');
+
             });
 
             it('should fail to deserialize', () => {
-                expect(() => deserialize(Book, { read: null })).to.throw('Unable to deserialize property "read": Value is null');
+
+                expect(
+                    () => deserialize(Doctor, { name: null })
+                ).to.throw('Unable to deserialize property "name": Value is null');
+
+                expect(
+                    () => deserialize(Patient, { age: 35, doctor: null })
+                ).to.throw('Unable to deserialize property "doctor": Value is null');
+
             });
 
         });
 
         describe('when value is null and option is true', () => {
 
-            class Book {
-                @Serializable.Prop({ nullable: true }) public read: boolean;
+            class Doctor {
+                @Serializable.Prop({ nullable: true }) public name: string;
+            }
+
+            class Patient {
+                @Serializable.Prop({ nullable: true }) public age: number;
+                @Serializable.Prop({ nullable: true }) public doctor: Doctor;
             }
 
             it('serializes to null', () => {
-                const book = Object.assign(new Book(), { read: null });
-                const serialized = serialize(book);
-                expect(serialized).to.deep.equal({ read: null });
+
+                const doctor = Object.assign(new Doctor(), { name: null });
+                expect(
+                    serialize(doctor)
+                ).to.deep.equal({ name: null });
+
+                const patient = Object.assign(new Patient(), { age: 35, doctor: null });
+                expect(
+                    serialize(patient)
+                ).to.deep.equal({ age: 35, doctor: null });
+
             });
 
             it('deserializes to null', () => {
-                const deserialized = deserialize(Book, { read: null });
-                expect(deserialized instanceof Book).to.equal(true);
-                expect(deserialized).to.deep.equal({ read: null });
+
+                const doctor = deserialize(Doctor, { name: null });
+                expect(doctor).to.be.instanceOf(Doctor);
+                expect(doctor).to.deep.equal({ name: null });
+
+                const patient = deserialize(Patient, { age: 35, doctor: null });
+                expect(patient).to.be.instanceOf(Patient);
+                expect(patient).to.deep.equal({ age: 35, doctor: null });
+
             });
 
         });
@@ -90,37 +131,80 @@ describe('options behavior', () => {
 
         describe('when value is undefined and option is false/null/undefined (default)', () => {
 
-            class Book {
-                @Serializable.Prop() public read: boolean;
+            class Doctor {
+                @Serializable.Prop() public name: string;
+            }
+
+            class Patient {
+                @Serializable.Prop() public age: number;
+                @Serializable.Prop() public doctor: Doctor;
             }
 
             it('should fail to serialize', () => {
-                const book = new Book();
-                expect(() => serialize(book)).to.throw('Unable to serialize property "read": Value is undefined');
+
+                const doctor = new Doctor(); // name is undefined
+                expect(
+                    () => serialize(doctor)
+                ).to.throw('Unable to serialize property "name": Value is undefined');
+
+                const patient = Object.assign(new Patient(), { age: 35 }); // doctor is undefined
+                expect(
+                    () => serialize(patient)
+                ).to.throw('Unable to serialize property "doctor": Value is undefined');
+
             });
 
             it('should fail to deserialize', () => {
-                expect(() => deserialize(Book, {})).to.throw('Unable to deserialize property "read": Value is undefined');
+
+                const doctorObj = {}; // name is undefined
+                expect(
+                    () => deserialize(Doctor, doctorObj)
+                ).to.throw('Unable to deserialize property "name": Value is undefined');
+
+                const patientObj = { age: 35 }; // doctor is undefined
+                expect(
+                    () => deserialize(Patient, patientObj)
+                ).to.throw('Unable to deserialize property "doctor": Value is undefined');
+
             });
 
         });
 
         describe('when value is undefined and option is true', () => {
 
-            class Book {
-                @Serializable.Prop({ optional: true }) public read: boolean;
+            class Doctor {
+                @Serializable.Prop({ optional: true }) public name: string;
+            }
+
+            class Patient {
+                @Serializable.Prop({ optional: true }) public age: number;
+                @Serializable.Prop({ optional: true }) public doctor: Doctor;
             }
 
             it('serializes to undefined', () => {
-                const book = new Book();
-                const serialized = serialize(book);
-                expect(serialized).to.not.haveOwnProperty('read');
+
+                const doctor = new Doctor(); // name is undefined
+                expect(
+                    serialize(doctor)
+                ).to.deep.equal({}); // name is not serialized
+
+                const patient = Object.assign(new Patient(), { age: 35 }); // doctor is undefined
+                expect(
+                    serialize(patient)
+                ).to.deep.equal({ age: 35 }); // doctor is not serialized
+
             });
 
             it('deserializes to undefined', () => {
-                const deserialized = deserialize(Book, {});
-                expect(deserialized instanceof Book).to.equal(true);
-                expect(deserialized).to.not.haveOwnProperty('read');
+
+                const doctor = deserialize(Doctor, {}); // name is undefined
+                expect(doctor).to.be.instanceOf(Doctor);
+                expect(doctor).to.deep.equal({});
+
+                const patient = deserialize(Patient, { age: 35 }); // doctor is undefined
+                expect(patient).to.be.instanceOf(Patient);
+                expect(patient).to.deep.equal({ age: 35 });
+
             });
 
         });
