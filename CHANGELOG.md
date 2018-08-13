@@ -1,3 +1,9 @@
+v2.0.1
+------
+
+* Updated `PropertyBagMetadata.getTypeSerializer()`: `up` & `down` arguments are checked for being null/undefined
+  before applying property serializers. Fixes #6
+
 v2.0.0
 ------
 

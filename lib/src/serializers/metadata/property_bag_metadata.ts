@@ -16,23 +16,41 @@ export default class PropertyBagMetadata extends SerializableTypeMetadata {
             type: this.ctor,
 
             down: (serializable: any) => {
-                const serialized = {};
-                try {
-                    this.aggregateSerializers().forEach(serializer => serializer.down(serializable, serialized));
-                } catch (error) {
-                    throw new Error(`Unable to serialize an instance of a class "${this.name}": ${error.message}`);
+
+                let serialized: {};
+
+                if (serializable === null || serializable === undefined) {
+                    serialized = serializable;
+                } else {
+                    serialized = {};
+                    try {
+                        this.aggregateSerializers().forEach(serializer => serializer.down(serializable, serialized));
+                    } catch (error) {
+                        throw new Error(`Unable to serialize an instance of a class "${this.name}": ${error.message}`);
+                    }
                 }
+
                 return serialized;
+
             },
 
             up: (serialized: any) => {
-                const serializable = new this.ctor();
-                try {
-                    this.aggregateSerializers().forEach(serializer => serializer.up(serializable, serialized));
-                } catch (error) {
-                    throw new Error(`Unable to deserialize an instance of a class "${this.name}": ${error.message}`);
+
+                let serializable: any;
+
+                if (serialized === null || serialized === undefined) {
+                    serializable = serialized;
+                } else {
+                    serializable = new this.ctor();
+                    try {
+                        this.aggregateSerializers().forEach(serializer => serializer.up(serializable, serialized));
+                    } catch (error) {
+                        throw new Error(`Unable to deserialize an instance of a class "${this.name}": ${error.message}`);
+                    }
                 }
+
                 return serializable;
+
             }
 
         };
