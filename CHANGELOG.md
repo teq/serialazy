@@ -8,6 +8,12 @@
 * Removed `Constructor.Default` type along with restriction for serializable type constructor to have a "default" version
   (which is able to construct serializable if no arguments passed)
 
+v2.0.1
+------
+
+* Updated `PropertyBagMetadata.getTypeSerializer()`: `up` & `down` arguments are checked for being null/undefined
+  before applying property serializers. Fixes #6
+
 v2.0.0
 ------
 
