@@ -31,11 +31,11 @@ export function serializeToJson<TOriginal>(serializable: TOriginal, ctor?: Const
 
 /**
  * Construct/deserialize a serializable type instance from a JSON-compatible object
- * @param ctor Serializable type constructor function
  * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
+ * @param ctor Serializable type constructor function
  * @returns Serializable type instance
  */
-export function deserializeFromJson<TOriginal>(ctor: Constructor<TOriginal>, serialized: JsonType): TOriginal {
+export function deserializeFromJson<TOriginal>(serialized: JsonType, ctor: Constructor<TOriginal>): TOriginal {
 
     if (typeof(ctor) !== 'function') {
         throw new Error('Expecting a constructor function');

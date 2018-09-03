@@ -1,3 +1,4 @@
+* Changed `deserialize` function arguments order.
 * Added optional optional `ctor` parameter to `serialize` function.
   It allows to serialize an instance as a different (type-compatible) serializable.
 * Both `up` and `down` functions for custom type serializer are optional now.
