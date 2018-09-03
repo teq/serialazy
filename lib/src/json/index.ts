@@ -62,3 +62,6 @@ export {
     default as JsonSerializable,
     default as Serializable // alias
 } from './json_serializable';
+
+// Types
+export * from './json_type';
