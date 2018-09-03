@@ -4,7 +4,6 @@ import chai = require('chai');
 const { expect } = chai;
 
 // *** Class definitions
-
 @Serializable.Type({
     down: (point: Point) => [point.x, point.y],
     up: (tuple) => Object.assign(new Point(), { x: tuple[0], y: tuple[1] })
@@ -37,7 +36,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = deserialize(Circle, serialized);
+const deserialized = deserialize(serialized, Circle);
 
 expect(deserialized instanceof Circle).to.equal(true);
 expect(deserialized).to.deep.equal(circle);
