@@ -1,3 +1,5 @@
+* Added optional optional `ctor` parameter to `serialize` function.
+  It allows to serialize an instance as a different (type-compatible) serializable.
 * Both `up` and `down` functions for custom type serializer are optional now.
 * [BREAKING] Renamed `deflate` to `serialize` (alias `serialize.toJSON`), `inflate` to `deserialize` (alias `deserialize.fromJSON`)
 * [BREAKING] Renamed property/type decorators.

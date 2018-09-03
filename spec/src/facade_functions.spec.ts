@@ -14,6 +14,30 @@ describe('facade function', () => {
         public id: string;
     }
 
+    @Serializable.Type({ down: (p: PointType1) => `${p.x},${p.y}` })
+    class PointType1 {
+        public x: number;
+        public y: number;
+    }
+
+    @Serializable.Type({ down: (p: PointType2) => [p.x, p.y] })
+    class PointType2 {
+        public x: number;
+        public y: number;
+    }
+
+    class RectType1 {
+        @Serializable.Prop() public center: PointType1;
+        @Serializable.Prop() public width: number;
+        @Serializable.Prop() public height: number;
+    }
+
+    class RectType2 {
+        @Serializable.Prop() public center: PointType2;
+        @Serializable.Prop() public width: number;
+        @Serializable.Prop() public height: number;
+    }
+
     describe('serialize', () => {
 
         it('is able to serialize null/undefined', () => {
@@ -48,6 +72,16 @@ describe('facade function', () => {
         it('should fail to serialize non-primitives which are not serializable', () => {
             const bar = Object.assign(new Bar(), { id: 'bar' });
             expect(() => serialize(bar)).to.throw("Unable to serialize a value");
+        });
+
+        it('allows to override a type of serializable', () => {
+            const rect = Object.assign(new RectType1(), {
+                center: Object.assign(new PointType1(), { x: 20, y: 15 }),
+                width: 6,
+                height: 3
+            });
+            expect(serialize(rect)).to.deep.equal({ center: '20,15', width: 6, height: 3 });
+            expect(serialize(rect, RectType2)).to.deep.equal({ center: [20, 15], width: 6, height: 3 });
         });
 
     });
