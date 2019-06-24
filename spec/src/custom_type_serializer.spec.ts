@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deserialize, Serializable, serialize } from 'serialazy';
+import { deflate, inflate, Serializable } from 'serialazy';
 
 const { expect } = chai;
 
@@ -22,12 +22,12 @@ describe('custom type serializer', () => {
 
     it('is able to serialize a type instance', () => {
         const point = Object.assign(new Point(), { x: 2, y: 3 });
-        const serialized = serialize(point);
+        const serialized = deflate(point);
         expect(serialized).to.equal('(2,3)');
     });
 
     it('is able to deserialize a type instance', () => {
-        const point = deserialize('(4,5)', Point);
+        const point = inflate('(4,5)', Point);
         expect(point).to.be.instanceOf(Point);
         expect(point).to.deep.equal({ x: 4, y: 5 });
     });
@@ -58,7 +58,7 @@ describe('custom type serializer', () => {
         })(Point);
 
         const point = Object.assign(new Point(), { x: 2, y: 3 });
-        const serialized = serialize(point);
+        const serialized = deflate(point);
         expect(serialized).to.deep.equal([2, 3]);
 
     });

@@ -1,4 +1,4 @@
-import { deserialize, Serializable, serialize } from 'serialazy';
+import { deflate, inflate, Serializable } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -23,14 +23,14 @@ const book = Object.assign(new Book(), {
 });
 
 // *** Serialize
-const serialized = serialize(book);
+const serialized = deflate(book);
 
 expect(serialized).to.deep.equal({
     summary: 'Descriptive text' // note that "description" is mapped to "summary" in serialized object
 });
 
 // *** Deserialize
-const deserialized = deserialize(serialized, Book);
+const deserialized = inflate(serialized, Book);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal(book);

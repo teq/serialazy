@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deserialize, Serializable, serialize } from 'serialazy';
+import { deflate, inflate, Serializable } from 'serialazy';
 
 const { expect } = chai;
 
@@ -18,9 +18,9 @@ describe('options behavior', () => {
 
             it('doesn\'t affect property name in resulting serialized object', () => {
                 const patient = Object.assign(new Patient(), { name: 'Joe', age: 35, notes: 'None' });
-                const serialized = serialize(patient);
+                const serialized = deflate(patient);
                 expect(serialized).to.deep.equal({ name: 'Joe', age: 35, notes: 'None' });
-                const deserialized = deserialize(serialized, Patient);
+                const deserialized = inflate(serialized, Patient);
                 expect(deserialized).to.deep.equal(patient);
             });
 
@@ -35,9 +35,9 @@ describe('options behavior', () => {
 
             it('overrides property name in resulting serialized object', () => {
                 const patient = Object.assign(new Patient(), { name: 'John', age: 35 });
-                const serialized = serialize(patient);
+                const serialized = deflate(patient);
                 expect(serialized).to.deep.equal({ name: 'John', years: 35 });
-                const deserialized = deserialize(serialized, Patient);
+                const deserialized = inflate(serialized, Patient);
                 expect(deserialized).to.deep.equal(patient);
             });
 
@@ -62,12 +62,12 @@ describe('options behavior', () => {
 
                 const doctor = Object.assign(new Doctor(), { name: null });
                 expect(
-                    () => serialize(doctor)
+                    () => deflate(doctor)
                 ).to.throw('Unable to serialize property "name": Value is null');
 
                 const patient = Object.assign(new Patient(), { age: 35, doctor: null });
                 expect(
-                    () => serialize(patient)
+                    () => deflate(patient)
                 ).to.throw('Unable to serialize property "doctor": Value is null');
 
             });
@@ -75,11 +75,11 @@ describe('options behavior', () => {
             it('should fail to deserialize', () => {
 
                 expect(
-                    () => deserialize({ name: null }, Doctor)
+                    () => inflate({ name: null }, Doctor)
                 ).to.throw('Unable to deserialize property "name": Value is null');
 
                 expect(
-                    () => deserialize({ age: 35, doctor: null }, Patient)
+                    () => inflate({ age: 35, doctor: null }, Patient)
                 ).to.throw('Unable to deserialize property "doctor": Value is null');
 
             });
@@ -101,23 +101,23 @@ describe('options behavior', () => {
 
                 const doctor = Object.assign(new Doctor(), { name: null });
                 expect(
-                    serialize(doctor)
+                    deflate(doctor)
                 ).to.deep.equal({ name: null });
 
                 const patient = Object.assign(new Patient(), { age: 35, doctor: null });
                 expect(
-                    serialize(patient)
+                    deflate(patient)
                 ).to.deep.equal({ age: 35, doctor: null });
 
             });
 
             it('deserializes to null', () => {
 
-                const doctor = deserialize({ name: null }, Doctor);
+                const doctor = inflate({ name: null }, Doctor);
                 expect(doctor).to.be.instanceOf(Doctor);
                 expect(doctor).to.deep.equal({ name: null });
 
-                const patient = deserialize({ age: 35, doctor: null }, Patient);
+                const patient = inflate({ age: 35, doctor: null }, Patient);
                 expect(patient).to.be.instanceOf(Patient);
                 expect(patient).to.deep.equal({ age: 35, doctor: null });
 
@@ -144,12 +144,12 @@ describe('options behavior', () => {
 
                 const doctor = new Doctor(); // name is undefined
                 expect(
-                    () => serialize(doctor)
+                    () => deflate(doctor)
                 ).to.throw('Unable to serialize property "name": Value is undefined');
 
                 const patient = Object.assign(new Patient(), { age: 35 }); // doctor is undefined
                 expect(
-                    () => serialize(patient)
+                    () => deflate(patient)
                 ).to.throw('Unable to serialize property "doctor": Value is undefined');
 
             });
@@ -158,12 +158,12 @@ describe('options behavior', () => {
 
                 const doctorObj = {}; // name is undefined
                 expect(
-                    () => deserialize(doctorObj, Doctor)
+                    () => inflate(doctorObj, Doctor)
                 ).to.throw('Unable to deserialize property "name": Value is undefined');
 
                 const patientObj = { age: 35 }; // doctor is undefined
                 expect(
-                    () => deserialize(patientObj, Patient)
+                    () => inflate(patientObj, Patient)
                 ).to.throw('Unable to deserialize property "doctor": Value is undefined');
 
             });
@@ -185,23 +185,23 @@ describe('options behavior', () => {
 
                 const doctor = new Doctor(); // name is undefined
                 expect(
-                    serialize(doctor)
+                    deflate(doctor)
                 ).to.deep.equal({}); // name is not serialized
 
                 const patient = Object.assign(new Patient(), { age: 35 }); // doctor is undefined
                 expect(
-                    serialize(patient)
+                    deflate(patient)
                 ).to.deep.equal({ age: 35 }); // doctor is not serialized
 
             });
 
             it('deserializes to undefined', () => {
 
-                const doctor = deserialize({}, Doctor); // name is undefined
+                const doctor = inflate({}, Doctor); // name is undefined
                 expect(doctor).to.be.instanceOf(Doctor);
                 expect(doctor).to.deep.equal({});
 
-                const patient = deserialize({ age: 35 }, Patient); // doctor is undefined
+                const patient = inflate({ age: 35 }, Patient); // doctor is undefined
                 expect(patient).to.be.instanceOf(Patient);
                 expect(patient).to.deep.equal({ age: 35 });
 

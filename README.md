@@ -102,7 +102,7 @@ class Point {
 
 ```ts
 
-import { deserialize, Serializable, serialize } from 'serialazy';
+import { deflate, inflate, Serializable } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -127,7 +127,7 @@ const book = Object.assign(new Book(), {
 });
 
 // *** Serialize
-const serialized = serialize(book); // JSON-compatible object (can be safely passed to `JSON.stringify`)
+const serialized = deflate(book); // JSON-compatible object (can be safely passed to `JSON.stringify`)
 
 expect(serialized).to.deep.equal({
     title: 'The Adventure of the Yellow Face',
@@ -136,7 +136,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = deserialize(serialized, Book);
+const deserialized = inflate(serialized, Book);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal({
@@ -150,7 +150,7 @@ expect(deserialized).to.deep.equal({
 
 ```ts
 
-import { deserialize, Serializable, serialize } from 'serialazy';
+import { deflate, inflate, Serializable } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -175,14 +175,14 @@ const book = Object.assign(new Book(), {
 });
 
 // *** Serialize
-const serialized = serialize(book);
+const serialized = deflate(book);
 
 expect(serialized).to.deep.equal({
     summary: 'Descriptive text' // note that "description" is mapped to "summary" in serialized object
 });
 
 // *** Deserialize
-const deserialized = deserialize(serialized, Book);
+const deserialized = inflate(serialized, Book);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal(book);
@@ -193,7 +193,7 @@ expect(deserialized).to.deep.equal(book);
 
 ```ts
 
-import { deserialize, Serializable, serialize } from 'serialazy';
+import { deflate, inflate, Serializable } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -228,7 +228,7 @@ const book = Object.assign(new Book(), {
 });
 
 // *** Serialize
-const serialized = serialize(book);
+const serialized = deflate(book);
 
 expect(serialized).to.deep.equal({
     releaseDate: '1893-02-01T00:00:00.000Z',
@@ -240,7 +240,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = deserialize(serialized, Book);
+const deserialized = inflate(serialized, Book);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal(book);
@@ -251,7 +251,7 @@ expect(deserialized).to.deep.equal(book);
 
 ```ts
 
-import { deserialize, Serializable, serialize } from 'serialazy';
+import { deflate, inflate, Serializable } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -275,7 +275,7 @@ const book = Object.assign(new Book(), {
 });
 
 // *** Serialize
-const serialized = serialize(book);
+const serialized = deflate(book);
 
 expect(serialized).to.deep.equal({
     title: 'The Adventure of the Yellow Face',
@@ -285,7 +285,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = deserialize(serialized, Book);
+const deserialized = inflate(serialized, Book);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal(book);
@@ -296,7 +296,7 @@ expect(deserialized).to.deep.equal(book);
 
 ```ts
 
-import { deserialize, Serializable, serialize } from 'serialazy';
+import { deflate, inflate, Serializable } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -326,7 +326,7 @@ const circle = Object.assign(new Circle(), {
 });
 
 // *** Serialize
-const serialized = serialize(circle);
+const serialized = deflate(circle);
 
 expect(serialized).to.deep.equal({
     position: [23, 34],
@@ -334,7 +334,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = deserialize(serialized, Circle);
+const deserialized = inflate(serialized, Circle);
 
 expect(deserialized instanceof Circle).to.equal(true);
 expect(deserialized).to.deep.equal(circle);

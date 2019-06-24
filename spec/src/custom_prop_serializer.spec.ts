@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deserialize, Serializable, serialize } from 'serialazy';
+import { deflate, inflate, Serializable } from 'serialazy';
 
 const { expect } = chai;
 
@@ -18,7 +18,7 @@ describe('custom property serializer', () => {
 
         const book = Object.assign(new Book(), { contents: new Map([[1, 'Chapter 1'], [21, 'Chapter 2']]) });
 
-        const bookObj = serialize(book);
+        const bookObj = deflate(book);
 
         expect(bookObj).to.deep.equal({
             contents: [
@@ -27,7 +27,7 @@ describe('custom property serializer', () => {
             ]
         });
 
-        const deserialized = deserialize(bookObj, Book);
+        const deserialized = inflate(bookObj, Book);
 
         expect(deserialized).to.deep.equal(book);
 
@@ -63,7 +63,7 @@ describe('custom property serializer', () => {
             })
         });
 
-        const serialized = serialize(book);
+        const serialized = deflate(book);
 
         expect(serialized).to.deep.equal({
             read: 0,
@@ -71,7 +71,7 @@ describe('custom property serializer', () => {
             author: 'Boris Pasternak'
         });
 
-        const deserialized = deserialize(serialized, Book);
+        const deserialized = inflate(serialized, Book);
 
         expect(deserialized).to.deep.equal(book);
 
@@ -89,11 +89,11 @@ describe('custom property serializer', () => {
 
         const book = Object.assign(new Book(), { releaseDate: new Date('1893') });
 
-        const bookObj = serialize(book);
+        const bookObj = deflate(book);
 
         expect(bookObj).to.deep.equal({ publishDate: "1893-01-01T00:00:00.000Z" });
 
-        const deserialized = deserialize(bookObj, Book);
+        const deserialized = inflate(bookObj, Book);
 
         expect(deserialized).to.deep.equal(book);
 

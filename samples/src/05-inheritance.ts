@@ -1,4 +1,4 @@
-import { deserialize, Serializable, serialize } from 'serialazy';
+import { deflate, inflate, Serializable } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -28,7 +28,7 @@ const circle = Object.assign(new Circle(), {
 });
 
 // *** Serialize
-const serialized = serialize(circle);
+const serialized = deflate(circle);
 
 expect(serialized).to.deep.equal({
     position: [23, 34],
@@ -36,7 +36,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = deserialize(serialized, Circle);
+const deserialized = inflate(serialized, Circle);
 
 expect(deserialized instanceof Circle).to.equal(true);
 expect(deserialized).to.deep.equal(circle);

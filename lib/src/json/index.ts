@@ -11,7 +11,7 @@ const picker = new TypeSerializer.Picker<JsonType>('json');
  * @param ctor _(optional)_ Serializable type constructor function. If provided, it overrides the type of serializable.
  * @returns JSON-compatible type which can be safely passed to `JSON.serialize`
  */
-export function serializeToJson<TOriginal>(serializable: TOriginal, ctor?: Constructor<TOriginal>): JsonType {
+export function deflate<TOriginal>(serializable: TOriginal, ctor?: Constructor<TOriginal>): JsonType {
 
     let serialized: JsonType;
 
@@ -35,7 +35,7 @@ export function serializeToJson<TOriginal>(serializable: TOriginal, ctor?: Const
  * @param ctor Serializable type constructor function
  * @returns Serializable type instance
  */
-export function deserializeFromJson<TOriginal>(serialized: JsonType, ctor: Constructor<TOriginal>): TOriginal {
+export function inflate<TOriginal>(serialized: JsonType, ctor: Constructor<TOriginal>): TOriginal {
 
     if (typeof(ctor) !== 'function') {
         throw new Error('Expecting a constructor function');
@@ -50,12 +50,6 @@ export function deserializeFromJson<TOriginal>(serialized: JsonType, ctor: Const
     return up(serialized);
 
 }
-
-// Functions
-export {
-    serializeToJson as serialize, // alias
-    deserializeFromJson as deserialize // alias
-};
 
 // Decorators
 export {
