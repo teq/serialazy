@@ -58,7 +58,7 @@ export default class ObjectSerializable<TSerialized> {
 
                 } catch (error) {
                     const className = proto.constructor.name;
-                    throw new Error(`Unable to construct a type serializer for property "${className}.${propertyName}": ${error.message}`);
+                    throw new Error(`Unable to construct a type serializer for "${propertyName}" property of "${className}": ${error.message}`);
                 }
 
             };

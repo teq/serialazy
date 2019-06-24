@@ -29,7 +29,7 @@ export default class PropertyBagMetadata extends GenericMetadata {
                     try {
                         this.aggregateSerializers().forEach(serializer => serializer.down(serializable, serialized));
                     } catch (error) {
-                        throw new Error(`Unable to serialize an instance of a class "${this.name}": ${error.message}`);
+                        throw new Error(`Unable to serialize an instance of "${this.name}": ${error.message}`);
                     }
                 }
 
@@ -48,7 +48,7 @@ export default class PropertyBagMetadata extends GenericMetadata {
                     try {
                         this.aggregateSerializers().forEach(serializer => serializer.up(serializable, serialized));
                     } catch (error) {
-                        throw new Error(`Unable to deserialize an instance of a class "${this.name}": ${error.message}`);
+                        throw new Error(`Unable to deserialize an instance of "${this.name}": ${error.message}`);
                     }
                 }
 
@@ -64,7 +64,7 @@ export default class PropertyBagMetadata extends GenericMetadata {
     public setPropertySerializer(propName: string, propSerializer: PropertySerializer<any, any>) {
 
         if (this.aggregateSerializers().has(propName)) {
-            throw new Error(`Unable to redefine/shadow serializer for property: ${propName}`);
+            throw new Error(`Unable to redefine/shadow serializer for "${propName}" property of "${this.name}"`);
         }
 
         this.propSerializers.set(propName, propSerializer);

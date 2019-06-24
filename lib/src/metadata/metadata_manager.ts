@@ -4,8 +4,12 @@ import PropertyBagMetadata from "./property_bag_metadata";
 type Metadata = CustomTypeMetadata | PropertyBagMetadata;
 
 /**
- * We need to make sure that metadata is compatible with all "serialazy" instances.
- * This version is increased in case of incompatible changes in metadata public props/methods.
+ * NOTE:
+ * It is possible that in given project we'll have a multiple of (possibly incompatible)
+ * versions of serialazy which came from different dependencies. To make sure that we access
+ * a compatible version of metadata (or throw an error instead) we use a version number
+ * which is increased in case of incompatible changes in metadata public props/methods.
+ * TODO: Use a major part of npm package version number.
  */
 const METADATA_VERSION = 3;
 
@@ -24,10 +28,12 @@ export default class MetadataManager {
 
     private readonly key: Symbol;
 
+    /** NOTE: Constructable via `get` factory method */
     private constructor(backend: string, projection: string) {
         this.key = key(backend, projection);
     }
 
+    /** Cache for manager instances */
     private static instances = new Map<Symbol, MetadataManager>();
 
     /**
@@ -77,7 +83,7 @@ export default class MetadataManager {
         Reflect.defineMetadata(this.key, metadata, proto);
     }
 
-    /** Seek prototype chain for next inherited serializable's metadata */
+    /** Seek prototype chain for inherited serializable's metadata */
     public seekInheritedMetaFor(proto: Object): Metadata {
 
         let result: Metadata = null;
@@ -94,40 +100,40 @@ export default class MetadataManager {
     /** Get or create own custom type metadata for given prototype */
     public getOrCreateCustomTypeMetaFor(proto: Object): CustomTypeMetadata {
 
-        let metadata = this.getOwnMetaFor(proto);
+        let ownMeta = this.getOwnMetaFor(proto);
 
-        if (!metadata) {
-            const inherited = this.seekInheritedMetaFor(proto);
-            if (inherited) {
+        if (!ownMeta) {
+            const inheritedMeta = this.seekInheritedMetaFor(proto);
+            if (inheritedMeta) {
                 throw new Error('Can\'t define a custom serializer on type which inherits from another serializable');
             }
-            metadata = new CustomTypeMetadata(proto, METADATA_VERSION, this);
-            this.setOwnMetaFor(proto, metadata);
-        } else if (metadata.kind !== CustomTypeMetadata.kind) {
+            ownMeta = new CustomTypeMetadata(proto, METADATA_VERSION, this);
+            this.setOwnMetaFor(proto, ownMeta);
+        } else if (ownMeta.kind === PropertyBagMetadata.kind) {
             throw new Error('Can\'t define a custom type serializer on a "property bag" serializable');
         }
 
-        return metadata;
+        return ownMeta;
 
     }
 
     /** Get own metadata for given prototype if it's exists or create an empty metadata container */
     public getOrCreatePropertyBagMetaFor(proto: Object): PropertyBagMetadata {
 
-        let metadata = this.getOwnMetaFor(proto);
+        let ownMeta = this.getOwnMetaFor(proto);
 
-        if (!metadata) {
-            const inherited = this.seekInheritedMetaFor(proto);
-            if (inherited && inherited.kind !== PropertyBagMetadata.kind) {
+        if (!ownMeta) {
+            const inheritedMeta = this.seekInheritedMetaFor(proto);
+            if (inheritedMeta && inheritedMeta.kind !== PropertyBagMetadata.kind) {
                 throw new Error('A property-bag serializable can\'t inherit from a type with custom serializer');
             }
-            metadata = new PropertyBagMetadata(proto, METADATA_VERSION, this);
-            this.setOwnMetaFor(proto, metadata);
-        } else if (metadata.kind !== PropertyBagMetadata.kind) {
+            ownMeta = new PropertyBagMetadata(proto, METADATA_VERSION, this);
+            this.setOwnMetaFor(proto, ownMeta);
+        } else if (ownMeta.kind === CustomTypeMetadata.kind) {
             throw new Error('Can\'t define property serializers on type which has a custom serializer');
         }
 
-        return metadata;
+        return ownMeta;
 
     }
 

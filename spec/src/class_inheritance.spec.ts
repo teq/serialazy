@@ -69,7 +69,7 @@ describe('class inheritance', () => {
                 class MyRectangle extends Rectangle {
                     @Serializable.Prop() public width: number;
                 }
-            }).to.throw('Unable to redefine/shadow serializer for property: width');
+            }).to.throw('Unable to redefine/shadow serializer for "width" property of "MyRectangle"');
 
         });
 
