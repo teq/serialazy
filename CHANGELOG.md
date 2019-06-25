@@ -1,25 +1,28 @@
-* Changed `deserialize` function arguments order.
-* Added optional optional `ctor` parameter to `serialize` function.
+* **[BREAKING]** Changed `inflate` function arguments order.
+  From `inflate<TOriginal>(ctor: Constructor<TOriginal>, serialized: JsonType): TOriginal`
+  to `inflate<TOriginal>(serialized: JsonType, ctor: Constructor<TOriginal>): TOriginal`.
+* Added optional `ctor` parameter to `serialize` function.
   It allows to serialize an instance as a different (type-compatible) serializable.
 * Both `up` and `down` functions for custom type serializer are optional now.
-* [BREAKING] Renamed type decorator `@Serialize.Type()` to `@Serializable()`
-* [BREAKING] Refactored `Serialize.Custom()` to be an overload for `Serialize()`
+* **[BREAKING]** Renamed type decorator `@Serialize.Type()` to `@Serializable()`
+* **[BREAKING]** Refactored `Serialize.Custom()` to be an overload for `Serialize()`
 * Removed `TypeSerializer.discriminate()` (redundant, was never used)
-* Removed `Constructor.Default` type along with restriction for serializable type constructor to have a "default" version
+* Removed `Constructor.Default` type along with restriction for serializable type constructor
+  to have a "default" version (TODO: check if it's true)
   (which is able to construct serializable if no arguments passed)
 
 v2.0.1
 ------
 
 * Updated `PropertyBagMetadata.getTypeSerializer()`: `up` & `down` arguments are checked for being null/undefined
-  before applying property serializers. Fixes #6
+  before applying property serializers. Fixes [#6](https://github.com/teq/serialazy/issues/6).
 
 v2.0.0
 ------
 
 * Added `@Serialize.Type()` decorator which allows to define custom serializers for types
 * `deflate/inflate` can accept primitives (string, number, boolean and their "boxed" variants, null, undefined)
-* [BREAKING] Removed `isSerializable`, `deepMerge` facade functions and `@Serialize.Skip()` decorator.
+* **[BREAKING]** Removed `isSerializable`, `deepMerge` facade functions and `@Serialize.Skip()` decorator.
 
 v1.3.1
 ------
