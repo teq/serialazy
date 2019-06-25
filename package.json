@@ -36,7 +36,7 @@
   "author": "Andrey Tselischev <vorteq@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "reflect-metadata": "^0.1.10"
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
@@ -46,8 +46,8 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "mocha": "^5.2.0",
-    "tslint": "^5.11.0",
-    "typedoc": "^0.11.1",
-    "typescript": "^2.9.2"
+    "tslint": "^5.18.0",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.5.2"
   }
 }
