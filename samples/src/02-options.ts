@@ -1,4 +1,4 @@
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -10,9 +10,9 @@ class Book {
     // * `optional` allows property to be `undefined` (default: `false`)
     // * `nullable` allows property to be `null (default: `false`)
     // * `name` allows to override property name
-    @Serializable.Prop({ optional: true }) public isbn: string;
+    @Serialize({ optional: true }) public isbn: string;
 
-    @Serializable.Prop({ name: 'summary' }) public description: string;
+    @Serialize({ name: 'summary' }) public description: string;
 
 }
 

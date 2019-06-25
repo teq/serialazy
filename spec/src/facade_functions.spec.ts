@@ -1,41 +1,41 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serializable, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
 describe('facade function', () => {
 
     class Foo {
-        @Serializable.Prop() public id: string;
+        @Serialize() public id: string;
     }
 
     class Bar {
         public id: string;
     }
 
-    @Serializable.Type({ down: (p: PointType1) => `${p.x},${p.y}` })
+    @Serializable({ down: (p: PointType1) => `${p.x},${p.y}` })
     class PointType1 {
         public x: number;
         public y: number;
     }
 
-    @Serializable.Type({ down: (p: PointType2) => [p.x, p.y] })
+    @Serializable({ down: (p: PointType2) => [p.x, p.y] })
     class PointType2 {
         public x: number;
         public y: number;
     }
 
     class RectType1 {
-        @Serializable.Prop() public center: PointType1;
-        @Serializable.Prop() public width: number;
-        @Serializable.Prop() public height: number;
+        @Serialize() public center: PointType1;
+        @Serialize() public width: number;
+        @Serialize() public height: number;
     }
 
     class RectType2 {
-        @Serializable.Prop() public center: PointType2;
-        @Serializable.Prop() public width: number;
-        @Serializable.Prop() public height: number;
+        @Serialize() public center: PointType2;
+        @Serialize() public width: number;
+        @Serialize() public height: number;
     }
 
     describe('deflate function', () => {

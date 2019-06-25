@@ -1,12 +1,12 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serializable, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
 describe('custom type serializer', () => {
 
-    @Serializable.Type({
+    @Serializable({
         down: (val: Point) => `(${val.x},${val.y})`,
         up: (val) => {
             const match = val.match(/^\((\d+),(\d+)\)$/);
@@ -34,9 +34,9 @@ describe('custom type serializer', () => {
 
     it('should fail to apply on a class which has property serializers', () => {
         expect(() => {
-            @Serializable.Type({ down: null, up: null })
+            @Serializable({ down: null, up: null })
             class Test {
-                @Serializable.Prop() public prop: string;
+                @Serialize() public prop: string;
             }
         }).to.throw('Can\'t define a custom type serializer on a "property bag" serializable');
     });
@@ -44,7 +44,7 @@ describe('custom type serializer', () => {
     it('should fail to apply on a class which inherits from another serializable', () => {
         // TODO: allow it?
         expect(() => {
-            @Serializable.Type({ down: (val: TaggedPoint) => `(${val.x},${val.y}),${val.tag}` })
+            @Serializable({ down: (val: TaggedPoint) => `(${val.x},${val.y}),${val.tag}` })
             class TaggedPoint extends Point {
                 public tag: string;
             }
@@ -53,7 +53,7 @@ describe('custom type serializer', () => {
 
     it('can be re-defined', () => {
 
-        Serializable.Type({
+        Serializable({
             down: (val: Point) => [val.x, val.y]
         })(Point);
 

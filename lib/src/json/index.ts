@@ -52,10 +52,7 @@ export function inflate<TOriginal>(serialized: JsonType, ctor: Constructor<TOrig
 }
 
 // Decorators
-export {
-    default as JsonSerializable,
-    default as Serializable // alias
-} from './json_serializable';
+export * from './json_serializable';
 
 // Types
 export * from './json_type';

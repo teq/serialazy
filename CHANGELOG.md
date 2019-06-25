@@ -2,9 +2,7 @@
 * Added optional optional `ctor` parameter to `serialize` function.
   It allows to serialize an instance as a different (type-compatible) serializable.
 * Both `up` and `down` functions for custom type serializer are optional now.
-* [BREAKING] Renamed property/type decorators.
-  `@Serialize()` to `@Serializable.JSON.Prop()` (alias `@Serializable.Prop()`)
-  `@Serialize.Type()` to `@Serializable.JSON.Type()` (alias `@Serializable.Type()`)
+* [BREAKING] Renamed type decorator `@Serialize.Type()` to `@Serializable()`
 * [BREAKING] Refactored `Serialize.Custom()` to be an overload for `Serialize()`
 * Removed `TypeSerializer.discriminate()` (redundant, was never used)
 * Removed `Constructor.Default` type along with restriction for serializable type constructor to have a "default" version

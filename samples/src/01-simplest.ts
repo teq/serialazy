@@ -1,4 +1,4 @@
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -7,8 +7,8 @@ const { expect } = chai;
 class Book {
 
     // "Serialize" decorator tries to pick a default serializer for given data type
-    @Serializable.Prop() public title: string;
-    @Serializable.Prop() public pages: number;
+    @Serialize() public title: string;
+    @Serialize() public pages: number;
 
     // Properties not decorated by `Serialize` are NOT serialized
     public notes: string;

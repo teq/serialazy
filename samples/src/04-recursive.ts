@@ -1,16 +1,16 @@
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
 
 // *** Class definition
 class Author {
-    @Serializable.Prop() public name: string;
+    @Serialize() public name: string;
 }
 
 class Book {
-    @Serializable.Prop() public title: string;
-    @Serializable.Prop() public author: Author; // Serializes Author recursively
+    @Serialize() public title: string;
+    @Serialize() public author: Author; // Serializes Author recursively
 }
 
 // *** Create instance

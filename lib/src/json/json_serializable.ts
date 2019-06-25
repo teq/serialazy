@@ -4,38 +4,32 @@ import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
 import JsonType from './json_type';
 
-namespace JsonSerializable {
+const jsonSerializable = new ObjectSerializable<JsonType>('json');
 
-    const jsonSerializable = new ObjectSerializable<JsonType>('json');
+/** Use default JSON type serializer for given property */
+export function Serialize(
+    options?: ObjectPropertySerializer.Options
+): (proto: Object, propertyName: string) => void;
 
-    /** Use default JSON type serializer for given property */
-    export function Prop(
-        options?: ObjectPropertySerializer.Options
-    ): (proto: Object, propertyName: string) => void;
+/** Use custom JSON type serializer for given property */
+export function Serialize<TSerialized extends JsonType, TOriginal>(
+    customTypeSerializer: TypeSerializer<TSerialized, TOriginal>,
+    options?: ObjectPropertySerializer.Options
+): (proto: Object, propertyName: string) => void;
 
-    /** Use custom JSON type serializer for given property */
-    export function Prop<TSerialized extends JsonType, TOriginal>(
-        customTypeSerializer: TypeSerializer<TSerialized, TOriginal>,
-        options?: ObjectPropertySerializer.Options
-    ): (proto: Object, propertyName: string) => void;
-
-    export function Prop<TSerialized extends JsonType, TOriginal>(
-        optionsOrCustomTypeSerializer: ObjectPropertySerializer.Options | TypeSerializer<TSerialized, TOriginal>,
-        maybeOptions?: ObjectPropertySerializer.Options
-    ): (proto: Object, propertyName: string) => void {
-        return jsonSerializable.propertyDecorator(
-            optionsOrCustomTypeSerializer as TypeSerializer<TSerialized, TOriginal>,
-            maybeOptions as ObjectPropertySerializer.Options
-        );
-    }
-
-    /** Use custom JSON serializer for given type */
-    export function Type<TSerialized extends JsonType, TOriginal>(
-        customTypeSerializer: TypeSerializer<TSerialized, TOriginal>,
-    ): (ctor: Constructor<TOriginal>) => void {
-        return jsonSerializable.typeDecorator(customTypeSerializer);
-    }
-
+export function Serialize<TSerialized extends JsonType, TOriginal>(
+    optionsOrCustomTypeSerializer: ObjectPropertySerializer.Options | TypeSerializer<TSerialized, TOriginal>,
+    maybeOptions?: ObjectPropertySerializer.Options
+): (proto: Object, propertyName: string) => void {
+    return jsonSerializable.propertyDecorator(
+        optionsOrCustomTypeSerializer as TypeSerializer<TSerialized, TOriginal>,
+        maybeOptions as ObjectPropertySerializer.Options
+    );
 }
 
-export default JsonSerializable;
+/** Use custom JSON serializer for given type */
+export function Serializable<TSerialized extends JsonType, TOriginal>(
+    customTypeSerializer: TypeSerializer<TSerialized, TOriginal>,
+): (ctor: Constructor<TOriginal>) => void {
+    return jsonSerializable.typeDecorator(customTypeSerializer);
+}

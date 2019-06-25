@@ -29,9 +29,9 @@ Library can be consumed _only_ from **TypeScript** projects because it makes use
 ## Usage
 
 ```ts
-import { serialize, deserialize } from 'serialazy';
-const serialized = serialize(serializable);
-const deserialized = deserialize(SerializableType, serialized);
+import { deflate, inflate } from 'serialazy';
+const serialized = deflate(serializable);
+const deserialized = inflate(serialized, SerializableType);
 ```
 
 Where:
@@ -43,7 +43,7 @@ There are 2 types of _non-primitive serializables_:
 
 ### 1. A "property bag"
 
-Is a JS class with properties decorated with `@Serializable.Prop()`.
+Is a JS class with properties decorated with `@Serialize()`.
 
 - _Always_ serializes to a plain JS object
 - Can extend (inherit from) another property bag, but will throw en error if child class "shadows" a property from a base class.
@@ -55,9 +55,9 @@ Example:
 // A "property bag" serializable
 class Person {
 
-    @Serializable.Prop() public name: string;
+    @Serialize() public name: string;
 
-    @Serializable.Prop({
+    @Serialize({
         down: (date: Date) => date.toISOString(),
         up: (isoDateStr: string) => new Date(isoDateStr)
     })
@@ -67,7 +67,7 @@ class Person {
 
 // Actor inherits all property serializers from Person
 class Actor extends Person {
-    @Serializable.Prop() public hasOscar: boolean;
+    @Serialize() public hasOscar: boolean;
 }
 
 ```
@@ -85,7 +85,7 @@ Example:
 ```ts
 
 // Point class serializes to a tuple "[number, number]"
-@Serializable.Type({
+@Serializable({
     down: (point: Point) => [point.x, point.y],
     up: (tuple) => Object.assign(new Point(), { x: tuple[0], y: tuple[1] })
 })
@@ -102,7 +102,7 @@ class Point {
 
 ```ts
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -111,8 +111,8 @@ const { expect } = chai;
 class Book {
 
     // "Serialize" decorator tries to pick a default serializer for given data type
-    @Serializable.Prop() public title: string;
-    @Serializable.Prop() public pages: number;
+    @Serialize() public title: string;
+    @Serialize() public pages: number;
 
     // Properties not decorated by `Serialize` are NOT serialized
     public notes: string;
@@ -150,7 +150,7 @@ expect(deserialized).to.deep.equal({
 
 ```ts
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -162,9 +162,9 @@ class Book {
     // * `optional` allows property to be `undefined` (default: `false`)
     // * `nullable` allows property to be `null (default: `false`)
     // * `name` allows to override property name
-    @Serializable.Prop({ optional: true }) public isbn: string;
+    @Serialize({ optional: true }) public isbn: string;
 
-    @Serializable.Prop({ name: 'summary' }) public description: string;
+    @Serialize({ name: 'summary' }) public description: string;
 
 }
 
@@ -193,7 +193,7 @@ expect(deserialized).to.deep.equal(book);
 
 ```ts
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -202,14 +202,14 @@ const { expect } = chai;
 class Book {
 
     // A custom serializer which converts Date to ISO date string
-    @Serializable.Prop({
+    @Serialize({
         down: (val: Date) => val.toISOString(),
         up: (val) => new Date(val)
     }, { name: 'releaseDate' }) // Note that custom serializer can accept options
     public publicationDate: Date;
 
     // A custom serializer which converts Map to a JSON-compatible array of objects
-    @Serializable.Prop({
+    @Serialize({
         down: (val: Map<number, string>) => Array.from(val).map(([page, title]) => ({ page, title })),
         up: (val) => new Map(val.map<[number, string]>(ch => [ch.page, ch.title])),
     })
@@ -251,19 +251,19 @@ expect(deserialized).to.deep.equal(book);
 
 ```ts
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
 
 // *** Class definition
 class Author {
-    @Serializable.Prop() public name: string;
+    @Serialize() public name: string;
 }
 
 class Book {
-    @Serializable.Prop() public title: string;
-    @Serializable.Prop() public author: Author; // Serializes Author recursively
+    @Serialize() public title: string;
+    @Serialize() public author: Author; // Serializes Author recursively
 }
 
 // *** Create instance
@@ -296,13 +296,13 @@ expect(deserialized).to.deep.equal(book);
 
 ```ts
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serializable, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
 
 // *** Class definitions
-@Serializable.Type({
+@Serializable({
     down: (point: Point) => [point.x, point.y],
     up: (tuple) => Object.assign(new Point(), { x: tuple[0], y: tuple[1] })
 })
@@ -312,11 +312,11 @@ class Point {
 }
 
 class Shape {
-    @Serializable.Prop() public position: Point;
+    @Serialize() public position: Point;
 }
 
 class Circle extends Shape { // inherits props & serializers from Shape
-    @Serializable.Prop() public radius: number;
+    @Serialize() public radius: number;
 }
 
 // *** Create instance

@@ -1,12 +1,12 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serializable, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
 describe('class inheritance', () => {
 
-    @Serializable.Type({
+    @Serializable({
         down: (val: Point) => `(${val.x},${val.y})`,
         up: (val) => {
             const match = val.match(/^\((\d+),(\d+)\)$/);
@@ -21,12 +21,12 @@ describe('class inheritance', () => {
     }
 
     class Shape {
-        @Serializable.Prop() public position: Point;
+        @Serialize() public position: Point;
     }
 
     class Rectangle extends Shape {
-        @Serializable.Prop() public width: number;
-        @Serializable.Prop() public height: number;
+        @Serialize() public width: number;
+        @Serialize() public height: number;
     }
 
     describe('for property-bag serializables', () => {
@@ -36,7 +36,7 @@ describe('class inheritance', () => {
             expect(() => {
                 // tslint:disable-next-line:no-unused-variable
                 class TaggedPoint extends Point {
-                    @Serializable.Prop() public tag: string;
+                    @Serialize() public tag: string;
                 }
             }).to.throw('A property-bag serializable can\'t inherit from a type with custom serializer');
 
@@ -67,7 +67,7 @@ describe('class inheritance', () => {
             expect(() => {
                 // tslint:disable-next-line:no-unused-variable
                 class MyRectangle extends Rectangle {
-                    @Serializable.Prop() public width: number;
+                    @Serialize() public width: number;
                 }
             }).to.throw('Unable to redefine/shadow serializer for "width" property of "MyRectangle"');
 
@@ -81,14 +81,14 @@ describe('class inheritance', () => {
 
             [
                 () => {
-                    @Serializable.Type({ down: null, up: null })
+                    @Serializable({ down: null, up: null })
                     // tslint:disable-next-line:no-unused-variable
                     class TaggedPoint extends Point {
                         public tag: string;
                     }
                 },
                 () => {
-                    @Serializable.Type({ down: null, up: null })
+                    @Serializable({ down: null, up: null })
                     // tslint:disable-next-line:no-unused-variable
                     class TaggedRectangle extends Rectangle {
                         public tag: string;

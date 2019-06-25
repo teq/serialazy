@@ -1,10 +1,10 @@
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serializable, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
 
 // *** Class definitions
-@Serializable.Type({
+@Serializable({
     down: (point: Point) => [point.x, point.y],
     up: (tuple) => Object.assign(new Point(), { x: tuple[0], y: tuple[1] })
 })
@@ -14,11 +14,11 @@ class Point {
 }
 
 class Shape {
-    @Serializable.Prop() public position: Point;
+    @Serialize() public position: Point;
 }
 
 class Circle extends Shape { // inherits props & serializers from Shape
-    @Serializable.Prop() public radius: number;
+    @Serialize() public radius: number;
 }
 
 // *** Create instance

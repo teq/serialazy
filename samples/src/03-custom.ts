@@ -1,4 +1,4 @@
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
@@ -7,14 +7,14 @@ const { expect } = chai;
 class Book {
 
     // A custom serializer which converts Date to ISO date string
-    @Serializable.Prop({
+    @Serialize({
         down: (val: Date) => val.toISOString(),
         up: (val) => new Date(val)
     }, { name: 'releaseDate' }) // Note that custom serializer can accept options
     public publicationDate: Date;
 
     // A custom serializer which converts Map to a JSON-compatible array of objects
-    @Serializable.Prop({
+    @Serialize({
         down: (val: Map<number, string>) => Array.from(val).map(([page, title]) => ({ page, title })),
         up: (val) => new Map(val.map<[number, string]>(ch => [ch.page, ch.title])),
     })

@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
@@ -11,9 +11,9 @@ describe('options behavior', () => {
         describe('when option is null/undefined/empty (default)', () => {
 
             class Patient {
-                @Serializable.Prop({ name: undefined }) public name: string;
-                @Serializable.Prop({ name: null }) public age: number;
-                @Serializable.Prop({ name: '' }) public notes : string;
+                @Serialize({ name: undefined }) public name: string;
+                @Serialize({ name: null }) public age: number;
+                @Serialize({ name: '' }) public notes : string;
             }
 
             it('doesn\'t affect property name in resulting serialized object', () => {
@@ -29,8 +29,8 @@ describe('options behavior', () => {
         describe('when option is a non-empty string', () => {
 
             class Patient {
-                @Serializable.Prop() public name: string;
-                @Serializable.Prop({ name: 'years' }) public age: number;
+                @Serialize() public name: string;
+                @Serialize({ name: 'years' }) public age: number;
             }
 
             it('overrides property name in resulting serialized object', () => {
@@ -50,12 +50,12 @@ describe('options behavior', () => {
         describe('when value is null and option is null/undefined/false (default)', () => {
 
             class Doctor {
-                @Serializable.Prop() public name: string;
+                @Serialize() public name: string;
             }
 
             class Patient {
-                @Serializable.Prop() public age: number;
-                @Serializable.Prop() public doctor: Doctor;
+                @Serialize() public age: number;
+                @Serialize() public doctor: Doctor;
             }
 
             it('should fail to serialize', () => {
@@ -89,12 +89,12 @@ describe('options behavior', () => {
         describe('when value is null and option is true', () => {
 
             class Doctor {
-                @Serializable.Prop({ nullable: true }) public name: string;
+                @Serialize({ nullable: true }) public name: string;
             }
 
             class Patient {
-                @Serializable.Prop({ nullable: true }) public age: number;
-                @Serializable.Prop({ nullable: true }) public doctor: Doctor;
+                @Serialize({ nullable: true }) public age: number;
+                @Serialize({ nullable: true }) public doctor: Doctor;
             }
 
             it('serializes to null', () => {
@@ -132,12 +132,12 @@ describe('options behavior', () => {
         describe('when value is undefined and option is false/null/undefined (default)', () => {
 
             class Doctor {
-                @Serializable.Prop() public name: string;
+                @Serialize() public name: string;
             }
 
             class Patient {
-                @Serializable.Prop() public age: number;
-                @Serializable.Prop() public doctor: Doctor;
+                @Serialize() public age: number;
+                @Serialize() public doctor: Doctor;
             }
 
             it('should fail to serialize', () => {
@@ -173,12 +173,12 @@ describe('options behavior', () => {
         describe('when value is undefined and option is true', () => {
 
             class Doctor {
-                @Serializable.Prop({ optional: true }) public name: string;
+                @Serialize({ optional: true }) public name: string;
             }
 
             class Patient {
-                @Serializable.Prop({ optional: true }) public age: number;
-                @Serializable.Prop({ optional: true }) public doctor: Doctor;
+                @Serialize({ optional: true }) public age: number;
+                @Serialize({ optional: true }) public doctor: Doctor;
             }
 
             it('serializes to undefined', () => {

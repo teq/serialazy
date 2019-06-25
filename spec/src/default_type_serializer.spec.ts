@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
@@ -9,7 +9,7 @@ describe('default type serializer', () => {
     describe('for boolean properties', () => {
 
         class Book {
-            @Serializable.Prop() public read: boolean;
+            @Serialize() public read: boolean;
         }
 
         describe('when the value is a boolean', () => {
@@ -66,7 +66,7 @@ describe('default type serializer', () => {
     describe('for number properties', () => {
 
         class Patient {
-            @Serializable.Prop() public age: number;
+            @Serialize() public age: number;
         }
 
         describe('when the value is a number', () => {
@@ -123,7 +123,7 @@ describe('default type serializer', () => {
     describe('for string properties', () => {
 
         class Greeter {
-            @Serializable.Prop() public message: string;
+            @Serialize() public message: string;
         }
 
         describe('when the value is a string', () => {
@@ -187,12 +187,12 @@ describe('default type serializer', () => {
         describe('when a property is serializable', () => {
 
             class Author {
-                @Serializable.Prop() public name: string;
+                @Serialize() public name: string;
             }
 
             class Book {
-                @Serializable.Prop() public title: string;
-                @Serializable.Prop() public author: Author;
+                @Serialize() public title: string;
+                @Serialize() public author: Author;
             }
 
             const book = Object.assign(new Book(), {
@@ -220,8 +220,8 @@ describe('default type serializer', () => {
             }
 
             class Book {
-                @Serializable.Prop() public title: string;
-                @Serializable.Prop() public author: Author;
+                @Serialize() public title: string;
+                @Serialize() public author: Author;
             }
 
             const book = Object.assign(new Book(), {

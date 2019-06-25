@@ -1,7 +1,7 @@
-import { Serializable } from 'serialazy';
+import { Serialize } from 'serialazy';
 
 import Child from './circular_child';
 
 export default class Parent {
-    @Serializable.Prop() public child: Child;
+    @Serialize() public child: Child;
 }

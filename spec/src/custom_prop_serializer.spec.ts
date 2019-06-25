@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
@@ -9,7 +9,7 @@ describe('custom property serializer', () => {
     it('accepts custom type serializer', () => {
 
         class Book {
-            @Serializable.Prop({
+            @Serialize({
                 down: (val: Map<number, string>) => val ? Array.from(val).map(([page, title]) => ({ page, title })) : null,
                 up: (val) => val ? new Map(val.map<[number, string]>(ch => [ch.page, ch.title])) : null,
             })
@@ -36,19 +36,19 @@ describe('custom property serializer', () => {
     it('overrides default (predefined) type serializer of given property', () => {
 
         class Author {
-            @Serializable.Prop() public name: string;
+            @Serialize() public name: string;
         }
 
         class Book {
-            @Serializable.Prop() public title: string;
+            @Serialize() public title: string;
 
-            @Serializable.Prop({ // should override debault `Author` type serializer
+            @Serialize({ // should override debault `Author` type serializer
                 down: (author: Author) => author.name,
                 up: (name: string) => Object.assign(new Author(), { name })
             })
             public author: Author;
 
-            @Serializable.Prop({ // should override default `boolean` type serializer
+            @Serialize({ // should override default `boolean` type serializer
                 down: (val: boolean) => val ? 1 : 0,
                 up: (val) => val ? true : false
             })
@@ -80,7 +80,7 @@ describe('custom property serializer', () => {
     it('accepts options', () => {
 
         class Book {
-            @Serializable.Prop(
+            @Serialize(
                 { down: (val: Date) => val ? val.toISOString() : null, up: (val) => val ? new Date(val) : null },
                 { name: 'publishDate' }
             )
