@@ -1,11 +1,12 @@
 * **[BREAKING]** Changed `inflate` function arguments order.
   From `inflate<TOriginal>(ctor: Constructor<TOriginal>, serialized: JsonType): TOriginal`
   to `inflate<TOriginal>(serialized: JsonType, ctor: Constructor<TOriginal>): TOriginal`.
-* Added optional `ctor` parameter to `serialize` function.
+* Added optional `ctor` parameter to `deflate` function.
   It allows to serialize an instance as a different (type-compatible) serializable.
 * Both `up` and `down` functions for custom type serializer are optional now.
-* **[BREAKING]** Renamed type decorator `@Serialize.Type()` to `@Serializable()`
-* **[BREAKING]** Refactored `Serialize.Custom()` to be an overload for `Serialize()`
+* **[BREAKING]** Removed `@Serialize.Type()` and `@Serialize.Custom()` decorators.
+  Now all type and property decoration is done by `@Serialize()`.
+* **[BREAKING]** `@Serialize()` accepts custom type serializer and options as a single argument.
 * Removed `TypeSerializer.discriminate()` (redundant, was never used)
 * Removed `Constructor.Default` type along with restriction for serializable type constructor
   to have a "default" version (TODO: check if it's true)

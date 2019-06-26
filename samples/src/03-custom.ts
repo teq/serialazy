@@ -8,9 +8,10 @@ class Book {
 
     // A custom serializer which converts Date to ISO date string
     @Serialize({
+        name: 'releaseDate', // Note that custom serializer can accept options
         down: (val: Date) => val.toISOString(),
         up: (val) => new Date(val)
-    }, { name: 'releaseDate' }) // Note that custom serializer can accept options
+    })
     public publicationDate: Date;
 
     // A custom serializer which converts Map to a JSON-compatible array of objects

@@ -80,10 +80,11 @@ describe('custom property serializer', () => {
     it('accepts options', () => {
 
         class Book {
-            @Serialize(
-                { down: (val: Date) => val ? val.toISOString() : null, up: (val) => val ? new Date(val) : null },
-                { name: 'publishDate' }
-            )
+            @Serialize({
+                name: 'publishDate',
+                down: (val: Date) => val ? val.toISOString() : null,
+                up: (val) => val ? new Date(val) : null
+            })
             public releaseDate: Date;
         }
 

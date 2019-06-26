@@ -74,7 +74,7 @@ class Actor extends Person {
 
 ### 2. Type (class) with custom serializer
 
-A JS class decorated with `@Serializable.Type()`.
+A JS class decorated with `@Serialize()`.
 
 - Serializes to any JSON-compatible value
 - Can not be a base class for other serializables
@@ -85,7 +85,7 @@ Example:
 ```ts
 
 // Point class serializes to a tuple "[number, number]"
-@Serializable({
+@Serialize({
     down: (point: Point) => [point.x, point.y],
     up: (tuple) => Object.assign(new Point(), { x: tuple[0], y: tuple[1] })
 })
@@ -203,9 +203,10 @@ class Book {
 
     // A custom serializer which converts Date to ISO date string
     @Serialize({
+        name: 'releaseDate', // Note that custom serializer can accept options
         down: (val: Date) => val.toISOString(),
         up: (val) => new Date(val)
-    }, { name: 'releaseDate' }) // Note that custom serializer can accept options
+    })
     public publicationDate: Date;
 
     // A custom serializer which converts Map to a JSON-compatible array of objects
@@ -296,13 +297,13 @@ expect(deserialized).to.deep.equal(book);
 
 ```ts
 
-import { deflate, inflate, Serializable, Serialize } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
 
 // *** Class definitions
-@Serializable({
+@Serialize({
     down: (point: Point) => [point.x, point.y],
     up: (tuple) => Object.assign(new Point(), { x: tuple[0], y: tuple[1] })
 })

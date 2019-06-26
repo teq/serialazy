@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable, Serialize } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
@@ -14,13 +14,13 @@ describe('facade function', () => {
         public id: string;
     }
 
-    @Serializable({ down: (p: PointType1) => `${p.x},${p.y}` })
+    @Serialize({ down: (p: PointType1) => `${p.x},${p.y}` })
     class PointType1 {
         public x: number;
         public y: number;
     }
 
-    @Serializable({ down: (p: PointType2) => [p.x, p.y] })
+    @Serialize({ down: (p: PointType2) => [p.x, p.y] })
     class PointType2 {
         public x: number;
         public y: number;

@@ -1,12 +1,12 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable, Serialize } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
 describe('custom type serializer', () => {
 
-    @Serializable({
+    @Serialize({
         down: (val: Point) => `(${val.x},${val.y})`,
         up: (val) => {
             const match = val.match(/^\((\d+),(\d+)\)$/);
@@ -34,7 +34,7 @@ describe('custom type serializer', () => {
 
     it('should fail to apply on a class which has property serializers', () => {
         expect(() => {
-            @Serializable({ down: null, up: null })
+            @Serialize({ down: null, up: null })
             class Test {
                 @Serialize() public prop: string;
             }
@@ -44,7 +44,7 @@ describe('custom type serializer', () => {
     it('should fail to apply on a class which inherits from another serializable', () => {
         // TODO: allow it?
         expect(() => {
-            @Serializable({ down: (val: TaggedPoint) => `(${val.x},${val.y}),${val.tag}` })
+            @Serialize({ down: (val: TaggedPoint) => `(${val.x},${val.y}),${val.tag}` })
             class TaggedPoint extends Point {
                 public tag: string;
             }
@@ -53,7 +53,7 @@ describe('custom type serializer', () => {
 
     it('can be re-defined', () => {
 
-        Serializable({
+        Serialize({
             down: (val: Point) => [val.x, val.y]
         })(Point);
 

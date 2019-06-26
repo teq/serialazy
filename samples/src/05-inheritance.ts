@@ -1,10 +1,10 @@
-import { deflate, inflate, Serializable, Serialize } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 import chai = require('chai');
 const { expect } = chai;
 
 // *** Class definitions
-@Serializable({
+@Serialize({
     down: (point: Point) => [point.x, point.y],
     up: (tuple) => Object.assign(new Point(), { x: tuple[0], y: tuple[1] })
 })

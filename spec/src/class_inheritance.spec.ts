@@ -1,12 +1,12 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serializable, Serialize } from 'serialazy';
+import { deflate, inflate, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
 describe('class inheritance', () => {
 
-    @Serializable({
+    @Serialize({
         down: (val: Point) => `(${val.x},${val.y})`,
         up: (val) => {
             const match = val.match(/^\((\d+),(\d+)\)$/);
@@ -81,14 +81,14 @@ describe('class inheritance', () => {
 
             [
                 () => {
-                    @Serializable({ down: null, up: null })
+                    @Serialize({ down: null, up: null })
                     // tslint:disable-next-line:no-unused-variable
                     class TaggedPoint extends Point {
                         public tag: string;
                     }
                 },
                 () => {
-                    @Serializable({ down: null, up: null })
+                    @Serialize({ down: null, up: null })
                     // tslint:disable-next-line:no-unused-variable
                     class TaggedRectangle extends Rectangle {
                         public tag: string;

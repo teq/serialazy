@@ -80,11 +80,11 @@ namespace ObjectPropertySerializer {
 
     /** Object property serializer options */
     export interface Options {
-        /** Indicates if property can be undefined. Default: false */
+        /** _(Applicable to properties)_ Indicates if property can be undefined. _Default:_ false. */
         optional?: boolean;
-        /** Indicates if property can be null. Default: false */
+        /** _(Applicable to properties)_ Indicates if property can be null. Default: false */
         nullable?: boolean;
-        /** Use different property name in serialized object. Default: use the same name */
+        /** _(Applicable to properties)_ Use different property name in serialized object. Default: use the same name */
         name?: string;
     }
 
