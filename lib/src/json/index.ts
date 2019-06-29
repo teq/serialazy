@@ -1,9 +1,23 @@
+import DecoratorFactory from '../decorator_factory';
+import ObjectPropertySerializer from '../object_property_serializer';
 import TypeSerializer from "../type_serializer";
 import Constructor from "../types/constructor";
+import Util from '../types/util';
 import JsonType from "./json_type";
-import './predefined';
 
 const picker = new TypeSerializer.Picker<JsonType>('json');
+const decoratorFactory = new DecoratorFactory<JsonType>('json');
+
+/**
+ * Define serializer for given property or type
+ * @param params _(optional)_ Type serializer and/or options
+ * @returns Type/property decorator
+ */
+export function Serialize<TSerialized extends JsonType, TOriginal>(
+    params?: TypeSerializer<TSerialized, TOriginal> & ObjectPropertySerializer.Options
+) {
+    return decoratorFactory.create(params);
+}
 
 /**
  * Serialize given serializable type instance to a JSON-compatible type
@@ -51,8 +65,22 @@ export function inflate<TOriginal>(serialized: JsonType, ctor: Constructor<TOrig
 
 }
 
-// Decorator
-export { default as Serialize } from './serialize';
-
 // Types
 export * from './json_type';
+
+// Define serializers for built-in types
+
+Serialize({
+    down: (original: any) => Util.expectBooleanOrNil(original),
+    up: (serialized: any) => Util.expectBooleanOrNil(serialized)
+})(Boolean);
+
+Serialize({
+    down: (original: any) => Util.expectNumberOrNil(original),
+    up: (serialized: any) => Util.expectNumberOrNil(serialized)
+})(Number);
+
+Serialize({
+    down: (original: any) => Util.expectStringOrNil(original),
+    up: (serialized: any) => Util.expectStringOrNil(serialized)
+})(String);

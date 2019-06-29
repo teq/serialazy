@@ -3,12 +3,16 @@ import ObjectPropertySerializer from "./object_property_serializer";
 import TypeSerializer from "./type_serializer";
 import Constructor from "./types/constructor";
 
+function isConstructor(protoOrCtor: Object | Constructor<unknown>): protoOrCtor is Constructor<unknown> {
+    return typeof protoOrCtor === 'function';
+}
+
 function isTypeSerializer<TSerialized, TOriginal>(target: any): target is TypeSerializer<TSerialized, TOriginal> {
     return typeof target === 'object' && (typeof target.down === 'function' || typeof target.up === 'function');
 }
 
-/** Decorates types and properties with serializer */
-export default class Decorator<TSerialized> {
+/** Creates type/property decorators */
+export default class DecoratorFactory<TSerialized> {
 
     private picker: TypeSerializer.Picker<TSerialized>;
 
@@ -18,7 +22,22 @@ export default class Decorator<TSerialized> {
         this.picker = new TypeSerializer.Picker<TSerialized>(backend);
     }
 
-    public decorateProperty<TOriginal>(
+    /** Create new type/property decorator */
+    public create<TOriginal>(
+        params?: TypeSerializer<TSerialized, TOriginal> & ObjectPropertySerializer.Options
+    ) {
+        return (protoOrCtor: Object | Constructor<TOriginal>, propertyName?: string) => {
+            if (isConstructor(protoOrCtor)) {
+                this.decorateType(protoOrCtor, params);
+            } else if (typeof protoOrCtor === 'object' && typeof propertyName === 'string') {
+                this.decorateProperty(protoOrCtor, propertyName, params);
+            } else {
+                throw new Error('Unable to decorate: Target is not a property, nor a constructor');
+            }
+        };
+    }
+
+    private decorateProperty<TOriginal>(
         proto: Object,
         propertyName: string,
         params?: TypeSerializer<TSerialized, TOriginal> & ObjectPropertySerializer.Options
@@ -58,7 +77,7 @@ export default class Decorator<TSerialized> {
 
     }
 
-    public decorateType<TOriginal>(
+    private decorateType<TOriginal>(
         ctor: Constructor<TOriginal>,
         customTypeSerializer: TypeSerializer<TSerialized, TOriginal>,
     ) {
