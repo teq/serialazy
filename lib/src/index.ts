@@ -5,7 +5,8 @@ export * from './json';
 // Internals (for backend implementations)
 export * from './metadata';
 export * from './types';
-export { default as ObjectPropertySerializer } from './object_property_serializer';
 export { default as DecoratorFactory } from './decorator_factory';
+export { default as ObjectPropertySerializer } from './object_property_serializer';
 export { default as PropertySerializer } from './property_serializer';
+export { default as TypeSerializerPicker } from './type_serializer_picker';
 export { default as TypeSerializer } from './type_serializer';

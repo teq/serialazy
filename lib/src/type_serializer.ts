@@ -1,4 +1,3 @@
-import MetadataManager from './metadata/metadata_manager';
 import Constructor from './types/constructor';
 
 /** Represents a generic type serializer */
@@ -27,62 +26,6 @@ interface TypeSerializer<TSerialized, TOriginal> {
 }
 
 namespace TypeSerializer {
-
-    /** A helper class which picks a type serializer for given value or type */
-    export class Picker<TSerialized> {
-
-        public constructor(
-            /** Serialization backend name ('json', 'mongodb', etc.) */
-            private backend: string,
-        ) {}
-
-        /** Try to pick a (possibly partial) type serializer for given value */
-        public pickForValue(value: any): TypeSerializer<TSerialized, any> {
-
-            if (value === null || value === undefined) {
-                throw new Error('Expecting value to be not null/undefined');
-            }
-
-            const type = value.constructor;
-
-            if (typeof(type) !== 'function') {
-                throw new Error(`Expecting value to have a constructor function`);
-            }
-
-            const proto = Object.getPrototypeOf(value);
-            const meta = MetadataManager.get(this.backend).getOwnOrInheritedMetaFor(proto);
-
-            return meta ? meta.getTypeSerializer() : { type };
-
-        }
-
-        /** Try to pick a (possibly partial) type serializer for given type */
-        public pickForType(type: Constructor<any>): TypeSerializer<TSerialized, any> {
-
-            if (typeof(type) !== 'function') {
-                throw new Error('Expecting a type constructor function');
-            }
-
-            const meta = MetadataManager.get(this.backend).getOwnOrInheritedMetaFor(type.prototype);
-
-            return meta ? meta.getTypeSerializer() : { type };
-
-        }
-
-        /** Try to pick a (possibly partial) type serializer for given property */
-        public pickForProp(proto: Object, propertyName: string): TypeSerializer<TSerialized, any> {
-
-            const type: Constructor<any> = Reflect.getMetadata('design:type', proto, propertyName);
-
-            if (type === undefined) {
-                throw new Error('Unable to fetch type information. Hint: Enable TS options: "emitDecoratorMetadata" and "experimentalDecorators"');
-            }
-
-            return this.pickForType(type);
-
-        }
-
-    }
 
     /** Compile type serializer partials to a final type serializer */
     export function compile<TSerialized, TOriginal>(

@@ -1,6 +1,7 @@
 import MetadataManager from "./metadata/metadata_manager";
 import ObjectPropertySerializer from "./object_property_serializer";
 import TypeSerializer from "./type_serializer";
+import TypeSerializerPicker from './type_serializer_picker';
 import Constructor from "./types/constructor";
 
 function isConstructor(protoOrCtor: Object | Constructor<unknown>): protoOrCtor is Constructor<unknown> {
@@ -14,12 +15,12 @@ function isTypeSerializer<TSerialized, TOriginal>(target: any): target is TypeSe
 /** Creates type/property decorators */
 export default class DecoratorFactory<TSerialized> {
 
-    private picker: TypeSerializer.Picker<TSerialized>;
+    private picker: TypeSerializerPicker<TSerialized>;
 
     public constructor(
         private backend: string
     ) {
-        this.picker = new TypeSerializer.Picker<TSerialized>(backend);
+        this.picker = new TypeSerializerPicker<TSerialized>(backend);
     }
 
     /** Create new type/property decorator */

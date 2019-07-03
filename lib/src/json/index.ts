@@ -1,12 +1,14 @@
 import DecoratorFactory from '../decorator_factory';
 import ObjectPropertySerializer from '../object_property_serializer';
 import TypeSerializer from "../type_serializer";
+import TypeSerializerPicker from '../type_serializer_picker';
 import Constructor from "../types/constructor";
 import Util from '../types/util';
 import JsonType from "./json_type";
 
-const picker = new TypeSerializer.Picker<JsonType>('json');
-const decoratorFactory = new DecoratorFactory<JsonType>('json');
+const BACKEND = 'json';
+const picker = new TypeSerializerPicker<JsonType>(BACKEND);
+const decoratorFactory = new DecoratorFactory<JsonType>(BACKEND);
 
 /**
  * Define serializer for given property or type
@@ -26,21 +28,7 @@ export function Serialize<TSerialized extends JsonType, TOriginal>(
  * @returns JSON-compatible type which can be safely passed to `JSON.serialize`
  */
 export function deflate<TOriginal>(serializable: TOriginal, ctor?: Constructor<TOriginal>): JsonType {
-
-    let serialized: JsonType;
-
-    if (serializable === null || serializable === undefined) {
-        serialized = serializable as null | undefined;
-    } else {
-        const { down } = typeof(ctor) === 'function' ? picker.pickForType(ctor) : picker.pickForValue(serializable);
-        if (!down) {
-            throw new Error(`Unable to serialize a value: ${serializable}`);
-        }
-        serialized = down(serializable);
-    }
-
-    return serialized;
-
+    return picker.deflate(serializable, ctor);
 }
 
 /**
@@ -50,19 +38,7 @@ export function deflate<TOriginal>(serializable: TOriginal, ctor?: Constructor<T
  * @returns Serializable type instance
  */
 export function inflate<TOriginal>(ctor: Constructor<TOriginal>, serialized: JsonType): TOriginal {
-
-    if (typeof(ctor) !== 'function') {
-        throw new Error('Expecting a constructor function');
-    }
-
-    const { up } = picker.pickForType(ctor);
-
-    if (!up) {
-        throw new Error(`Unable to deserialize an instance of "${ctor.name}" from: ${serialized}`);
-    }
-
-    return up(serialized);
-
+    return picker.inflate(ctor, serialized);
 }
 
 // Types
