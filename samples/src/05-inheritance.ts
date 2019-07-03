@@ -36,7 +36,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = inflate(serialized, Circle);
+const deserialized = inflate(Circle, serialized);
 
 expect(deserialized instanceof Circle).to.equal(true);
 expect(deserialized).to.deep.equal(circle);

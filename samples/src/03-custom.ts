@@ -46,7 +46,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = inflate(serialized, Book);
+const deserialized = inflate(Book, serialized);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal(book);

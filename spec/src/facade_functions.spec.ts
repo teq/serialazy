@@ -90,31 +90,31 @@ describe('facade function', () => {
 
         it('is able to deserialize primitives', () => {
 
-            expect(inflate(true, Boolean)).to.be.a('boolean');
-            expect(inflate(new Boolean(true) as boolean, Boolean)).to.be.a('boolean');
-            expect(inflate(true, Boolean)).to.equal(true);
-            expect(inflate(new Boolean(true) as boolean, Boolean)).to.equal(true);
+            expect(inflate(Boolean, true)).to.be.a('boolean');
+            expect(inflate(Boolean, new Boolean(true) as boolean)).to.be.a('boolean');
+            expect(inflate(Boolean, true)).to.equal(true);
+            expect(inflate(Boolean, new Boolean(true) as boolean)).to.equal(true);
 
-            expect(inflate(12, Number)).to.be.a('number');
-            expect(inflate(new Number(12) as number, Number)).to.be.a('number');
-            expect(inflate(12, Number)).to.equal(12);
-            expect(inflate(new Number(12) as number, Number)).to.equal(12);
+            expect(inflate(Number, 12)).to.be.a('number');
+            expect(inflate(Number, new Number(12) as number)).to.be.a('number');
+            expect(inflate(Number, 12)).to.equal(12);
+            expect(inflate(Number, new Number(12) as number)).to.equal(12);
 
-            expect(inflate('hello', String)).to.be.a('string');
-            expect(inflate(new String('hello') as string, String)).to.be.a('string');
-            expect(inflate('hello', String)).to.equal('hello');
-            expect(inflate(new String('hello') as string, String)).to.equal('hello');
+            expect(inflate(String, 'hello')).to.be.a('string');
+            expect(inflate(String, new String('hello') as string)).to.be.a('string');
+            expect(inflate(String, 'hello')).to.equal('hello');
+            expect(inflate(String, new String('hello') as string)).to.equal('hello');
 
         });
 
         it('is able to deserialize non-primitives which are serializable', () => {
-            const foo = inflate({ id: 'foo' }, Foo);
+            const foo = inflate(Foo, { id: 'foo' });
             expect(foo).to.be.instanceOf(Foo);
             expect(foo).to.deep.equal({ id: 'foo' });
         });
 
         it('should fail to deserialize non-primitives which are not serializable', () => {
-            expect(() => inflate({ id: 'bar' }, Bar)).to.throw('Unable to deserialize an instance of "Bar"');
+            expect(() => inflate(Bar, { id: 'bar' })).to.throw('Unable to deserialize an instance of "Bar"');
         });
 
     });

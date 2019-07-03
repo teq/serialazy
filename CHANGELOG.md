@@ -1,6 +1,3 @@
-* **[BREAKING]** Changed `inflate` function arguments order.
-  From `inflate<TOriginal>(ctor: Constructor<TOriginal>, serialized: JsonType): TOriginal`
-  to `inflate<TOriginal>(serialized: JsonType, ctor: Constructor<TOriginal>): TOriginal`.
 * Added optional `ctor` parameter to `deflate` function.
   It allows to serialize an instance as a different (type-compatible) serializable.
 * Both `up` and `down` functions for custom type serializer are optional now.

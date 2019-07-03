@@ -27,7 +27,7 @@ describe('custom property serializer', () => {
             ]
         });
 
-        const deserialized = inflate(bookObj, Book);
+        const deserialized = inflate(Book, bookObj);
 
         expect(deserialized).to.deep.equal(book);
 
@@ -71,7 +71,7 @@ describe('custom property serializer', () => {
             author: 'Boris Pasternak'
         });
 
-        const deserialized = inflate(serialized, Book);
+        const deserialized = inflate(Book, serialized);
 
         expect(deserialized).to.deep.equal(book);
 
@@ -94,7 +94,7 @@ describe('custom property serializer', () => {
 
         expect(bookObj).to.deep.equal({ publishDate: "1893-01-01T00:00:00.000Z" });
 
-        const deserialized = inflate(bookObj, Book);
+        const deserialized = inflate(Book, bookObj);
 
         expect(deserialized).to.deep.equal(book);
 

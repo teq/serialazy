@@ -31,7 +31,7 @@ Library can be consumed _only_ from **TypeScript** projects because it makes use
 ```ts
 import { deflate, inflate } from 'serialazy';
 const serialized = deflate(serializable);
-const deserialized = inflate(serialized, SerializableType);
+const deserialized = inflate(SerializableType, serialized);
 ```
 
 Where:
@@ -136,7 +136,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = inflate(serialized, Book);
+const deserialized = inflate(Book, serialized);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal({
@@ -182,7 +182,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = inflate(serialized, Book);
+const deserialized = inflate(Book, serialized);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal(book);
@@ -241,7 +241,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = inflate(serialized, Book);
+const deserialized = inflate(Book, serialized);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal(book);
@@ -286,7 +286,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = inflate(serialized, Book);
+const deserialized = inflate(Book, serialized);
 
 expect(deserialized instanceof Book).to.equal(true);
 expect(deserialized).to.deep.equal(book);
@@ -335,7 +335,7 @@ expect(serialized).to.deep.equal({
 });
 
 // *** Deserialize
-const deserialized = inflate(serialized, Circle);
+const deserialized = inflate(Circle, serialized);
 
 expect(deserialized instanceof Circle).to.equal(true);
 expect(deserialized).to.deep.equal(circle);

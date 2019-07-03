@@ -23,7 +23,7 @@ describe('default type serializer', () => {
                 });
 
                 it('deserializes to a boolean primitive', () => {
-                    const deserialized = inflate({ read: false }, Book);
+                    const deserialized = inflate(Book, { read: false });
                     expect(deserialized instanceof Book).to.equal(true);
                     expect(deserialized).to.deep.equal({ read: false });
                 });
@@ -39,7 +39,7 @@ describe('default type serializer', () => {
                 });
 
                 it('deserializes to a boolean primitive', () => {
-                    const deserialized = inflate({ read: new Boolean(false) as boolean }, Book);
+                    const deserialized = inflate(Book, { read: new Boolean(false) as boolean });
                     expect(deserialized instanceof Book).to.equal(true);
                     expect(deserialized).to.deep.equal({ read: false });
                 });
@@ -56,7 +56,7 @@ describe('default type serializer', () => {
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate({ read: new Date() as any }, Book)).to.throw('Unable to deserialize property "read": Not a boolean');
+                expect(() => inflate(Book, { read: new Date() as any })).to.throw('Unable to deserialize property "read": Not a boolean');
             });
 
         });
@@ -80,7 +80,7 @@ describe('default type serializer', () => {
                 });
 
                 it('deserializes to a number primitive', () => {
-                    const deserialized = inflate({ age: 45 }, Patient);
+                    const deserialized = inflate(Patient, { age: 45 });
                     expect(deserialized instanceof Patient).to.equal(true);
                     expect(deserialized).to.deep.equal({ age: 45 });
                 });
@@ -96,7 +96,7 @@ describe('default type serializer', () => {
                 });
 
                 it('deserializes to a number primitive', () => {
-                    const deserialized = inflate({ age: new Number(45) as number }, Patient);
+                    const deserialized = inflate(Patient, { age: new Number(45) as number });
                     expect(deserialized instanceof Patient).to.equal(true);
                     expect(deserialized).to.deep.equal({ age: 45 });
                 });
@@ -113,7 +113,7 @@ describe('default type serializer', () => {
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate({ age: new Date() as any }, Patient)).to.throw('Unable to deserialize property "age": Not a number');
+                expect(() => inflate(Patient, { age: new Date() as any })).to.throw('Unable to deserialize property "age": Not a number');
             });
 
         });
@@ -137,7 +137,7 @@ describe('default type serializer', () => {
                 });
 
                 it('deserializes to a string literal', () => {
-                    const deserialized = inflate({ message: 'hi' }, Greeter);
+                    const deserialized = inflate(Greeter, { message: 'hi' });
                     expect(deserialized instanceof Greeter).to.equal(true);
                     expect(deserialized).to.deep.equal({ message: 'hi' });
                 });
@@ -153,7 +153,7 @@ describe('default type serializer', () => {
                 });
 
                 it('deserializes to a string literal', () => {
-                    const deserialized = inflate({ message: new String('hello') as string }, Greeter);
+                    const deserialized = inflate(Greeter, { message: new String('hello') as string });
                     expect(deserialized instanceof Greeter).to.equal(true);
                     expect(deserialized).to.deep.equal({ message: 'hello' });
                 });
@@ -170,7 +170,7 @@ describe('default type serializer', () => {
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate({ message: new Date() as any }, Greeter)).to.throw('Unable to deserialize property "message": Not a string');
+                expect(() => inflate(Greeter, { message: new Date() as any })).to.throw('Unable to deserialize property "message": Not a string');
             });
 
         });
@@ -206,7 +206,7 @@ describe('default type serializer', () => {
             });
 
             it('deserializes from JSON-compatible object', () => {
-                const deserialized = inflate(bookObj, Book);
+                const deserialized = inflate(Book, bookObj);
                 expect(deserialized instanceof Book).to.equal(true);
                 expect(deserialized).to.deep.equal(book);
             });
@@ -234,7 +234,7 @@ describe('default type serializer', () => {
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate(bookObj, Book)).to.throw('Deserializer function ("up") for type "Author" is not defined.');
+                expect(() => inflate(Book, bookObj)).to.throw('Deserializer function ("up") for type "Author" is not defined.');
             });
 
         });

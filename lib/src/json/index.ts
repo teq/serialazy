@@ -10,7 +10,7 @@ const decoratorFactory = new DecoratorFactory<JsonType>('json');
 
 /**
  * Define serializer for given property or type
- * @param params _(optional)_ Type serializer and/or options
+ * @param params _(optional)_ Custom type serializer and/or options
  * @returns Type/property decorator
  */
 export function Serialize<TSerialized extends JsonType, TOriginal>(
@@ -45,11 +45,11 @@ export function deflate<TOriginal>(serializable: TOriginal, ctor?: Constructor<T
 
 /**
  * Construct/deserialize a serializable type instance from a JSON-compatible object
- * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
  * @param ctor Serializable type constructor function
+ * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
  * @returns Serializable type instance
  */
-export function inflate<TOriginal>(serialized: JsonType, ctor: Constructor<TOriginal>): TOriginal {
+export function inflate<TOriginal>(ctor: Constructor<TOriginal>, serialized: JsonType): TOriginal {
 
     if (typeof(ctor) !== 'function') {
         throw new Error('Expecting a constructor function');

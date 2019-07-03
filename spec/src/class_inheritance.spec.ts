@@ -57,7 +57,7 @@ describe('class inheritance', () => {
                 height: 6
             });
 
-            const deserialized = inflate(serialized, Rectangle);
+            const deserialized = inflate(Rectangle, serialized);
             expect(deserialized).to.deep.equal(rectangle);
 
         });
