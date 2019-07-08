@@ -4,7 +4,7 @@ import { deflate, inflate, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
-describe('facade function', () => {
+describe('frontend functions', () => {
 
     class Foo {
         @Serialize() public id: string;
@@ -38,7 +38,7 @@ describe('facade function', () => {
         @Serialize() public height: number;
     }
 
-    describe('deflate function', () => {
+    describe('deflate', () => {
 
         it('is able to serialize null/undefined', () => {
             expect(deflate(null)).to.equal(null);
@@ -81,12 +81,12 @@ describe('facade function', () => {
                 height: 3
             });
             expect(deflate(rect)).to.deep.equal({ center: '20,15', width: 6, height: 3 });
-            expect(deflate(rect, RectType2)).to.deep.equal({ center: [20, 15], width: 6, height: 3 });
+            expect(deflate(rect, { as: RectType2 })).to.deep.equal({ center: [20, 15], width: 6, height: 3 });
         });
 
     });
 
-    describe('inflate function', () => {
+    describe('inflate', () => {
 
         it('is able to deserialize primitives', () => {
 

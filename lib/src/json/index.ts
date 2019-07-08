@@ -1,6 +1,5 @@
 import DecoratorFactory from '../decorator_factory';
-import ObjectPropertySerializer from '../object_property_serializer';
-import TypeSerializer from "../type_serializer";
+import { DeflateOptions, InflateOptions, SerializeDecoratorOptions } from '../frontend_options';
 import TypeSerializerPicker from '../type_serializer_picker';
 import Constructor from "../types/constructor";
 import Util from '../types/util';
@@ -12,32 +11,40 @@ const decoratorFactory = new DecoratorFactory<JsonType>(BACKEND);
 
 /**
  * Define serializer for given property or type
- * @param params _(optional)_ Custom type serializer and/or options
+ * @param options _(optional)_ Custom type serializer and/or other options
  * @returns Type/property decorator
  */
 export function Serialize<TSerialized extends JsonType, TOriginal>(
-    params?: TypeSerializer<TSerialized, TOriginal> & ObjectPropertySerializer.Options
-) {
-    return decoratorFactory.create(params);
+    options?: SerializeDecoratorOptions<TSerialized, TOriginal>
+): (protoOrCtor: Object | Constructor<TOriginal>, propertyName?: string) => void {
+    return decoratorFactory.create(options);
 }
 
 /**
  * Serialize given serializable type instance to a JSON-compatible type
  * @param serializable Serializable type instance
- * @param ctor _(optional)_ Serializable type constructor function. If provided, it overrides the type of serializable.
+ * @param options _(optional)_ Deflate options
  * @returns JSON-compatible type which can be safely passed to `JSON.serialize`
  */
-export function deflate<TOriginal>(serializable: TOriginal, ctor?: Constructor<TOriginal>): JsonType {
-    return picker.deflate(serializable, ctor);
+export function deflate<TOriginal>(
+    serializable: TOriginal,
+    options?: DeflateOptions<JsonType, TOriginal>
+): JsonType {
+    return picker.deflate(serializable, options);
 }
 
 /**
  * Construct/deserialize a serializable type instance from a JSON-compatible object
  * @param ctor Serializable type constructor function
  * @param serialized JSON-compatible object (e.g. returned from `JSON.parse`)
+ * @param options _(optional)_ Inflate options
  * @returns Serializable type instance
  */
-export function inflate<TOriginal>(ctor: Constructor<TOriginal>, serialized: JsonType): TOriginal {
+export function inflate<TOriginal>(
+    ctor: Constructor<TOriginal>,
+    serialized: JsonType,
+    options?: InflateOptions<JsonType, TOriginal>
+): TOriginal {
     return picker.inflate(ctor, serialized);
 }
 

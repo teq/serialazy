@@ -1,3 +1,4 @@
+import { DeflateOptions, InflateOptions } from './frontend_options';
 import MetadataManager from './metadata/metadata_manager';
 import TypeSerializer from './type_serializer';
 import Constructor from './types/constructor';
@@ -14,7 +15,12 @@ export default class TypeSerializerPicker<TSerialized> {
     ) {}
 
     /** Serialize given value */
-    public deflate<TOriginal>(serializable: TOriginal, ctor?: Constructor<TOriginal>): TSerialized {
+    public deflate<TOriginal>(
+        serializable: TOriginal,
+        options: DeflateOptions<TSerialized, TOriginal> = {}
+    ): TSerialized {
+
+        const { as: ctor } = options;
 
         let serialized: TSerialized;
 
@@ -33,7 +39,11 @@ export default class TypeSerializerPicker<TSerialized> {
     }
 
     /** Construct/deserialize given value */
-    public inflate<TOriginal>(ctor: Constructor<TOriginal>, serialized: TSerialized): TOriginal {
+    public inflate<TOriginal>(
+        ctor: Constructor<TOriginal>,
+        serialized: TSerialized,
+        options: InflateOptions<TSerialized, TOriginal> = {}
+    ): TOriginal {
 
         if (typeof(ctor) !== 'function') {
             throw new Error('Expecting a constructor function');

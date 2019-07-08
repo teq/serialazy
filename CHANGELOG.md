@@ -1,5 +1,6 @@
-* Added optional `ctor` parameter to `deflate` function.
-  It allows to serialize an instance as a different (type-compatible) serializable.
+* Added optional `as` parameter to DeflateOptions. It allows to override a type of serializable
+  (serialize as a different type)
+* Added inflate/deflate options
 * Both `up` and `down` functions for custom type serializer are optional now.
 * **[BREAKING]** Removed `@Serialize.Type()` and `@Serialize.Custom()` decorators.
   Now all type and property decoration is done by `@Serialize()`.
@@ -20,7 +21,7 @@ v2.0.0
 
 * Added `@Serialize.Type()` decorator which allows to define custom serializers for types
 * `deflate/inflate` can accept primitives (string, number, boolean and their "boxed" variants, null, undefined)
-* **[BREAKING]** Removed `isSerializable`, `deepMerge` facade functions and `@Serialize.Skip()` decorator.
+* **[BREAKING]** Removed `isSerializable`, `deepMerge` functions and `@Serialize.Skip()` decorator.
 
 v1.3.1
 ------
