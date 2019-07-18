@@ -2,7 +2,7 @@ import TypeSerializer from '../type_serializer';
 import Provider from '../types/provider';
 import GenericMetadata from './generic_metadata';
 
-/** Metadata container for custom serializable types */
+/** Metadata container for custom serializable type */
 export default class CustomTypeMetadata extends GenericMetadata {
 
     public static readonly kind = Symbol.for('com.github.teq.serialazy.customTypeMetadata');
@@ -11,7 +11,6 @@ export default class CustomTypeMetadata extends GenericMetadata {
 
     private typeSerializerProvider: Provider<TypeSerializer<any, any>> = null;
 
-    /** Get type serializer from a custom type metadata */
     public getTypeSerializer(): TypeSerializer<any, any> {
 
         if (!this.typeSerializerProvider) {

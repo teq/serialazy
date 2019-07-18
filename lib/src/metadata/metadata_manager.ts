@@ -4,34 +4,27 @@ import PropertyBagMetadata from "./property_bag_metadata";
 type Metadata = CustomTypeMetadata | PropertyBagMetadata;
 
 /**
- * NOTE:
- * It is possible that in given project we'll have a multiple of (possibly incompatible)
- * versions of serialazy which came from different dependencies. To make sure that we access
- * a compatible version of metadata (or throw an error instead) we use a version number
- * which is increased in case of incompatible changes in metadata public props/methods.
- * TODO: Use a major part of npm package version number.
+ * Metadata version number.
+ *
+ * It is possible to mix multiple serialazy versions which came from different dependencies.
+ * To make sure that we access a compatible version of metadata (or throw an error instead)
+ * we use a metadata version number.
+ *
+ * It's not directly linked with package (NPM) version, but:
+ * * Several consecutive major package versions can share the same metadata version.
+ *   (If there are chages in public API, but not in metadata format)
+ * * Metadata version increase is a **breaking change**, so the major part
+ *   of package versions should be increased as well
  */
 const METADATA_VERSION = 3;
-
-/** Get metadata unique symbol for given `backend` and `projection` */
-function key(backend: string, projection: string) {
-
-    // There may be multiple "serialazy" instances in project (from different dependencies)
-    // We use global symbol to make sure that all of them can access the same metadata.
-
-    return Symbol.for(`com.github.teq.serialazy.metadata.${backend}.${projection}`);
-
-}
 
 /** Used to access serializable type metadata */
 export default class MetadataManager {
 
-    private readonly key: Symbol;
-
     /** NOTE: Constructable via `get` factory method */
-    private constructor(backend: string, projection: string) {
-        this.key = key(backend, projection);
-    }
+    private constructor(
+        private readonly key: Symbol
+    ) {}
 
     /** Cache for manager instances */
     private static instances = new Map<Symbol, MetadataManager>();
@@ -42,12 +35,20 @@ export default class MetadataManager {
      * @param projection Serialization projection. _(Default: 'default')_
      */
     public static get(backend: string, projection = 'default') {
-        let instance = this.instances.get(key(backend, projection));
+
+        // There may be multiple "serialazy" instances in project from different dependencies.
+        // We use global symbol to make sure that all of them can access the same metadata.
+        const key = Symbol.for(`com.github.teq.serialazy.metadata.${backend}.${projection}`);
+
+        let instance = this.instances.get(key);
+
         if (!instance) {
-            instance = new this(backend, projection);
-            this.instances.set(key(backend, projection), instance);
+            instance = new this(key);
+            this.instances.set(key, instance);
         }
+
         return instance;
+
     }
 
     /** Get own metadata for given prototype if it's exists or return a null */
