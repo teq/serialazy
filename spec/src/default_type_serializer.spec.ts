@@ -65,7 +65,7 @@ describe('default type serializer', () => {
 
     describe('for number properties', () => {
 
-        class Patient {
+        class Person {
             @Serialize() public age: number;
         }
 
@@ -74,14 +74,14 @@ describe('default type serializer', () => {
             describe('of primitive type', () => {
 
                 it('serializes to a number primitive', () => {
-                    const patient = Object.assign(new Patient(), { age: 40 });
-                    const serialized = deflate(patient);
+                    const person = Object.assign(new Person(), { age: 40 });
+                    const serialized = deflate(person);
                     expect(serialized).to.deep.equal({ age: 40 });
                 });
 
                 it('deserializes to a number primitive', () => {
-                    const deserialized = inflate(Patient, { age: 45 });
-                    expect(deserialized instanceof Patient).to.equal(true);
+                    const deserialized = inflate(Person, { age: 45 });
+                    expect(deserialized instanceof Person).to.equal(true);
                     expect(deserialized).to.deep.equal({ age: 45 });
                 });
 
@@ -90,14 +90,14 @@ describe('default type serializer', () => {
             describe('of object type', () => {
 
                 it('serializes to a number primitive', () => {
-                    const patient = Object.assign(new Patient(), { age: new Number(40) });
-                    const serialized = deflate(patient);
+                    const person = Object.assign(new Person(), { age: new Number(40) });
+                    const serialized = deflate(person);
                     expect(serialized).to.deep.equal({ age: 40 });
                 });
 
                 it('deserializes to a number primitive', () => {
-                    const deserialized = inflate(Patient, { age: new Number(45) as number });
-                    expect(deserialized instanceof Patient).to.equal(true);
+                    const deserialized = inflate(Person, { age: new Number(45) as number });
+                    expect(deserialized instanceof Person).to.equal(true);
                     expect(deserialized).to.deep.equal({ age: 45 });
                 });
 
@@ -108,12 +108,12 @@ describe('default type serializer', () => {
         describe('when the value is a non-number', () => {
 
             it('should fail to serialize', () => {
-                const patient = Object.assign(new Patient(), { age: new Date() });
-                expect(() => deflate(patient)).to.throw('Unable to serialize property "age": Not a number');
+                const person = Object.assign(new Person(), { age: new Date() });
+                expect(() => deflate(person)).to.throw('Unable to serialize property "age": Not a number');
             });
 
             it('should fail to deserialize', () => {
-                expect(() => inflate(Patient, { age: new Date() as any })).to.throw('Unable to deserialize property "age": Not a number');
+                expect(() => inflate(Person, { age: new Date() as any })).to.throw('Unable to deserialize property "age": Not a number');
             });
 
         });

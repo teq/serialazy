@@ -6,14 +6,6 @@ const { expect } = chai;
 
 describe('frontend functions', () => {
 
-    class Foo {
-        @Serialize() public id: string;
-    }
-
-    class Bar {
-        public id: string;
-    }
-
     describe('deflate', () => {
 
         it('is able to serialize null/undefined', () => {
@@ -41,11 +33,13 @@ describe('frontend functions', () => {
         });
 
         it('is able to serialize non-primitives which are serializable', () => {
+            class Foo { @Serialize() public id: string; }
             const foo = Object.assign(new Foo(), { id: 'foo' });
             expect(deflate(foo)).to.deep.equal({ id: 'foo' });
         });
 
         it('should fail to serialize non-primitives which are not serializable', () => {
+            class Bar { public id: string; }
             const bar = Object.assign(new Bar(), { id: 'bar' });
             expect(() => deflate(bar)).to.throw("Unable to serialize a value");
         });
@@ -122,12 +116,14 @@ describe('frontend functions', () => {
         });
 
         it('is able to deserialize non-primitives which are serializable', () => {
+            class Foo { @Serialize() public id: string; }
             const foo = inflate(Foo, { id: 'foo' });
             expect(foo).to.be.instanceOf(Foo);
             expect(foo).to.deep.equal({ id: 'foo' });
         });
 
         it('should fail to deserialize non-primitives which are not serializable', () => {
+            class Bar { public id: string; }
             expect(() => inflate(Bar, { id: 'bar' })).to.throw('Unable to deserialize an instance of "Bar"');
         });
 
