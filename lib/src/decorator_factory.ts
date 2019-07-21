@@ -1,3 +1,4 @@
+import { SerializeDecoratorOptions } from "./frontend_options";
 import MetadataManager from "./metadata/metadata_manager";
 import ObjectPropertySerializer from "./object_property_serializer";
 import TypeSerializer from "./type_serializer";
@@ -25,13 +26,13 @@ export default class DecoratorFactory<TSerialized> {
 
     /** Create new type/property decorator */
     public create<TOriginal>(
-        params?: TypeSerializer<TSerialized, TOriginal> & ObjectPropertySerializer.Options
+        options?: SerializeDecoratorOptions<TSerialized, TOriginal>
     ) {
         return (protoOrCtor: Object | Constructor<TOriginal>, propertyName?: string) => {
             if (isConstructor(protoOrCtor)) {
-                this.decorateType(protoOrCtor, params);
+                this.decorateType(protoOrCtor, options);
             } else if (typeof protoOrCtor === 'object' && typeof propertyName === 'string') {
-                this.decorateProperty(protoOrCtor, propertyName, params);
+                this.decorateProperty(protoOrCtor, propertyName, options);
             } else {
                 throw new Error('Unable to decorate: Target is not a property, nor a constructor');
             }
@@ -41,7 +42,7 @@ export default class DecoratorFactory<TSerialized> {
     private decorateProperty<TOriginal>(
         proto: Object,
         propertyName: string,
-        params?: TypeSerializer<TSerialized, TOriginal> & ObjectPropertySerializer.Options
+        params?: SerializeDecoratorOptions<TSerialized, TOriginal>
     ) {
 
         let customTypeSerializer: TypeSerializer<TSerialized, TOriginal> = null;

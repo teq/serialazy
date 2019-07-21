@@ -14,30 +14,6 @@ describe('frontend functions', () => {
         public id: string;
     }
 
-    @Serialize({ down: (p: PointType1) => `${p.x},${p.y}` })
-    class PointType1 {
-        public x: number;
-        public y: number;
-    }
-
-    @Serialize({ down: (p: PointType2) => [p.x, p.y] })
-    class PointType2 {
-        public x: number;
-        public y: number;
-    }
-
-    class RectType1 {
-        @Serialize() public center: PointType1;
-        @Serialize() public width: number;
-        @Serialize() public height: number;
-    }
-
-    class RectType2 {
-        @Serialize() public center: PointType2;
-        @Serialize() public width: number;
-        @Serialize() public height: number;
-    }
-
     describe('deflate', () => {
 
         it('is able to serialize null/undefined', () => {
@@ -74,14 +50,52 @@ describe('frontend functions', () => {
             expect(() => deflate(bar)).to.throw("Unable to serialize a value");
         });
 
-        it('allows to override a type of serializable', () => {
-            const rect = Object.assign(new RectType1(), {
-                center: Object.assign(new PointType1(), { x: 20, y: 15 }),
-                width: 6,
-                height: 3
+        describe('when used with options', () => {
+
+            describe('"as" option', () => {
+
+                @Serialize({ down: (p: PointType1) => `${p.x},${p.y}` })
+                class PointType1 {
+                    public x: number;
+                    public y: number;
+                }
+
+                @Serialize({ down: (p: PointType2) => [p.x, p.y] })
+                class PointType2 {
+                    public x: number;
+                    public y: number;
+                }
+
+                class RectType1 {
+                    @Serialize() public center: PointType1;
+                    @Serialize() public width: number;
+                    @Serialize() public height: number;
+                }
+
+                class RectType2 {
+                    @Serialize() public center: PointType2;
+                    @Serialize() public width: number;
+                    @Serialize() public height: number;
+                }
+
+                it('allows to override a type of serializable', () => {
+                    const rect = Object.assign(new RectType1(), {
+                        center: Object.assign(new PointType1(), { x: 20, y: 15 }),
+                        width: 6,
+                        height: 3
+                    });
+                    expect(deflate(rect)).to.deep.equal({ center: '20,15', width: 6, height: 3 });
+                    expect(deflate(rect, { as: RectType2 })).to.deep.equal({ center: [20, 15], width: 6, height: 3 });
+                });
+
             });
-            expect(deflate(rect)).to.deep.equal({ center: '20,15', width: 6, height: 3 });
-            expect(deflate(rect, { as: RectType2 })).to.deep.equal({ center: [20, 15], width: 6, height: 3 });
+
+            describe('"projection" option', () => {
+
+                it('forces serialization in given projection');
+
+            });
+
         });
 
     });
@@ -115,6 +129,16 @@ describe('frontend functions', () => {
 
         it('should fail to deserialize non-primitives which are not serializable', () => {
             expect(() => inflate(Bar, { id: 'bar' })).to.throw('Unable to deserialize an instance of "Bar"');
+        });
+
+        describe('when used with options', () => {
+
+            describe('"projection" option', () => {
+
+                it('forces deserialization in given projection');
+
+            });
+
         });
 
     });

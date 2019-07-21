@@ -4,11 +4,27 @@ import { deflate, inflate, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
-describe('options behavior', () => {
+describe('decorator options', () => {
 
-    describe('for "name" option', () => {
+    describe('"projection" option', () => {
 
-        describe('when option is null/undefined/empty (default)', () => {
+        describe('when option is empty/null/undefined (default)', () => {
+
+            it('applies decorator in "default" projection');
+
+        });
+
+        describe('when option is a non-empty string', () => {
+
+            it('applies decorator in given projection');
+
+        });
+
+    });
+
+    describe('"name" option', () => {
+
+        describe('when option is empty/null/undefined (default)', () => {
 
             class Patient {
                 @Serialize({ name: undefined }) public name: string;
@@ -41,13 +57,15 @@ describe('options behavior', () => {
                 expect(deserialized).to.deep.equal(patient);
             });
 
+            it('should be impossible to use the same name for multiple properties');
+
         });
 
     });
 
-    describe('for "nullable" option', () => {
+    describe('"nullable" option', () => {
 
-        describe('when value is null and option is null/undefined/false (default)', () => {
+        describe('when value is null and option is false/undefined (default)', () => {
 
             class Doctor {
                 @Serialize() public name: string;
@@ -55,7 +73,7 @@ describe('options behavior', () => {
 
             class Patient {
                 @Serialize() public age: number;
-                @Serialize() public doctor: Doctor;
+                @Serialize({ nullable: false }) public doctor: Doctor;
             }
 
             it('should fail to serialize', () => {
@@ -127,9 +145,9 @@ describe('options behavior', () => {
 
     });
 
-    describe('for "optional" option', () => {
+    describe('"optional" option', () => {
 
-        describe('when value is undefined and option is false/null/undefined (default)', () => {
+        describe('when value is undefined and option is false/undefined (default)', () => {
 
             class Doctor {
                 @Serialize() public name: string;
@@ -137,7 +155,7 @@ describe('options behavior', () => {
 
             class Patient {
                 @Serialize() public age: number;
-                @Serialize() public doctor: Doctor;
+                @Serialize({ optional: false }) public doctor: Doctor;
             }
 
             it('should fail to serialize', () => {
