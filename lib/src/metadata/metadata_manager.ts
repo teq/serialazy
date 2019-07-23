@@ -31,10 +31,10 @@ export default class MetadataManager {
 
     /**
      * Get metadata manager instance
-     * @param backend Serialization backend.
-     * @param projection Serialization projection. _(Default: 'default')_
+     * @param backend Serialization backend
+     * @param projection Serialization projection
      */
-    public static get(backend: string, projection = 'default') {
+    public static get(backend: string, projection: string) {
 
         // There may be multiple "serialazy" instances in project from different dependencies.
         // We use global symbol to make sure that all of them can access the same metadata.

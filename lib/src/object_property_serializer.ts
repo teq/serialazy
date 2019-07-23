@@ -53,7 +53,11 @@ class ObjectPropertySerializer<TSerialized> implements PropertySerializer<Proper
                 serializable[propertyName] = originalValue;
             }
         } catch (error) {
-            throw new Error(`Unable to deserialize property "${propertyName}": ${error.message}`);
+            let message = `Unable to deserialize property "${propertyName}"`;
+            if (propertyName !== mappedName) {
+                message = `${message} (mapped to "${mappedName}")`;
+            }
+            throw new Error(`${message}: ${error.message}`);
         }
 
     }

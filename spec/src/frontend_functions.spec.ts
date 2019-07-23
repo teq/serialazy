@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serialize } from 'serialazy';
+import { Constructor, deflate, inflate, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
@@ -86,7 +86,45 @@ describe('frontend functions', () => {
 
             describe('"projection" option', () => {
 
-                it('forces serialization in given projection');
+                class Person {
+                    @Serialize()
+                    @Serialize({ projection: 'foo', name: 'years' })
+                    public age: number;
+                }
+
+                const personObj = { age: 47 };
+                const defaultProjection = personObj;
+                const fooProjection = { years: 47 };
+
+                function itSerializesInDefaultProjection(ctor: Constructor<{age: number}>, options: { projection?: string }) {
+                    it('performs serialization in "default" projection', () => {
+                        const person = Object.assign(new ctor(), personObj);
+                        expect(deflate(person, options)).to.deep.equal(defaultProjection);
+                    });
+                }
+
+                describe('when option is undefined', () => {
+                    itSerializesInDefaultProjection(Person, {});
+                });
+
+                describe('when option is set to undefined', () => {
+                    itSerializesInDefaultProjection(Person, { projection: undefined });
+                });
+
+                describe('when option is set to null', () => {
+                    itSerializesInDefaultProjection(Person, { projection: null });
+                });
+
+                describe('when option is set to empty string', () => {
+                    itSerializesInDefaultProjection(Person, { projection: '' });
+                });
+
+                describe('when option is a non-empty string', () => {
+                    it('performs serialization in given projection', () => {
+                        const person = Object.assign(new Person(), personObj);
+                        expect(deflate(person, { projection: 'foo' })).to.deep.equal(fooProjection);
+                    });
+                });
 
             });
 
@@ -131,7 +169,49 @@ describe('frontend functions', () => {
 
             describe('"projection" option', () => {
 
-                it('forces deserialization in given projection');
+                class Person {
+                    @Serialize()
+                    @Serialize({ projection: 'foo', name: 'years' })
+                    public age: number;
+                }
+
+                const personObj = { age: 47 };
+                const defaultProjection = personObj;
+                const fooProjection = { years: 47 };
+
+                function itDeserializesInDefaultProjection(ctor: Constructor<{age: number}>, options: { projection?: string }) {
+                    it('performs deserialization in "default" projection', () => {
+                        expect(inflate(ctor, defaultProjection, options)).to.deep.equal(personObj);
+                        expect(
+                            () => inflate(Person, fooProjection, options)
+                        ).to.throw('Unable to deserialize property "age": Value is undefined');
+                    });
+                }
+
+                describe('when option is undefined', () => {
+                    itDeserializesInDefaultProjection(Person, {});
+                });
+
+                describe('when option is set to undefined', () => {
+                    itDeserializesInDefaultProjection(Person, { projection: undefined });
+                });
+
+                describe('when option is set to null', () => {
+                    itDeserializesInDefaultProjection(Person, { projection: null });
+                });
+
+                describe('when option is set to empty string', () => {
+                    itDeserializesInDefaultProjection(Person, { projection: '' });
+                });
+
+                describe('when option is a non-empty string', () => {
+                    it('performs deserialization in given projection', () => {
+                        expect(inflate(Person, fooProjection, { projection: 'foo' })).to.deep.equal(personObj);
+                        expect(
+                            () => inflate(Person, defaultProjection, { projection: 'foo' })
+                        ).to.throw('Unable to deserialize property "age" (mapped to "years"): Value is undefined');
+                    });
+                });
 
             });
 

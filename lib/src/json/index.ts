@@ -1,13 +1,11 @@
-import DecoratorFactory from '../decorator_factory';
-import { DeflateOptions, InflateOptions, SerializeDecoratorOptions } from '../frontend_options';
-import TypeSerializerPicker from '../type_serializer_picker';
+import decoratorFactory from '../decorator_factory';
+import frontendFunctions from '../frontend_functions';
+import { DecoratorOptions, DeflateOptions, InflateOptions } from '../frontend_options';
 import Constructor from "../types/constructor";
 import Util from '../types/util';
 import JsonType from "./json_type";
 
 const BACKEND = 'json';
-const picker = new TypeSerializerPicker<JsonType>(BACKEND);
-const decoratorFactory = new DecoratorFactory<JsonType>(BACKEND);
 
 /**
  * Define serializer for given property or type
@@ -15,9 +13,9 @@ const decoratorFactory = new DecoratorFactory<JsonType>(BACKEND);
  * @returns Type/property decorator
  */
 export function Serialize<TSerialized extends JsonType, TOriginal>(
-    options?: SerializeDecoratorOptions<TSerialized, TOriginal>
+    options?: DecoratorOptions<TSerialized, TOriginal>
 ): (protoOrCtor: Object | Constructor<TOriginal>, propertyName?: string) => void {
-    return decoratorFactory.create(options);
+    return decoratorFactory(BACKEND, options);
 }
 
 /**
@@ -30,7 +28,7 @@ export function deflate<TOriginal>(
     serializable: TOriginal,
     options?: DeflateOptions<JsonType, TOriginal>
 ): JsonType {
-    return picker.deflate(serializable, options);
+    return frontendFunctions<JsonType>(BACKEND).deflate(serializable, options);
 }
 
 /**
@@ -45,7 +43,7 @@ export function inflate<TOriginal>(
     serialized: JsonType,
     options?: InflateOptions<JsonType, TOriginal>
 ): TOriginal {
-    return picker.inflate(ctor, serialized);
+    return frontendFunctions<JsonType>(BACKEND).inflate(ctor, serialized, options);
 }
 
 // Types

@@ -1,6 +1,6 @@
 import chai = require('chai');
 
-import { deflate, inflate, Serialize } from 'serialazy';
+import { Constructor, deflate, inflate, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
@@ -8,15 +8,57 @@ describe('decorator options', () => {
 
     describe('"projection" option', () => {
 
-        describe('when option is empty/null/undefined (default)', () => {
+        function itAppliesInDefaultProjection(ctor: Constructor<{name: string}>) {
+            it('applies decorator in "default" projection', () => {
+                const personObj = { name: 'Fred' };
+                const person = Object.assign(new ctor(), personObj);
+                expect(deflate(person)).to.deep.equal(personObj); // deflate in default projection
+            });
+        }
 
-            it('applies decorator in "default" projection');
+        describe('when option is undefined', () => {
+            class Person { @Serialize() public name: string; }
+            itAppliesInDefaultProjection(Person);
+        });
 
+        describe('when option is set to undefined', () => {
+            class Person { @Serialize({ projection: undefined }) public name: string; }
+            itAppliesInDefaultProjection(Person);
+        });
+
+        describe('when option is set to null', () => {
+            class Person { @Serialize({ projection: null }) public name: string; }
+            itAppliesInDefaultProjection(Person);
+        });
+
+        describe('when option is set to empty string', () => {
+            class Person { @Serialize({ projection: '' }) public name: string; }
+            itAppliesInDefaultProjection(Person);
         });
 
         describe('when option is a non-empty string', () => {
 
-            it('applies decorator in given projection');
+            class Person {
+
+                @Serialize({ projection: 'foo' })
+                @Serialize({ projection: 'bar' })
+                public name: string;
+
+                @Serialize({ projection: 'foo' })
+                @Serialize({ projection: 'bar', name: 'years' })
+                public age: number;
+
+                @Serialize({ projection: 'foo' })
+                public notes: string; // not serialized in "bar" projection
+
+            }
+
+            it('applies decorator in given projection', () => {
+                const personObj = { name: 'Fred', age: 55, notes: 'Eats bread' };
+                const person = Object.assign(new Person(), personObj);
+                expect(deflate(person, { projection: 'foo' })).to.deep.equal(personObj);
+                expect(deflate(person, { projection: 'bar' })).to.deep.equal({ name: 'Fred', years: 55 });
+            });
 
         });
 

@@ -1,108 +1,64 @@
-import { DeflateOptions, InflateOptions } from './frontend_options';
-import MetadataManager from './metadata/metadata_manager';
+import { DEFAULT_PROJECTION, MetadataManager } from './metadata';
 import TypeSerializer from './type_serializer';
-import Constructor from './types/constructor';
+import { Constructor, isConstructor } from './types/constructor';
 
-/**
- * A helper class which picks a type serializer for given value or type
- * and performs serialization/deserialization
- */
-export default class TypeSerializerPicker<TSerialized> {
+/** Returns a helper which picks a type serializer for given value or type */
+export default function typeSerializerPicker<TSerialized>(backend: string, projection?: string) {
 
-    public constructor(
-        /** Serialization backend name ('json', 'mongodb', etc.) */
-        private backend: string,
-    ) {}
+    projection = projection || DEFAULT_PROJECTION;
 
-    /** Serialize given value */
-    public deflate<TOriginal>(
-        serializable: TOriginal,
-        options: DeflateOptions<TSerialized, TOriginal> = {}
-    ): TSerialized {
+    /** Try to pick a (possibly partial) type serializer for given type */
+    function pickForType(ctor: Constructor<unknown>): TypeSerializer<TSerialized, any> {
 
-        const { as: ctor } = options;
-
-        let serialized: TSerialized;
-
-        if (serializable === null || serializable === undefined) {
-            serialized = serializable as null | undefined;
-        } else {
-            const { down } = typeof(ctor) === 'function' ? this.pickForType(ctor) : this.pickForValue(serializable);
-            if (!down) {
-                throw new Error(`Unable to serialize a value: ${serializable}`);
-            }
-            serialized = down(serializable);
+        if (!isConstructor(ctor)) {
+            throw new Error('Expecting constructor function');
         }
 
-        return serialized;
+        const proto = ctor.prototype as Object;
+        let meta = MetadataManager.get(backend, projection).getOwnOrInheritedMetaFor(proto);
+
+        if (meta) {
+            return meta.getTypeSerializer();
+        } else if (projection !== DEFAULT_PROJECTION) {
+            // Try to fall back to default projection
+            meta = MetadataManager.get(backend, DEFAULT_PROJECTION).getOwnOrInheritedMetaFor(proto);
+            if (meta) {
+                return meta.getTypeSerializer();
+            }
+        }
+
+        return { type: ctor };
 
     }
 
-    /** Construct/deserialize given value */
-    public inflate<TOriginal>(
-        ctor: Constructor<TOriginal>,
-        serialized: TSerialized,
-        options: InflateOptions<TSerialized, TOriginal> = {}
-    ): TOriginal {
+    /** Try to pick a (possibly partial) type serializer for given property */
+    function pickForProp(proto: Object, propertyName: string): TypeSerializer<TSerialized, any> {
 
-        if (typeof(ctor) !== 'function') {
-            throw new Error('Expecting a constructor function');
+        const ctor: Constructor<unknown> = Reflect.getMetadata('design:type', proto, propertyName);
+
+        if (ctor === undefined) {
+            throw new Error('Unable to fetch type information. Hint: Enable TS options: "emitDecoratorMetadata" and "experimentalDecorators"');
         }
 
-        const { up } = this.pickForType(ctor);
-
-        if (!up) {
-            throw new Error(`Unable to deserialize an instance of "${ctor.name}" from: ${serialized}`);
-        }
-
-        return up(serialized);
+        return pickForType(ctor);
 
     }
 
     /** Try to pick a (possibly partial) type serializer for given value */
-    public pickForValue(value: any): TypeSerializer<TSerialized, any> {
+    function pickForValue(value: unknown): TypeSerializer<TSerialized, any> {
 
         if (value === null || value === undefined) {
             throw new Error('Expecting value to be not null/undefined');
         }
 
-        const type = value.constructor;
-
-        if (typeof(type) !== 'function') {
-            throw new Error(`Expecting value to have a constructor function`);
-        }
-
-        const proto = Object.getPrototypeOf(value);
-        const meta = MetadataManager.get(this.backend).getOwnOrInheritedMetaFor(proto);
-
-        return meta ? meta.getTypeSerializer() : { type };
+        return pickForType(value.constructor as Constructor<unknown>);
 
     }
 
-    /** Try to pick a (possibly partial) type serializer for given type */
-    public pickForType(type: Constructor<any>): TypeSerializer<TSerialized, any> {
-
-        if (typeof(type) !== 'function') {
-            throw new Error('Expecting a type constructor function');
-        }
-
-        const meta = MetadataManager.get(this.backend).getOwnOrInheritedMetaFor(type.prototype);
-
-        return meta ? meta.getTypeSerializer() : { type };
-
-    }
-
-    /** Try to pick a (possibly partial) type serializer for given property */
-    public pickForProp(proto: Object, propertyName: string): TypeSerializer<TSerialized, any> {
-
-        const type: Constructor<any> = Reflect.getMetadata('design:type', proto, propertyName);
-
-        if (type === undefined) {
-            throw new Error('Unable to fetch type information. Hint: Enable TS options: "emitDecoratorMetadata" and "experimentalDecorators"');
-        }
-
-        return this.pickForType(type);
-
-    }
+    return {
+        pickForType,
+        pickForProp,
+        pickForValue
+    };
 
 }

@@ -7,8 +7,10 @@ interface CommonOptions {
     projection?: string;
 }
 
-export type SerializeDecoratorOptions<TSerialized, TOriginal> =
-    TypeSerializer<TSerialized, TOriginal> & ObjectPropertySerializer.Options & CommonOptions;
+export type DecoratorOptions<TSerialized, TOriginal> =
+    TypeSerializer<TSerialized, TOriginal> &
+    ObjectPropertySerializer.Options &
+    CommonOptions;
 
 export interface DeflateOptions<TSerialized, TOriginal> extends CommonOptions {
     /** _(optional)_ Serializable type constructor function. If provided, it overrides the type of serializable. */
