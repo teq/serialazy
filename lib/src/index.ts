@@ -6,6 +6,7 @@ export * from './json';
 export * from './metadata';
 export * from './types';
 export * from './frontend_options';
+export { default as FrontendFunctions } from './frontend_functions';
 export { default as DecoratorFactory } from './decorator_factory';
 export { default as ObjectPropertySerializer } from './object_property_serializer';
 export { default as PropertySerializer } from './property_serializer';
