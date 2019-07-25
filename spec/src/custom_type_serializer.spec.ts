@@ -42,7 +42,6 @@ describe('custom type serializer', () => {
     });
 
     it('should fail to apply on a class which inherits from another serializable', () => {
-        // TODO: allow it?
         expect(() => {
             @Serialize({ down: (val: TaggedPoint) => `(${val.x},${val.y}),${val.tag}` })
             class TaggedPoint extends Point {

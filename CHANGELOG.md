@@ -6,9 +6,6 @@
   Now all type and property decoration is done by `@Serialize()`.
 * **[BREAKING]** `@Serialize()` accepts custom type serializer and options as a single argument.
 * Removed `TypeSerializer.discriminate()` (redundant, was never used)
-* Removed `Constructor.Default` type along with restriction for serializable type constructor
-  to have a "default" version (TODO: check if it's true)
-  (which is able to construct serializable if no arguments passed)
 
 v2.0.1
 ------

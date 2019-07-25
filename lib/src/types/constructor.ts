@@ -1,6 +1,6 @@
 
-/** Represents constructor function which _may_ require arguments */
-export type Constructor<T> = new (...args: any[]) => T;
+/** Represents constructor function which require no arguments */
+export type Constructor<T> = new () => T;
 
 /** Check if target is constructor function */
 export function isConstructor<T = unknown>(target: unknown): target is Constructor<T> {
