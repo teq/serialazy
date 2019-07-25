@@ -1,5 +1,5 @@
-import decoratorFactory from '../decorator_factory';
-import frontendFunctions from '../frontend_functions';
+import DecoratorFactory from '../decorator_factory';
+import FrontendFunctions from '../frontend_functions';
 import { DecoratorOptions, DeflateOptions, InflateOptions } from '../frontend_options';
 import Constructor from "../types/constructor";
 import Util from '../types/util';
@@ -15,7 +15,7 @@ const BACKEND = 'json';
 export function Serialize<TSerialized extends JsonType, TOriginal>(
     options?: DecoratorOptions<TSerialized, TOriginal>
 ): (protoOrCtor: Object | Constructor<TOriginal>, propertyName?: string) => void {
-    return decoratorFactory(BACKEND, options);
+    return DecoratorFactory(BACKEND, options);
 }
 
 /**
@@ -28,7 +28,7 @@ export function deflate<TOriginal>(
     serializable: TOriginal,
     options?: DeflateOptions<JsonType, TOriginal>
 ): JsonType {
-    return frontendFunctions<JsonType>(BACKEND).deflate(serializable, options);
+    return FrontendFunctions<JsonType>(BACKEND).deflate(serializable, options);
 }
 
 /**
@@ -43,7 +43,7 @@ export function inflate<TOriginal>(
     serialized: JsonType,
     options?: InflateOptions<JsonType, TOriginal>
 ): TOriginal {
-    return frontendFunctions<JsonType>(BACKEND).inflate(ctor, serialized, options);
+    return FrontendFunctions<JsonType>(BACKEND).inflate(ctor, serialized, options);
 }
 
 // Types

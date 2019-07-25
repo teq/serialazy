@@ -99,7 +99,22 @@ describe('decorator options', () => {
                 expect(deserialized).to.deep.equal(person);
             });
 
-            it('should be impossible to use the same name for multiple properties');
+            it('should be impossible to use the same name for multiple properties', () => {
+                [
+                    () => {
+                        class Person {
+                            @Serialize() public age: number;
+                            @Serialize({ name: 'age' }) public years: number;
+                        }
+                    },
+                    () => {
+                        class Person {
+                            @Serialize({ name: 'age' }) public foo: number;
+                            @Serialize({ name: 'age' }) public bar: number;
+                        }
+                    }
+                ].forEach(func => expect(func).to.throw('"age" tag already used'));
+            });
 
         });
 

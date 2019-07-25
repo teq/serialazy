@@ -2,18 +2,18 @@ import { DecoratorOptions } from "./frontend_options";
 import { DEFAULT_PROJECTION, MetadataManager } from "./metadata";
 import ObjectPropertySerializer from "./object_property_serializer";
 import TypeSerializer from "./type_serializer";
-import typeSerializerPicker from './type_serializer_picker';
+import TypeSerializerPicker from './type_serializer_picker';
 import { Constructor, isConstructor } from "./types/constructor";
 
 /** Constructs type/property decorators */
-export default function decoratorFactory<TSerialized, TOriginal>(backend: string, options?: DecoratorOptions<TSerialized, TOriginal>) {
+export default function DecoratorFactory<TSerialized, TOriginal>(backend: string, options?: DecoratorOptions<TSerialized, TOriginal>) {
 
     let { projection } = (options || {}) as DecoratorOptions<TSerialized, TOriginal>;
     projection = projection || DEFAULT_PROJECTION;
 
     function decorateProperty<TOriginal>(proto: Object, propertyName: string, options: DecoratorOptions<TSerialized, TOriginal>) {
 
-        const picker = typeSerializerPicker(backend, projection);
+        const picker = TypeSerializerPicker(backend, projection);
 
         const compiledTypeSerializerProvider = () => {
             try {
@@ -25,11 +25,11 @@ export default function decoratorFactory<TSerialized, TOriginal>(backend: string
             }
         };
 
-        const propertySerializer = new ObjectPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
+        const propertySerializer = ObjectPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
 
         MetadataManager.get(backend, projection)
             .getOrCreatePropertyBagMetaFor(proto)
-            .setPropertySerializer(propertyName, propertySerializer);
+            .addPropertySerializer(propertySerializer);
 
     }
 

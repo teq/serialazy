@@ -1,9 +1,9 @@
 import { DeflateOptions, InflateOptions } from './frontend_options';
 import { DEFAULT_PROJECTION } from "./metadata";
-import typeSerializerPicker from './type_serializer_picker';
+import TypeSerializerPicker from './type_serializer_picker';
 import { Constructor, isConstructor } from './types/constructor';
 
-export default function frontendFunctions<TSerialized>(backend: string) {
+export default function FrontendFunctions<TSerialized>(backend: string) {
 
     /** Serialize given value */
     function deflate<TOriginal>(serializable: TOriginal, options?: DeflateOptions<TSerialized, TOriginal>): TSerialized {
@@ -19,7 +19,7 @@ export default function frontendFunctions<TSerialized>(backend: string) {
 
         } else {
 
-            const picker = typeSerializerPicker<TSerialized>(backend, projection);
+            const picker = TypeSerializerPicker<TSerialized>(backend, projection);
             const { down } = isConstructor(ctor) ? picker.pickForType(ctor) : picker.pickForValue(serializable);
 
             if (!down) {
@@ -43,7 +43,7 @@ export default function frontendFunctions<TSerialized>(backend: string) {
             throw new Error('Expecting a constructor function');
         }
 
-        const picker = typeSerializerPicker<TSerialized>(backend, projection);
+        const picker = TypeSerializerPicker<TSerialized>(backend, projection);
         const { up } = picker.pickForType(ctor);
 
         if (!up) {

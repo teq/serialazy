@@ -9,7 +9,7 @@ export default class PropertyBagMetadata extends GenericMetadata {
 
     public readonly kind: typeof PropertyBagMetadata.kind = PropertyBagMetadata.kind;
 
-    private propSerializers = new Map<string, PropertySerializer<any, any>>();
+    private propSerializers = new Map<string, PropertySerializer<any, any, unknown>>();
 
     public getTypeSerializer(): TypeSerializer<any, any> {
 
@@ -60,18 +60,28 @@ export default class PropertyBagMetadata extends GenericMetadata {
     }
 
     /** Add or update a property serializer */
-    public setPropertySerializer(propName: string, propSerializer: PropertySerializer<any, any>) {
+    public addPropertySerializer(propSerializer: PropertySerializer<any, any, unknown>) {
 
-        if (this.aggregateSerializers().has(propName)) {
-            throw new Error(`Unable to redefine/shadow serializer for "${propName}" property of "${this.name}"`);
+        const serializers = this.aggregateSerializers();
+
+        if (serializers.has(propSerializer.propertyName)) {
+            throw new Error(`Unable to redefine/shadow serializer for "${propSerializer.propertyName}" property of "${this.name}"`);
         }
 
-        this.propSerializers.set(propName, propSerializer);
+        const conflict = Array.from(serializers.values()).find(ps => ps.propertyTag === propSerializer.propertyTag);
+        if (conflict) {
+            throw new Error(
+                `Unable to define serializer for "${propSerializer.propertyName}" property of "${this.name}": ` +
+                `"${conflict.propertyTag}" tag already used by "${conflict.propertyName}" property`
+            );
+        }
+
+        this.propSerializers.set(propSerializer.propertyName, propSerializer);
 
     }
 
     /** Aggregates all property serializers: own and inherited */
-    private aggregateSerializers(): Map<string, PropertySerializer<any, any>> {
+    private aggregateSerializers(): Map<string, PropertySerializer<any, any, unknown>> {
 
         const inheritedMeta = this.manager.seekInheritedMetaFor(this.proto) as PropertyBagMetadata;
 

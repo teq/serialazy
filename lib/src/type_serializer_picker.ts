@@ -3,7 +3,7 @@ import TypeSerializer from './type_serializer';
 import { Constructor, isConstructor } from './types/constructor';
 
 /** Returns a helper which picks a type serializer for given value or type */
-export default function typeSerializerPicker<TSerialized>(backend: string, projection?: string) {
+export default function TypeSerializerPicker<TSerialized>(backend: string, projection?: string) {
 
     projection = projection || DEFAULT_PROJECTION;
 

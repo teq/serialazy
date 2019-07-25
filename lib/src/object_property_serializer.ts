@@ -7,70 +7,59 @@ export interface PropertyBag<TSerialized> {
     [prop: string]: TSerialized;
 }
 
-/** Represents a property serializer for serializables which serialize to object-like (property bag) structures */
-class ObjectPropertySerializer<TSerialized> implements PropertySerializer<PropertyBag<TSerialized>, any> {
+/** Returns a property serializer for serializables which serialize to object-like (property bag) structures */
+function ObjectPropertySerializer<TSerialized>(
+    propertyName: string,
+    typeSerializerProvider: Provider<TypeSerializer<TSerialized, any>>,
+    options?: ObjectPropertySerializer.Options
+): PropertySerializer<PropertyBag<TSerialized>, any, string> {
 
-    /**
-     * Construct a new property serializer
-     * @param propertyName Property name
-     * @param typeSerializerProvider Type serializer for given property
-     * @param options Serializer options
-     */
-    public constructor(
-        private propertyName: string,
-        private typeSerializerProvider: Provider<TypeSerializer<TSerialized, any>>,
-        private options: ObjectPropertySerializer.Options = {}
-    ) {}
+    let { name: propertyTag, optional, nullable } = (options || {}) as ObjectPropertySerializer.Options;
+    propertyTag = propertyTag || propertyName;
 
-    private get typeSerializer() {
-        return this.typeSerializerProvider();
-    }
-
-    public down(serializable: any, serialized: PropertyBag<TSerialized>) {
-
-        const [propertyName, mappedName] = [this.propertyName, this.options.name || this.propertyName];
+    function down(serializable: any, serialized: PropertyBag<TSerialized>) {
 
         try {
             const originalValue = serializable[propertyName];
-            const serializedValue = this.typeSerializer.down(this.validate(originalValue));
+            const serializedValue = typeSerializerProvider().down(validate(originalValue));
             if (serializedValue !== undefined) {
-                serialized[mappedName] = serializedValue;
+                serialized[propertyTag] = serializedValue;
             }
         } catch (error) {
-            throw new Error(`Unable to serialize property "${propertyName}": ${error.message}`);
-        }
-
-    }
-
-    public up(serializable: any, serialized: PropertyBag<TSerialized>) {
-
-        const [propertyName, mappedName] = [this.propertyName, this.options.name || this.propertyName];
-
-        try {
-            const serializedValue = serialized[mappedName];
-            const originalValue = this.validate(this.typeSerializer.up(serializedValue));
-            if (originalValue !== undefined) {
-                serializable[propertyName] = originalValue;
-            }
-        } catch (error) {
-            let message = `Unable to deserialize property "${propertyName}"`;
-            if (propertyName !== mappedName) {
-                message = `${message} (mapped to "${mappedName}")`;
-            }
+            const message = formatError(`Unable to serialize property "${propertyName}"`);
             throw new Error(`${message}: ${error.message}`);
         }
 
     }
 
-    private validate(value: any) {
+    function up(serializable: any, serialized: PropertyBag<TSerialized>) {
 
-        if (!this.options.optional && value === undefined) {
-            const hint = (typeof(this.options.optional) !== 'boolean') ? 'Hint: make it optional' : null;
+        try {
+            const serializedValue = serialized[propertyTag];
+            const originalValue = validate(typeSerializerProvider().up(serializedValue));
+            if (originalValue !== undefined) {
+                serializable[propertyName] = originalValue;
+            }
+        } catch (error) {
+            const message = formatError(`Unable to deserialize property "${propertyName}"`);
+            throw new Error(`${message}: ${error.message}`);
+        }
+
+    }
+
+    function formatError(message: string) {
+        return propertyName !== propertyTag ? `${message} (mapped to "${propertyTag}")` : message;
+    }
+
+    function validate(value: any) {
+
+        if (!optional && value === undefined) {
+            const hint = (typeof(optional) !== 'boolean') ? 'Hint: make it optional' : null;
             throw new Error(`Value is undefined${ hint ? `; ${hint}` : ''}`);
         }
 
-        if (!this.options.nullable && value === null) {
-            const hint = (typeof(this.options.nullable) !== 'boolean') ? 'Hint: make it nullable' : null;
+        if (!nullable && value === null) {
+            const hint = (typeof(nullable) !== 'boolean') ? 'Hint: make it nullable' : null;
             throw new Error(`Value is null${ hint ? `; ${hint}` : ''}`);
         }
 
@@ -78,18 +67,33 @@ class ObjectPropertySerializer<TSerialized> implements PropertySerializer<Proper
 
     }
 
+    return {
+        propertyName,
+        propertyTag,
+        down,
+        up
+    };
+
 }
 
 namespace ObjectPropertySerializer {
 
     /** Object property serializer options */
     export interface Options {
+
         /** _(Applicable to properties)_ Indicates if property can be undefined. _Default:_ false. */
         optional?: boolean;
+
         /** _(Applicable to properties)_ Indicates if property can be null. Default: false */
         nullable?: boolean;
-        /** _(Applicable to properties)_ Use different property name in serialized object. Default: use the same name */
+
+        /**
+         * _(Applicable to properties)_
+         * When defined it forces to use different property name in serialized object.
+         * Also referred to as: mapped (property) name or "tag".
+         */
         name?: string;
+
     }
 
 }
