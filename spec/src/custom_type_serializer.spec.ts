@@ -50,16 +50,10 @@ describe('custom type serializer', () => {
         }).to.throw('Can\'t define a custom serializer on type which inherits from another serializable');
     });
 
-    it('can be re-defined', () => {
-
-        Serialize({
-            down: (val: Point) => [val.x, val.y]
-        })(Point);
-
-        const point = Object.assign(new Point(), { x: 2, y: 3 });
-        const serialized = deflate(point);
-        expect(serialized).to.deep.equal([2, 3]);
-
+    it('can\'t be re-defined', () => {
+        expect(() => {
+            Serialize({ down: null, up: null })(Point);
+        }).to.throw('Unable to re-define custom type serializer for "Point"');
     });
 
 });
