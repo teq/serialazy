@@ -1,3 +1,10 @@
+v2.0.2
+------
+
+* Refine class inheritance logic: If class inherits from property-bag serializable => it becomes
+  a property-bag serializable. If class inherits from custom type serializable => it becomes
+  non-serializable. Fixes #11
+
 v2.0.1
 ------
 
