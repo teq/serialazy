@@ -15,13 +15,13 @@ export default function TypeSerializerPicker<TSerialized>(backend: string, proje
         }
 
         const proto = ctor.prototype as Object;
-        let meta = MetadataManager.get(backend, projection).getOwnOrInheritedMetaFor(proto);
+        let meta = MetadataManager.get(backend, projection).getMetaFor(proto);
 
         if (meta) {
             return meta.getTypeSerializer();
         } else if (projection !== DEFAULT_PROJECTION) {
             // Try to fall back to default projection
-            meta = MetadataManager.get(backend, DEFAULT_PROJECTION).getOwnOrInheritedMetaFor(proto);
+            meta = MetadataManager.get(backend, DEFAULT_PROJECTION).getMetaFor(proto);
             if (meta) {
                 return meta.getTypeSerializer();
             }

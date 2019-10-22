@@ -51,7 +51,7 @@ export default class MetadataManager {
 
     }
 
-    /** Get own metadata for given prototype if it's exists or return a null */
+    /** Get own metadata */
     public getOwnMetaFor(proto: Object): Metadata {
 
         if (proto === null || proto === undefined) {
@@ -74,17 +74,33 @@ export default class MetadataManager {
 
     }
 
-    /** Get own metadata or seek prototype chain for nearest ancestor which has metadata. */
-    public getOwnOrInheritedMetaFor(proto: Object): Metadata {
-        return this.getOwnMetaFor(proto) || this.seekInheritedMetaFor(proto);
+    /** Get metadata */
+    public getMetaFor(proto: Object): Metadata {
+
+        let result: Metadata = null;
+
+        const ownMeta = this.getOwnMetaFor(proto);
+
+        if (ownMeta) {
+            result = ownMeta;
+        } else {
+            const inheritedMeta = this.seekInheritedMetaFor(proto);
+            if (inheritedMeta && inheritedMeta.kind === PropertyBagMetadata.kind) {
+                // No own metadata, but it inherits from property-bag serializable.
+                // Return a virtual (not persisted) property-bag metadata.
+                result = new PropertyBagMetadata(proto, METADATA_VERSION, this);
+            }
+        }
+
+        return result;
     }
 
-    /** Get own metadata for given prototype */
-    public setOwnMetaFor(proto: Object, metadata: Metadata): void {
+    /** Set own metadata */
+    public setMetaFor(proto: Object, metadata: Metadata): void {
         Reflect.defineMetadata(this.key, metadata, proto);
     }
 
-    /** Seek prototype chain for inherited serializable's metadata */
+    /** Seek prototype chain for inherited metadata */
     public seekInheritedMetaFor(proto: Object): Metadata {
 
         let result: Metadata = null;
@@ -98,7 +114,7 @@ export default class MetadataManager {
 
     }
 
-    /** Get or create own custom type metadata for given prototype */
+    /** Get or create own custom serializable type metadata */
     public getOrCreateCustomTypeMetaFor(proto: Object): CustomTypeMetadata {
 
         let ownMeta = this.getOwnMetaFor(proto);
@@ -109,7 +125,7 @@ export default class MetadataManager {
                 throw new Error('Can\'t define a custom serializer on type which inherits from another serializable');
             }
             ownMeta = new CustomTypeMetadata(proto, METADATA_VERSION, this);
-            this.setOwnMetaFor(proto, ownMeta);
+            this.setMetaFor(proto, ownMeta);
         } else if (ownMeta.kind === PropertyBagMetadata.kind) {
             throw new Error('Can\'t define a custom type serializer on a "property bag" serializable');
         }
@@ -118,18 +134,18 @@ export default class MetadataManager {
 
     }
 
-    /** Get own metadata for given prototype if it's exists or create an empty metadata container */
+    /** Get or create own property-bag serializable type metadata */
     public getOrCreatePropertyBagMetaFor(proto: Object): PropertyBagMetadata {
 
         let ownMeta = this.getOwnMetaFor(proto);
 
         if (!ownMeta) {
             const inheritedMeta = this.seekInheritedMetaFor(proto);
-            if (inheritedMeta && inheritedMeta.kind !== PropertyBagMetadata.kind) {
+            if (inheritedMeta && inheritedMeta.kind === CustomTypeMetadata.kind) {
                 throw new Error('A property-bag serializable can\'t inherit from a type with custom serializer');
             }
             ownMeta = new PropertyBagMetadata(proto, METADATA_VERSION, this);
-            this.setOwnMetaFor(proto, ownMeta);
+            this.setMetaFor(proto, ownMeta);
         } else if (ownMeta.kind === CustomTypeMetadata.kind) {
             throw new Error('Can\'t define property serializers on type which has a custom serializer');
         }

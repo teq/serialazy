@@ -20,10 +20,13 @@ export default function FrontendFunctions<TSerialized>(backend: string) {
         } else {
 
             const picker = TypeSerializerPicker<TSerialized>(backend, projection);
-            const { down } = isConstructor(ctor) ? picker.pickForType(ctor) : picker.pickForValue(serializable);
+            const { down, type } = isConstructor(ctor) ? picker.pickForType(ctor) : picker.pickForValue(serializable);
 
             if (!down) {
-                throw new Error(`Unable to serialize a value: ${serializable}`);
+                throw new Error(
+                    `Unable to serialize an instance of "${type.name}". ` +
+                    'Its serializer is not defined or doesn\'t have a "down" method'
+                );
             }
 
             serialized = down(serializable);
@@ -44,10 +47,13 @@ export default function FrontendFunctions<TSerialized>(backend: string) {
         }
 
         const picker = TypeSerializerPicker<TSerialized>(backend, projection);
-        const { up } = picker.pickForType(ctor);
+        const { up, type } = picker.pickForType(ctor);
 
         if (!up) {
-            throw new Error(`Unable to deserialize an instance of "${ctor.name}" from: ${serialized}`);
+            throw new Error(
+                `Unable to deserialize an instance of "${type.name}". ` +
+                'Its serializer is not defined or doesn\'t have an "up" method'
+            );
         }
 
         return up(serialized);

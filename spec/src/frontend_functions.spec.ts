@@ -41,7 +41,7 @@ describe('frontend functions', () => {
         it('should fail to serialize non-primitives which are not serializable', () => {
             class Bar { public id: string; }
             const bar = Object.assign(new Bar(), { id: 'bar' });
-            expect(() => deflate(bar)).to.throw("Unable to serialize a value");
+            expect(() => deflate(bar)).to.throw('Unable to serialize an instance of "Bar"');
         });
 
         describe('when used with options', () => {
