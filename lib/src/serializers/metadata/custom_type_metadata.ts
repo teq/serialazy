@@ -1,5 +1,6 @@
 import Provider from '../../types/provider';
 import TypeSerializer from '../type_serializer';
+import { getOwnMetaFor, seekForInheritedMetaFor, setMetaFor } from './';
 import SerializableTypeMetadata from './serializable_type_metadata';
 
 /** Metadata container for custom serializable types */
@@ -28,15 +29,15 @@ export default class CustomTypeMetadata extends SerializableTypeMetadata {
     /** Get or create own custom type metadata for given prototype */
     public static getOrCreateFor(proto: Object): CustomTypeMetadata {
 
-        let metadata = this.getFor<CustomTypeMetadata>(proto);
+        let metadata = getOwnMetaFor<CustomTypeMetadata>(proto);
 
         if (!metadata) {
-            const inherited = this.seekForInheritedMetaFor(proto);
+            const inherited = seekForInheritedMetaFor(proto);
             if (inherited) {
                 throw new Error('Can\'t define a custom serializer on type which inherits from another serializable');
             }
             metadata = new CustomTypeMetadata(proto);
-            this.setFor(proto, metadata);
+            setMetaFor(proto, metadata);
         } else if (metadata.type !== SerializableTypeMetadata.Type.CUSTOM) {
             throw new Error('Can\'t define a custom serializer on type which has property serializers');
         }

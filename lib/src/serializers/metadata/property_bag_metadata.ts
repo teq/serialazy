@@ -1,4 +1,5 @@
 import PropertySerializer from '../property_serializer';
+import { getOwnMetaFor, seekForInheritedMetaFor, setMetaFor } from './';
 import SerializableTypeMetadata from './serializable_type_metadata';
 
 /** Metadata container for serializable property bags */
@@ -68,7 +69,7 @@ export default class PropertyBagMetadata extends SerializableTypeMetadata {
     /** Aggregates all property serializers: own and inherited */
     private aggregateSerializers(): Map<string, PropertySerializer<any, any>> {
 
-        const inheritedMeta = SerializableTypeMetadata.seekForInheritedMetaFor<PropertyBagMetadata>(this.proto);
+        const inheritedMeta = seekForInheritedMetaFor<PropertyBagMetadata>(this.proto);
 
         if (inheritedMeta) {
             return new Map([...inheritedMeta.aggregateSerializers(), ...this.propSerializers]);
@@ -81,15 +82,15 @@ export default class PropertyBagMetadata extends SerializableTypeMetadata {
     /** Get own metadata for given prototype if it's exists or create an empty metadata container */
     public static getOrCreateFor(proto: Object): PropertyBagMetadata {
 
-        let metadata = this.getFor<PropertyBagMetadata>(proto);
+        let metadata = getOwnMetaFor<PropertyBagMetadata>(proto);
 
         if (!metadata) {
-            const inherited = this.seekForInheritedMetaFor(proto);
+            const inherited = seekForInheritedMetaFor(proto);
             if (inherited && inherited.type === SerializableTypeMetadata.Type.CUSTOM) {
                 throw new Error('A property-bag serializable can\'t inherit from a type with custom serializer');
             }
             metadata = new PropertyBagMetadata(proto);
-            this.setFor(proto, metadata);
+            setMetaFor(proto, metadata);
         } else if (metadata.type !== SerializableTypeMetadata.Type.PROP_BAG) {
             throw new Error('Can\'t define property serializers on type which has a custom serializer');
         }

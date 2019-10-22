@@ -29,9 +29,9 @@ describe('class inheritance', () => {
         @Serialize() public height: number;
     }
 
-    describe('for property-bag serializables', () => {
+    describe ('when property-bag serializable extends some other class', () => {
 
-        it('should fail when trying to inherit from custom type serializable', () => {
+        it('should fail if it has custom type serializables in prototype chain', () => {
 
             expect(() => {
                 // tslint:disable-next-line:no-unused-variable
@@ -42,10 +42,23 @@ describe('class inheritance', () => {
 
         });
 
-        it('allows to inherit property serialializers from ancestor classes', () => {
+        it('should fail when trying to shadow inherited serializable properties', () => {
+
+            expect(() => {
+                // tslint:disable-next-line:no-unused-variable
+                class MyRectangle extends Rectangle {
+                    @Serialize() public width: number;
+                }
+            }).to.throw('Unable to redefine/shadow serializer for property: width');
+
+        });
+
+        it('should inherit from all property-bag serializables in prototype chain', () => {
 
             const rectangle = Object.assign(new Rectangle(), {
-                position: Object.assign(new Point(), { x: 23, y: 34 }),
+                position: Object.assign(new Point(), {
+                    x: 23, y: 34
+                }),
                 width: 5,
                 height: 6
             });
@@ -62,22 +75,37 @@ describe('class inheritance', () => {
 
         });
 
-        it('should fail when child class trying to shadow parent class serializable properties', () => {
+    });
 
-            expect(() => {
-                // tslint:disable-next-line:no-unused-variable
-                class MyRectangle extends Rectangle {
-                    @Serialize() public width: number;
-                }
-            }).to.throw('Unable to redefine/shadow serializer for property: width');
+    describe ('when a non-serializable class extends property-bag serializable', () => {
+
+        it('should become a property-bag serializable', () => {
+
+            class Circle extends Shape {
+                public radius: number; // not serializable
+            }
+
+            const circle = Object.assign(new Circle(), {
+                position: Object.assign(new Point(), {
+                    x: 3, y: 4
+                }),
+                radius: 10
+            });
+
+            const serialized = deflate(circle);
+            expect(serialized).to.deep.equal({ position: '(3,4)' }); // no radius
+
+            const deserialized = inflate(Circle, serialized);
+            expect(deserialized).to.deep.equal({ position: { x: 3, y: 4 } }); // no radius
+            expect(deserialized).to.be.instanceOf(Circle);
 
         });
 
     });
 
-    describe('for custom type serializables', () => {
+    describe('when custom type serializable extends some other class', () => {
 
-        it('should fail when trying to inherit from any serializable', () => {
+        it('should fail if it has other serializables in prototype chain', () => {
 
             [
                 () => {
@@ -95,6 +123,24 @@ describe('class inheritance', () => {
                     }
                 }
             ].forEach(f => expect(f).to.throw('Can\'t define a custom serializer on type which inherits from another serializable'));
+
+        });
+
+    });
+
+    describe('when a non-serializable class extends custom type serializable', () => {
+
+        it('should be a non-serializable', () => {
+
+            class TaggedPoint extends Point {
+                public tag: string; // not serializable
+            }
+
+            const point = Object.assign(new TaggedPoint(), {
+                x: 3, y: 4, tag: 'not serializable'
+            });
+
+            expect(() => deflate(point)).to.throw('Value is not serializable');
 
         });
 
