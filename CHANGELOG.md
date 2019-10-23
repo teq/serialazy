@@ -7,6 +7,13 @@
 * **[BREAKING]** `@Serialize()` accepts custom type serializer and options as a single argument.
 * Removed `TypeSerializer.discriminate()` (redundant, was never used)
 
+v2.0.2
+------
+
+* Refine class inheritance logic: If class inherits from property-bag serializable => it becomes
+  a property-bag serializable. If class inherits from custom type serializable => it becomes
+  non-serializable. Fixes [#11](https://github.com/teq/serialazy/issues/11).
+
 v2.0.1
 ------
 
