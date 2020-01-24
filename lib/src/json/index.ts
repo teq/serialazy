@@ -5,7 +5,7 @@ import Constructor from "../types/constructor";
 import Util from '../types/util';
 import JsonType from "./json_type";
 
-const BACKEND = 'json';
+export const BACKEND_NAME = 'json';
 
 /**
  * Define serializer for given property or type
@@ -15,7 +15,7 @@ const BACKEND = 'json';
 export function Serialize<TSerialized extends JsonType, TOriginal>(
     options?: DecoratorOptions<TSerialized, TOriginal>
 ): (protoOrCtor: Object | Constructor<TOriginal>, propertyName?: string) => void {
-    return DecoratorFactory(BACKEND, options);
+    return DecoratorFactory(BACKEND_NAME, options);
 }
 
 /**
@@ -28,7 +28,7 @@ export function deflate<TOriginal>(
     serializable: TOriginal,
     options?: DeflateOptions<JsonType, TOriginal>
 ): JsonType {
-    return FrontendFunctions<JsonType>(BACKEND).deflate(serializable, options);
+    return FrontendFunctions<JsonType>(BACKEND_NAME).deflate(serializable, options);
 }
 
 /**
@@ -43,25 +43,28 @@ export function inflate<TOriginal>(
     serialized: JsonType,
     options?: InflateOptions<JsonType, TOriginal>
 ): TOriginal {
-    return FrontendFunctions<JsonType>(BACKEND).inflate(ctor, serialized, options);
+    return FrontendFunctions<JsonType>(BACKEND_NAME).inflate(ctor, serialized, options);
 }
 
 // Types
 export * from './json_type';
 
-// Define serializers for built-in types
+// Define serializers for built-in types in special "wildcard" projection
 
 Serialize({
+    projection: '*',
     down: (original: any) => Util.expectBooleanOrNil(original),
     up: (serialized: any) => Util.expectBooleanOrNil(serialized)
 })(Boolean);
 
 Serialize({
+    projection: '*',
     down: (original: any) => Util.expectNumberOrNil(original),
     up: (serialized: any) => Util.expectNumberOrNil(serialized)
 })(Number);
 
 Serialize({
+    projection: '*',
     down: (original: any) => Util.expectStringOrNil(original),
     up: (serialized: any) => Util.expectStringOrNil(serialized)
 })(String);

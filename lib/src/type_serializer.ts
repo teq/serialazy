@@ -8,14 +8,14 @@ interface TypeSerializer<TSerialized, TOriginal> {
      * @param original Original value
      * @returns Serialized value
      */
-    down?(this: void, original: TOriginal): TSerialized;
+    down?(original: TOriginal): TSerialized;
 
     /**
      * Deserializer function
      * @param serialized Serialized value
      * @returns Original value
      */
-    up?(this: void, serialized: TSerialized): TOriginal;
+    up?(serialized: TSerialized): TOriginal;
 
     /**
      * _Optional._ Original type constructor function.
@@ -27,20 +27,20 @@ interface TypeSerializer<TSerialized, TOriginal> {
 
 namespace TypeSerializer {
 
+    const hints = (
+        'Hints: Use a serializable type or provide a custom serializer. ' +
+        'Property type should be specified explicitly, details: https://github.com/Microsoft/TypeScript/issues/18995.'
+    );
+
     /** Compile type serializer partials to a final type serializer */
     export function compile<TSerialized, TOriginal>(
         partials: Array<TypeSerializer<TSerialized, TOriginal>>
     ): TypeSerializer<TSerialized, TOriginal> {
 
-        const hints = (
-            'Hints: Use a serializable type or provide a custom serializer. ' +
-            'Specify property type explicitly, (details: https://github.com/Microsoft/TypeScript/issues/18995)'
-        );
-
         const { down, up, type } = Object.assign({
             down: () => { throw new Error(`Serializer function ("down") for type "${typeName}" is not defined. ` + hints); },
             up: () => { throw new Error(`Deserializer function ("up") for type "${typeName}" is not defined. ` + hints); },
-            type: null
+            type: undefined
         }, ...partials) as TypeSerializer<TSerialized, TOriginal>;
 
         const typeName = type && type.name ? type.name : '<unknown>';

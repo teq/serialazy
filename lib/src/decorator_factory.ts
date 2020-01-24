@@ -6,7 +6,10 @@ import TypeSerializerPicker from './type_serializer_picker';
 import { Constructor, isConstructor } from "./types/constructor";
 
 /** Constructs type/property decorators */
-export default function DecoratorFactory<TSerialized, TOriginal>(backend: string, options?: DecoratorOptions<TSerialized, TOriginal>) {
+export default function DecoratorFactory<TSerialized, TOriginal>(
+    backend: string,
+    options?: DecoratorOptions<TSerialized, TOriginal>
+) {
 
     let { projection } = (options || {}) as DecoratorOptions<TSerialized, TOriginal>;
     projection = projection || DEFAULT_PROJECTION;
@@ -18,7 +21,8 @@ export default function DecoratorFactory<TSerialized, TOriginal>(backend: string
         const compiledTypeSerializerProvider = () => {
             try {
                 const defaultTypeSerializer = picker.pickForProp(proto, propertyName);
-                return TypeSerializer.compile([defaultTypeSerializer, options as TypeSerializer<TSerialized, TOriginal>]);
+                const customTypeSerializer = options as TypeSerializer<TSerialized, TOriginal>;
+                return TypeSerializer.compile([defaultTypeSerializer, customTypeSerializer]);
             } catch (error) {
                 const className = proto.constructor.name;
                 throw new Error(`Unable to construct a type serializer for "${propertyName}" property of "${className}": ${error.message}`);

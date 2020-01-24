@@ -11,6 +11,10 @@ export default class PropertyBagMetadata extends GenericMetadata {
 
     private propSerializers = new Map<string, PropertySerializer<any, any, unknown>>();
 
+    public get propertySerializers() {
+        return this.propSerializers as ReadonlyMap<string, PropertySerializer<any, any, unknown>>;
+    }
+
     public getTypeSerializer(): TypeSerializer<any, any> {
 
         return {
@@ -59,7 +63,6 @@ export default class PropertyBagMetadata extends GenericMetadata {
 
     }
 
-    /** Add or update a property serializer */
     public addPropertySerializer(propSerializer: PropertySerializer<any, any, unknown>) {
 
         const serializers = this.aggregateSerializers();

@@ -81,17 +81,13 @@ namespace ObjectPropertySerializer {
     /** Object property serializer options */
     export interface Options {
 
-        /** _(Applicable to properties)_ Indicates if property can be undefined. _Default:_ false. */
+        /** _(Applicable to properties)_ Indicates if property can be undefined. _Default:_ false */
         optional?: boolean;
 
         /** _(Applicable to properties)_ Indicates if property can be null. Default: false */
         nullable?: boolean;
 
-        /**
-         * _(Applicable to properties)_
-         * When defined it forces to use different property name in serialized object.
-         * Also referred to as: mapped (property) name or "tag".
-         */
+        /** _(Applicable to properties)_ When defined it forces to use different property name in serialized object */
         name?: string;
 
     }

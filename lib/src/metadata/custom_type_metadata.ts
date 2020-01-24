@@ -13,20 +13,19 @@ export default class CustomTypeMetadata extends GenericMetadata {
 
     public getTypeSerializer(): TypeSerializer<any, any> {
 
-        if (!this.typeSerializerProvider) {
-            throw new Error('Type serializer is not specified');
-        }
-
-        return this.typeSerializerProvider();
+        return this.typeSerializerProvider && this.typeSerializerProvider();
 
     }
 
     /** Set type serializer on a custom type metadata */
     public setTypeSerializer(typeSerializer: TypeSerializer<any, any> | Provider<TypeSerializer<any, any>>) {
+
         if (this.typeSerializerProvider) {
             throw new Error(`Unable to re-define custom type serializer for "${this.name}"`);
         }
+
         this.typeSerializerProvider = typeof(typeSerializer) === 'function' ? typeSerializer : () => typeSerializer;
+
     }
 
 }

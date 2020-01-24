@@ -15,19 +15,13 @@ export default function TypeSerializerPicker<TSerialized>(backend: string, proje
         }
 
         const proto = ctor.prototype as Object;
-        let meta = MetadataManager.get(backend, projection).getMetaFor(proto);
 
-        if (meta) {
-            return meta.getTypeSerializer();
-        } else if (projection !== DEFAULT_PROJECTION) {
-            // Try to fall back to default projection
-            meta = MetadataManager.get(backend, DEFAULT_PROJECTION).getMetaFor(proto);
-            if (meta) {
-                return meta.getTypeSerializer();
-            }
-        }
+        const meta = MetadataManager.get(backend, projection).getMetaFor(proto)
+            || MetadataManager.get(backend, '*').getMetaFor(proto); // Fall back to a 'wildcard' projection
 
-        return { type: ctor };
+        const typeSerializer = meta && meta.getTypeSerializer();
+
+        return typeSerializer || { type: ctor };
 
     }
 
