@@ -1,6 +1,7 @@
 import DecoratorFactory from '../decorator_factory';
 import FrontendFunctions from '../frontend_functions';
 import { DecoratorOptions, DeflateOptions, InflateOptions } from '../frontend_options';
+import { DEFAULT_PROJECTION, MetadataManager } from '../metadata';
 import Constructor from "../types/constructor";
 import Util from '../types/util';
 import JsonType from "./json_type";
@@ -51,17 +52,25 @@ export * from './json_type';
 
 // Define serializers for built-in types in default projection
 
-Serialize({
-    down: (original: any) => Util.expectBooleanOrNil(original),
-    up: (serialized: any) => Util.expectBooleanOrNil(serialized)
-})(Boolean);
+const metaManager = MetadataManager.get(BACKEND_NAME, DEFAULT_PROJECTION);
 
-Serialize({
-    down: (original: any) => Util.expectNumberOrNil(original),
-    up: (serialized: any) => Util.expectNumberOrNil(serialized)
-})(Number);
+if (!metaManager.getMetaFor(Boolean.prototype)) {
+    Serialize({
+        down: (original: any) => Util.expectBooleanOrNil(original),
+        up: (serialized: any) => Util.expectBooleanOrNil(serialized)
+    })(Boolean);
+}
 
-Serialize({
-    down: (original: any) => Util.expectStringOrNil(original),
-    up: (serialized: any) => Util.expectStringOrNil(serialized)
-})(String);
+if (!metaManager.getMetaFor(Number.prototype)) {
+    Serialize({
+        down: (original: any) => Util.expectNumberOrNil(original),
+        up: (serialized: any) => Util.expectNumberOrNil(serialized)
+    })(Number);
+}
+
+if (!metaManager.getMetaFor(String.prototype)) {
+    Serialize({
+        down: (original: any) => Util.expectStringOrNil(original),
+        up: (serialized: any) => Util.expectStringOrNil(serialized)
+    })(String);
+}
