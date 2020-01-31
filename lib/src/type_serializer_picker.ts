@@ -17,7 +17,7 @@ export default function TypeSerializerPicker<TSerialized>(backend: string, proje
         const proto = ctor.prototype as Object;
 
         const meta = MetadataManager.get(backend, projection).getMetaFor(proto)
-            || MetadataManager.get(backend, '*').getMetaFor(proto); // Fall back to a 'wildcard' projection
+            || MetadataManager.get(backend, DEFAULT_PROJECTION).getMetaFor(proto); // Fall back to default projection
 
         const typeSerializer = meta && meta.getTypeSerializer();
 

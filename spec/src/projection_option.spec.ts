@@ -161,7 +161,6 @@ describe('"projection" option', () => {
     describe('when used with frontend function', () => {
 
         @Serialize({
-            projection: '*',
             down: (ts: Timestamp) => ts.date.getTime(),
             up: (value: number) => new Timestamp(new Date(value))
         })

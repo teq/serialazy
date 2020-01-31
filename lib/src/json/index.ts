@@ -49,22 +49,19 @@ export function inflate<TOriginal>(
 // Types
 export * from './json_type';
 
-// Define serializers for built-in types in special "wildcard" projection
+// Define serializers for built-in types in default projection
 
 Serialize({
-    projection: '*',
     down: (original: any) => Util.expectBooleanOrNil(original),
     up: (serialized: any) => Util.expectBooleanOrNil(serialized)
 })(Boolean);
 
 Serialize({
-    projection: '*',
     down: (original: any) => Util.expectNumberOrNil(original),
     up: (serialized: any) => Util.expectNumberOrNil(serialized)
 })(Number);
 
 Serialize({
-    projection: '*',
     down: (original: any) => Util.expectStringOrNil(original),
     up: (serialized: any) => Util.expectStringOrNil(serialized)
 })(String);
