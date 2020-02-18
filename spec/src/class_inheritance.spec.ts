@@ -2,26 +2,28 @@ import chai = require('chai');
 
 import { deflate, inflate, Serialize } from 'serialazy';
 
+import Serializable from './serializable';
+
 const { expect } = chai;
 
 describe('class inheritance', () => {
 
     @Serialize({
-        down: (val: Point) => `(${val.x},${val.y})`,
+        down: (val: Position) => `(${val.x},${val.y})`,
         up: (val) => {
             const match = val.match(/^\((\d+),(\d+)\)$/);
             if (!match) { throw new Error(`Invalid point: ${val}`); }
             const [, xStr, yStr] = match;
-            return Object.assign(new Point(), { x: Number.parseInt(xStr), y: Number.parseInt(yStr) });
+            return Position.create({ x: Number.parseInt(xStr), y: Number.parseInt(yStr) });
         }
     })
-    class Point {
+    class Position extends Serializable {
         public x: number;
         public y: number;
     }
 
-    class Shape {
-        @Serialize() public position: Point;
+    abstract class Shape extends Serializable {
+        @Serialize() public position: Position;
     }
 
     class Rectangle extends Shape {
@@ -35,7 +37,7 @@ describe('class inheritance', () => {
 
             expect(() => {
                 // tslint:disable-next-line:no-unused-variable
-                class TaggedPoint extends Point {
+                class TaggedPosition extends Position {
                     @Serialize() public tag: string;
                 }
             }).to.throw('A property-bag serializable can\'t inherit from a type with custom serializer');
@@ -55,10 +57,8 @@ describe('class inheritance', () => {
 
         it('should inherit from all property-bag serializables in prototype chain', () => {
 
-            const rectangle = Object.assign(new Rectangle(), {
-                position: Object.assign(new Point(), {
-                    x: 23, y: 34
-                }),
+            const rectangle = Rectangle.create({
+                position: Position.create({ x: 23, y: 34 }),
                 width: 5,
                 height: 6
             });
@@ -85,10 +85,8 @@ describe('class inheritance', () => {
                 public radius: number; // not serializable
             }
 
-            const circle = Object.assign(new Circle(), {
-                position: Object.assign(new Point(), {
-                    x: 3, y: 4
-                }),
+            const circle = Circle.create({
+                position: Position.create({ x: 3, y: 4 }),
                 radius: 10
             });
 
@@ -111,7 +109,7 @@ describe('class inheritance', () => {
                 () => {
                     @Serialize({ down: null, up: null })
                     // tslint:disable-next-line:no-unused-variable
-                    class TaggedPoint extends Point {
+                    class TaggedPoint extends Position {
                         public tag: string;
                     }
                 },
@@ -132,13 +130,11 @@ describe('class inheritance', () => {
 
         it('should be a non-serializable', () => {
 
-            class TaggedPoint extends Point {
+            class TaggedPoint extends Position {
                 public tag: string; // not serializable
             }
 
-            const point = Object.assign(new TaggedPoint(), {
-                x: 3, y: 4, tag: 'not serializable'
-            });
+            const point = TaggedPoint.create({ x: 3, y: 4, tag: 'not serializable' });
 
             expect(() => deflate(point)).to.throw('Unable to serialize an instance of "TaggedPoint"');
 

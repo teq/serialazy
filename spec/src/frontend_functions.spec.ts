@@ -2,6 +2,8 @@ import chai = require('chai');
 
 import { deflate, inflate, Serialize } from 'serialazy';
 
+import Serializable from './serializable';
+
 const { expect } = chai;
 
 describe('frontend functions', () => {
@@ -33,15 +35,27 @@ describe('frontend functions', () => {
         });
 
         it('is able to serialize non-primitives which are serializable', () => {
-            class Foo { @Serialize() public id: string; }
-            const foo = Object.assign(new Foo(), { id: 'foo' });
+
+            class Foo extends Serializable {
+                @Serialize() public id: string;
+            }
+
+            const foo = Foo.create({ id: 'foo' });
+
             expect(deflate(foo)).to.deep.equal({ id: 'foo' });
+
         });
 
         it('should fail to serialize non-primitives which are not serializable', () => {
-            class Bar { public id: string; }
-            const bar = Object.assign(new Bar(), { id: 'bar' });
+
+            class Bar extends Serializable {
+                public id: string;
+            }
+
+            const bar = Bar.create({ id: 'bar' });
+
             expect(() => deflate(bar)).to.throw('Unable to serialize an instance of "Bar"');
+
         });
 
         describe('when used with options', () => {
@@ -49,32 +63,32 @@ describe('frontend functions', () => {
             describe('"as" option', () => {
 
                 @Serialize({ down: (p: PointType1) => `${p.x},${p.y}` })
-                class PointType1 {
+                class PointType1 extends Serializable {
                     public x: number;
                     public y: number;
                 }
 
                 @Serialize({ down: (p: PointType2) => [p.x, p.y] })
-                class PointType2 {
+                class PointType2 extends Serializable {
                     public x: number;
                     public y: number;
                 }
 
-                class RectType1 {
+                class RectType1 extends Serializable {
                     @Serialize() public center: PointType1;
                     @Serialize() public width: number;
                     @Serialize() public height: number;
                 }
 
-                class RectType2 {
+                class RectType2 extends Serializable {
                     @Serialize() public center: PointType2;
                     @Serialize() public width: number;
                     @Serialize() public height: number;
                 }
 
                 it('allows to override a type of serializable', () => {
-                    const rect = Object.assign(new RectType1(), {
-                        center: Object.assign(new PointType1(), { x: 20, y: 15 }),
+                    const rect = RectType1.create({
+                        center: PointType1.create({ x: 20, y: 15 }),
                         width: 6,
                         height: 3
                     });

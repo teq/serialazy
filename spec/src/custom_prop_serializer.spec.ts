@@ -2,13 +2,15 @@ import chai = require('chai');
 
 import { deflate, inflate, Serialize } from 'serialazy';
 
+import Serializable from './serializable';
+
 const { expect } = chai;
 
 describe('custom property serializer', () => {
 
     it('accepts custom type serializer', () => {
 
-        class Book {
+        class Book extends Serializable {
             @Serialize({
                 down: (val: Map<number, string>) => val ? Array.from(val).map(([page, title]) => ({ page, title })) : null,
                 up: (val) => val ? new Map(val.map<[number, string]>(ch => [ch.page, ch.title])) : null,
@@ -16,7 +18,7 @@ describe('custom property serializer', () => {
             public contents: Map<number, string>;
         }
 
-        const book = Object.assign(new Book(), { contents: new Map([[1, 'Chapter 1'], [21, 'Chapter 2']]) });
+        const book = Book.create({ contents: new Map([[1, 'Chapter 1'], [21, 'Chapter 2']]) });
 
         const bookObj = deflate(book);
 
@@ -35,16 +37,16 @@ describe('custom property serializer', () => {
 
     it('overrides default (predefined) type serializer of given property', () => {
 
-        class Author {
+        class Author extends Serializable {
             @Serialize() public name: string;
         }
 
-        class Book {
+        class Book extends Serializable {
             @Serialize() public title: string;
 
             @Serialize({ // should override debault `Author` type serializer
                 down: (author: Author) => author.name,
-                up: (name: string) => Object.assign(new Author(), { name })
+                up: (name: string) => Author.create({ name })
             })
             public author: Author;
 
@@ -55,12 +57,10 @@ describe('custom property serializer', () => {
             public read: boolean;
         }
 
-        const book = Object.assign(new Book(), {
+        const book = Book.create({
             read: false,
             title: 'Doctor Zhivago',
-            author: Object.assign(new Author(), {
-                name: 'Boris Pasternak'
-            })
+            author: Author.create({ name: 'Boris Pasternak' })
         });
 
         const serialized = deflate(book);
@@ -79,7 +79,7 @@ describe('custom property serializer', () => {
 
     it('accepts options', () => {
 
-        class Book {
+        class Book extends Serializable {
             @Serialize({
                 name: 'publishDate',
                 down: (val: Date) => val ? val.toISOString() : null,
@@ -88,7 +88,7 @@ describe('custom property serializer', () => {
             public releaseDate: Date;
         }
 
-        const book = Object.assign(new Book(), { releaseDate: new Date('1893') });
+        const book = Book.create({ releaseDate: new Date('1893') });
 
         const bookObj = deflate(book);
 

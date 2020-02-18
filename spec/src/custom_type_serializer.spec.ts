@@ -2,6 +2,8 @@ import chai = require('chai');
 
 import { deflate, inflate, Serialize } from 'serialazy';
 
+import Serializable from './serializable';
+
 const { expect } = chai;
 
 describe('custom type serializer', () => {
@@ -12,16 +14,16 @@ describe('custom type serializer', () => {
             const match = val.match(/^\((\d+),(\d+)\)$/);
             if (!match) { throw new Error(`Invalid point: ${val}`); }
             const [, xStr, yStr] = match;
-            return Object.assign(new Point(), { x: Number.parseInt(xStr), y: Number.parseInt(yStr) });
+            return Point.create({ x: Number.parseInt(xStr), y: Number.parseInt(yStr) });
         }
     })
-    class Point {
+    class Point extends Serializable {
         public x: number;
         public y: number;
     }
 
     it('is able to serialize a type instance', () => {
-        const point = Object.assign(new Point(), { x: 2, y: 3 });
+        const point = Point.create({ x: 2, y: 3 });
         const serialized = deflate(point);
         expect(serialized).to.equal('(2,3)');
     });

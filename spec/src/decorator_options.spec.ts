@@ -2,6 +2,8 @@ import chai = require('chai');
 
 import { deflate, inflate, Serialize } from 'serialazy';
 
+import Serializable from './serializable';
+
 const { expect } = chai;
 
 describe('decorator options', () => {
@@ -10,14 +12,14 @@ describe('decorator options', () => {
 
         describe('when option is empty/null/undefined (default)', () => {
 
-            class Person {
+            class Person extends Serializable {
                 @Serialize({ name: undefined }) public name: string;
                 @Serialize({ name: null }) public age: number;
                 @Serialize({ name: '' }) public notes : string;
             }
 
             it('doesn\'t affect property name in resulting serialized object', () => {
-                const person = Object.assign(new Person(), { name: 'Joe', age: 35, notes: 'None' });
+                const person = Person.create({ name: 'Joe', age: 35, notes: 'None' });
                 const serialized = deflate(person);
                 expect(serialized).to.deep.equal({ name: 'Joe', age: 35, notes: 'None' });
                 const deserialized = inflate(Person, serialized);
@@ -28,13 +30,13 @@ describe('decorator options', () => {
 
         describe('when option is a non-empty string', () => {
 
-            class Person {
+            class Person extends Serializable {
                 @Serialize() public name: string;
                 @Serialize({ name: 'years' }) public age: number;
             }
 
             it('overrides property name in resulting serialized object', () => {
-                const person = Object.assign(new Person(), { name: 'John', age: 35 });
+                const person = Person.create({ name: 'John', age: 35 });
                 const serialized = deflate(person);
                 expect(serialized).to.deep.equal({ name: 'John', years: 35 });
                 const deserialized = inflate(Person, serialized);
@@ -66,23 +68,23 @@ describe('decorator options', () => {
 
         describe('when value is null and option is false/undefined (default)', () => {
 
-            class Pet {
+            class Pet extends Serializable {
                 @Serialize() public name: string;
             }
 
-            class Person {
+            class Person extends Serializable {
                 @Serialize() public age: number;
                 @Serialize({ nullable: false }) public pet: Pet;
             }
 
             it('should fail to serialize', () => {
 
-                const pet = Object.assign(new Pet(), { name: null });
+                const pet = Pet.create({ name: null });
                 expect(
                     () => deflate(pet)
                 ).to.throw('Unable to serialize property "name": Value is null');
 
-                const person = Object.assign(new Person(), { age: 35, pet: null });
+                const person = Person.create({ age: 35, pet: null });
                 expect(
                     () => deflate(person)
                 ).to.throw('Unable to serialize property "pet": Value is null');
@@ -105,23 +107,23 @@ describe('decorator options', () => {
 
         describe('when value is null and option is true', () => {
 
-            class Pet {
+            class Pet extends Serializable {
                 @Serialize({ nullable: true }) public name: string;
             }
 
-            class Person {
+            class Person extends Serializable {
                 @Serialize({ nullable: true }) public age: number;
                 @Serialize({ nullable: true }) public pet: Pet;
             }
 
             it('serializes to null', () => {
 
-                const pet = Object.assign(new Pet(), { name: null });
+                const pet = Pet.create({ name: null });
                 expect(
                     deflate(pet)
                 ).to.deep.equal({ name: null });
 
-                const person = Object.assign(new Person(), { age: 35, pet: null });
+                const person = Person.create({ age: 35, pet: null });
                 expect(
                     deflate(person)
                 ).to.deep.equal({ age: 35, pet: null });
@@ -148,11 +150,11 @@ describe('decorator options', () => {
 
         describe('when value is undefined and option is false/undefined (default)', () => {
 
-            class Pet {
+            class Pet extends Serializable {
                 @Serialize() public name: string;
             }
 
-            class Person {
+            class Person extends Serializable {
                 @Serialize() public age: number;
                 @Serialize({ optional: false }) public pet: Pet;
             }
@@ -164,7 +166,7 @@ describe('decorator options', () => {
                     () => deflate(pet)
                 ).to.throw('Unable to serialize property "name": Value is undefined');
 
-                const person = Object.assign(new Person(), { age: 35 }); // pet is undefined
+                const person = Person.create({ age: 35, pet: undefined });
                 expect(
                     () => deflate(person)
                 ).to.throw('Unable to serialize property "pet": Value is undefined');
@@ -189,11 +191,11 @@ describe('decorator options', () => {
 
         describe('when value is undefined and option is true', () => {
 
-            class Pet {
+            class Pet extends Serializable {
                 @Serialize({ optional: true }) public name: string;
             }
 
-            class Person {
+            class Person extends Serializable {
                 @Serialize({ optional: true }) public age: number;
                 @Serialize({ optional: true }) public pet: Pet;
             }
@@ -205,7 +207,7 @@ describe('decorator options', () => {
                     deflate(pet)
                 ).to.deep.equal({}); // name is not serialized
 
-                const person = Object.assign(new Person(), { age: 35 }); // pet is undefined
+                const person = Person.create({ age: 35, pet: undefined });
                 expect(
                     deflate(person)
                 ).to.deep.equal({ age: 35 }); // pet is not serialized

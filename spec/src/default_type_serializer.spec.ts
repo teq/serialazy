@@ -2,13 +2,15 @@ import chai = require('chai');
 
 import { deflate, inflate, Serialize } from 'serialazy';
 
+import Serializable from './serializable';
+
 const { expect } = chai;
 
 describe('default type serializer', () => {
 
     describe('for boolean properties', () => {
 
-        class Book {
+        class Book extends Serializable {
             @Serialize() public read: boolean;
         }
 
@@ -17,7 +19,7 @@ describe('default type serializer', () => {
             describe('of primitive type', () => {
 
                 it('serializes to a boolean primitive', () => {
-                    const book = Object.assign(new Book(), { read: true });
+                    const book = Book.create({ read: true });
                     const serialized = deflate(book);
                     expect(serialized).to.deep.equal({ read: true });
                 });
@@ -33,7 +35,7 @@ describe('default type serializer', () => {
             describe('of object type', () => {
 
                 it('serializes to a boolean primitive', () => {
-                    const book = Object.assign(new Book(), { read: new Boolean(true) });
+                    const book = Book.create({ read: new Boolean(true) });
                     const serialized = deflate(book);
                     expect(serialized).to.deep.equal({ read: true });
                 });
@@ -51,7 +53,7 @@ describe('default type serializer', () => {
         describe('when the value is a non-boolean', () => {
 
             it('should fail to serialize', () => {
-                const book = Object.assign(new Book(), { read: new Date() });
+                const book = Book.create({ read: new Date() as any });
                 expect(() => deflate(book)).to.throw('Unable to serialize property "read": Not a boolean');
             });
 
@@ -65,7 +67,7 @@ describe('default type serializer', () => {
 
     describe('for number properties', () => {
 
-        class Person {
+        class Person extends Serializable {
             @Serialize() public age: number;
         }
 
@@ -74,7 +76,7 @@ describe('default type serializer', () => {
             describe('of primitive type', () => {
 
                 it('serializes to a number primitive', () => {
-                    const person = Object.assign(new Person(), { age: 40 });
+                    const person = Person.create({ age: 40 });
                     const serialized = deflate(person);
                     expect(serialized).to.deep.equal({ age: 40 });
                 });
@@ -90,7 +92,7 @@ describe('default type serializer', () => {
             describe('of object type', () => {
 
                 it('serializes to a number primitive', () => {
-                    const person = Object.assign(new Person(), { age: new Number(40) });
+                    const person = Person.create({ age: new Number(40) });
                     const serialized = deflate(person);
                     expect(serialized).to.deep.equal({ age: 40 });
                 });
@@ -108,7 +110,7 @@ describe('default type serializer', () => {
         describe('when the value is a non-number', () => {
 
             it('should fail to serialize', () => {
-                const person = Object.assign(new Person(), { age: new Date() });
+                const person = Person.create({ age: new Date() as any });
                 expect(() => deflate(person)).to.throw('Unable to serialize property "age": Not a number');
             });
 
@@ -122,7 +124,7 @@ describe('default type serializer', () => {
 
     describe('for string properties', () => {
 
-        class Greeter {
+        class Greeter extends Serializable {
             @Serialize() public message: string;
         }
 
@@ -131,7 +133,7 @@ describe('default type serializer', () => {
             describe('of primitive type', () => {
 
                 it('serializes to a string literal', () => {
-                    const greeter = Object.assign(new Greeter(), { message: 'hello' });
+                    const greeter = Greeter.create({ message: 'hello' });
                     const serialized = deflate(greeter);
                     expect(serialized).to.deep.equal({ message: 'hello' });
                 });
@@ -147,7 +149,7 @@ describe('default type serializer', () => {
             describe('of object type', () => {
 
                 it('serializes to a string literal', () => {
-                    const greeter = Object.assign(new Greeter(), { message: new String('hello') });
+                    const greeter = Greeter.create({ message: new String('hello') });
                     const serialized = deflate(greeter);
                     expect(serialized).to.deep.equal({ message: 'hello' });
                 });
@@ -165,7 +167,7 @@ describe('default type serializer', () => {
         describe('when the value is a non-string', () => {
 
             it('should fail to serialize', () => {
-                const greeter = Object.assign(new Greeter(), { message: new Date() });
+                const greeter = Greeter.create({ message: new Date() as any });
                 expect(() => deflate(greeter)).to.throw('Unable to serialize property "message": Not a string');
             });
 
@@ -186,18 +188,18 @@ describe('default type serializer', () => {
 
         describe('when a property is serializable', () => {
 
-            class Author {
+            class Author extends Serializable {
                 @Serialize() public name: string;
             }
 
-            class Book {
+            class Book extends Serializable {
                 @Serialize() public title: string;
                 @Serialize() public author: Author;
             }
 
-            const book = Object.assign(new Book(), {
+            const book = Book.create({
                 title: 'The Story of the Sealed Room',
-                author: Object.assign(new Author(), { name: 'Arthur Conan Doyle' })
+                author: Author.create({ name: 'Arthur Conan Doyle' })
             });
 
             it('serializes to JSON-compatible object', () => {
@@ -215,18 +217,18 @@ describe('default type serializer', () => {
 
         describe('when a property is a non-serializable', () => {
 
-            class Author {
+            class Author extends Serializable {
                 public name: string;
             }
 
-            class Book {
+            class Book extends Serializable {
                 @Serialize() public title: string;
                 @Serialize() public author: Author;
             }
 
-            const book = Object.assign(new Book(), {
+            const book = Book.create({
                 title: 'The Story of the Sealed Room',
-                author: Object.assign(new Author(), { name: 'Arthur Conan Doyle' })
+                author: Author.create({ name: 'Arthur Conan Doyle' })
             });
 
             it('should fail to serialize', () => {
