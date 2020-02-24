@@ -11,11 +11,7 @@ export default class PropertyBagMetadata extends GenericMetadata {
 
     public readonly kind: typeof PropertyBagMetadata.kind = PropertyBagMetadata.kind;
 
-    private propSerializers = new Map<string, PropertySerializer<any, any, unknown>>();
-
-    public get propertySerializers() {
-        return this.propSerializers as ReadonlyMap<string, PropertySerializer<any, any, unknown>>;
-    }
+    public readonly propertySerializers = new Map<string, PropertySerializer<any, any, unknown>>();
 
     public getTypeSerializer(fallbackToDefaultProjection: boolean): TypeSerializer<any, any> {
 
@@ -84,21 +80,21 @@ export default class PropertyBagMetadata extends GenericMetadata {
             );
         }
 
-        this.propSerializers.set(propSerializer.propertyName, propSerializer);
+        this.propertySerializers.set(propSerializer.propertyName, propSerializer);
 
     }
 
     /** Aggregates all property serializers: own and inherited */
     private aggregateSerializers(fallbackToDefaultProjection: boolean): Map<string, PropertySerializer<any, any, unknown>> {
 
-        let serializers = new Map(this.propSerializers); // clone
+        let serializers = new Map(this.propertySerializers); // clone
 
         if (fallbackToDefaultProjection) {
 
             const defaultMeta = MetadataManager.get(this.backend, DEFAULT_PROJECTION).getOwnMetaFor(this.proto);
 
             if (defaultMeta?.kind === PropertyBagMetadata.kind) {
-                serializers = new Map([...defaultMeta.propSerializers, ...serializers]);
+                serializers = new Map([...defaultMeta.propertySerializers, ...serializers]);
             }
 
         }
