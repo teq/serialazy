@@ -36,7 +36,10 @@ describe('projection options', () => {
             function itAppliesInDefaultProjection(ctor: Constructor<Named>) {
 
                 it('applies decorator in default projection', () => {
-                    const { down } = defaultProjection.getOwnMetaFor(ctor.prototype).getTypeSerializer(false);
+                    const { down } = defaultProjection.getOwnMetaFor(ctor.prototype).getTypeSerializer({
+                        projection: DEFAULT_PROJECTION,
+                        fallbackToDefaultProjection: false
+                    });
                     expect(down).to.equal(typeSerializer.down);
                     // tslint:disable-next-line: no-unused-expression
                     expect(testProjection.getOwnMetaFor(ctor.prototype)).to.not.exist;
@@ -96,7 +99,10 @@ describe('projection options', () => {
                 }
 
                 it('applies decorator in given projection', () => {
-                    const { down } = testProjection.getOwnMetaFor(Person.prototype).getTypeSerializer(false);
+                    const { down } = testProjection.getOwnMetaFor(Person.prototype).getTypeSerializer({
+                        projection: DEFAULT_PROJECTION,
+                        fallbackToDefaultProjection: false
+                    });
                     expect(down).to.equal(typeSerializer.down);
                     // tslint:disable-next-line: no-unused-expression
                     expect(defaultProjection.getOwnMetaFor(Person.prototype)).to.not.exist;
@@ -179,12 +185,10 @@ describe('projection options', () => {
 
         class JWT extends Serializable {
 
-            @Serialize()
-            @Serialize({ projection: 'compact', name: 'sub' })
+            @Serialize({ name: 'sub' })
             public subject: string;
 
-            @Serialize()
-            @Serialize({ projection: 'compact', name: 'iat' })
+            @Serialize({ name: 'iat' })
             public issuedAt: Timestamp;
 
         }
@@ -227,8 +231,8 @@ describe('projection options', () => {
             identifier: 1,
             name: 'John Doe',
             jwt: {
-                subject: 'api',
-                issuedAt: timestamp.date.toISOString()
+                sub: 'api',
+                iat: timestamp.date.toISOString()
             },
             lastVisit: timestamp.date.toISOString()
         };

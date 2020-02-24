@@ -1,3 +1,4 @@
+import { ProjectionOptions } from '../options';
 import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
 
@@ -21,6 +22,6 @@ export default abstract class GenericMetadata {
     }
 
     /** Get type serializer from metadata */
-    public abstract getTypeSerializer(fallbackToDefaultProjection: boolean): TypeSerializer<any, any>;
+    public abstract getTypeSerializer(options?: ProjectionOptions): TypeSerializer<any, any>;
 
 }

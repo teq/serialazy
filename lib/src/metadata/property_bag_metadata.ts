@@ -1,4 +1,5 @@
 import { DEFAULT_PROJECTION } from '.';
+import { ProjectionOptions } from '../options';
 import PropertySerializer from '../property_serializer';
 import TypeSerializer from '../type_serializer';
 import GenericMetadata from './generic_metadata';
@@ -13,10 +14,15 @@ export default class PropertyBagMetadata extends GenericMetadata {
 
     public readonly propertySerializers = new Map<string, PropertySerializer<any, any, unknown>>();
 
-    public getTypeSerializer(fallbackToDefaultProjection: boolean): TypeSerializer<any, any> {
+    public getTypeSerializer(
+        {
+            projection = this.projection,
+            fallbackToDefaultProjection = true
+        }: ProjectionOptions = {}
+    ): TypeSerializer<any, any> {
 
         const serializers = this.aggregateSerializers(fallbackToDefaultProjection);
-        const options = { projection: this.projection, fallbackToDefaultProjection };
+        const options = { projection, fallbackToDefaultProjection };
 
         return {
 

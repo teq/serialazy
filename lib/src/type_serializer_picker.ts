@@ -4,12 +4,15 @@ import TypeSerializer from './type_serializer';
 import { Constructor, isConstructor } from './types/constructor';
 
 /** Returns a helper which picks a type serializer for given value or type */
-export default function TypeSerializerPicker<TSerialized, TOriginal>(backend: string, options?: ProjectionOptions) {
-
-    const {
+export default function TypeSerializerPicker<TSerialized, TOriginal>(
+    backend: string,
+    {
         projection = DEFAULT_PROJECTION,
         fallbackToDefaultProjection = true
-    } = options || {};
+    }: ProjectionOptions = { }
+) {
+
+    const options = { projection, fallbackToDefaultProjection };
 
     return {
         pickForType,
@@ -32,7 +35,7 @@ export default function TypeSerializerPicker<TSerialized, TOriginal>(backend: st
             meta = MetadataManager.get(backend, DEFAULT_PROJECTION).getMetaFor(proto);
         }
 
-        const typeSerializer = meta?.getTypeSerializer(fallbackToDefaultProjection);
+        const typeSerializer = meta?.getTypeSerializer(options);
 
         return typeSerializer || { type: ctor };
 
