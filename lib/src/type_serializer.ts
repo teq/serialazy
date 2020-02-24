@@ -18,8 +18,10 @@ interface TypeSerializer<TSerialized, TOriginal> {
     up?(serialized: TSerialized): TOriginal;
 
     /**
-     * _Optional._ Original type constructor function.
-     * Default: Value of `design:type` metadata for given property.
+     * Type of serializable
+     * @defaultValue
+     *   * For types: Type constructor function
+     *   * For properties: Value of `design:type` metadata for given property
      */
     type?: Constructor<TOriginal>;
 
@@ -43,7 +45,7 @@ namespace TypeSerializer {
             type: undefined
         }, ...partials) as TypeSerializer<TSerialized, TOriginal>;
 
-        const typeName = type && type.name ? type.name : '<unknown>';
+        const typeName = type?.name ? type.name : '<unknown>';
 
         return { down, up, type };
 

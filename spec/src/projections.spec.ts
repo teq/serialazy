@@ -12,11 +12,13 @@ import {
     Serialize
 } from 'serialazy';
 
+import Serializable from './serializable';
+
 const { expect } = chai;
 
-describe('"projection" option', () => {
+describe('projection options', () => {
 
-    describe('when used with decorator', () => {
+    describe('when applied to decorator', () => {
 
         const defaultProjection = MetadataManager.get(BACKEND_NAME, DEFAULT_PROJECTION);
         const testProjection = MetadataManager.get(BACKEND_NAME, 'test');
@@ -34,7 +36,7 @@ describe('"projection" option', () => {
             function itAppliesInDefaultProjection(ctor: Constructor<Named>) {
 
                 it('applies decorator in default projection', () => {
-                    const { down } = defaultProjection.getOwnMetaFor(ctor.prototype).getTypeSerializer();
+                    const { down } = defaultProjection.getOwnMetaFor(ctor.prototype).getTypeSerializer(false);
                     expect(down).to.equal(typeSerializer.down);
                     // tslint:disable-next-line: no-unused-expression
                     expect(testProjection.getOwnMetaFor(ctor.prototype)).to.not.exist;
@@ -94,7 +96,7 @@ describe('"projection" option', () => {
                 }
 
                 it('applies decorator in given projection', () => {
-                    const { down } = testProjection.getOwnMetaFor(Person.prototype).getTypeSerializer();
+                    const { down } = testProjection.getOwnMetaFor(Person.prototype).getTypeSerializer(false);
                     expect(down).to.equal(typeSerializer.down);
                     // tslint:disable-next-line: no-unused-expression
                     expect(defaultProjection.getOwnMetaFor(Person.prototype)).to.not.exist;
@@ -158,11 +160,16 @@ describe('"projection" option', () => {
 
     });
 
-    describe('when used with frontend function', () => {
+    describe('when applied to serialize/deserialize functions', () => {
 
         @Serialize({
+            down: (ts: Timestamp) => ts.date.toISOString(),
+            up: (isoString: string) => new Timestamp(new Date(isoString))
+        })
+        @Serialize({
+            projection: 'compact',
             down: (ts: Timestamp) => ts.date.getTime(),
-            up: (value: number) => new Timestamp(new Date(value))
+            up: (unixTimeMs: number) => new Timestamp(new Date(unixTimeMs))
         })
         class Timestamp {
             public constructor(
@@ -170,7 +177,7 @@ describe('"projection" option', () => {
             ) {}
         }
 
-        class JWT {
+        class JWT extends Serializable {
 
             @Serialize()
             @Serialize({ projection: 'compact', name: 'sub' })
@@ -182,14 +189,20 @@ describe('"projection" option', () => {
 
         }
 
-        class User {
+        class Person extends Serializable {
 
             @Serialize()
-            @Serialize({ projection: 'compact' })
+            @Serialize({ projection: 'compact', name: 'id' })
+            public identifier: number;
+
+            @Serialize()
             public name: string;
 
+        }
+
+        class User extends Person {
+
             @Serialize()
-            @Serialize({ projection: 'compact' })
             public jwt: JWT;
 
             @Serialize()
@@ -200,9 +213,10 @@ describe('"projection" option', () => {
 
         const timestamp = new Timestamp(new Date());
 
-        const user = Object.assign(new User(), {
+        const user = User.create({
+            identifier: 1,
             name: 'John Doe',
-            jwt: Object.assign(new JWT(), {
+            jwt: JWT.create({
                 subject: 'api',
                 issuedAt: timestamp
             }),
@@ -210,15 +224,17 @@ describe('"projection" option', () => {
         });
 
         const userDefaultProjection = {
+            identifier: 1,
             name: 'John Doe',
             jwt: {
                 subject: 'api',
-                issuedAt: timestamp.date.getTime()
+                issuedAt: timestamp.date.toISOString()
             },
-            lastVisit: timestamp.date.getTime()
+            lastVisit: timestamp.date.toISOString()
         };
 
         const userCompactProjection = {
+            id: 1,
             name: 'John Doe',
             jwt: {
                 sub: 'api',
@@ -257,9 +273,23 @@ describe('"projection" option', () => {
 
             describe('when projection is a non-empty string', () => {
 
+                const projection = 'compact';
+
                 it('performs serialization in given projection', () => {
-                    const obj = deflate(user, { projection: 'compact' });
+                    const obj = deflate(user, { projection });
                     expect(obj).to.deep.equal(userCompactProjection);
+                });
+
+                describe('when fallback to default projection is disabled', () => {
+
+                    it('doesn\'t fall back to default projection', () => {
+                        const obj = deflate(user, { projection, fallbackToDefaultProjection: false });
+                        expect(obj).to.deep.equal({
+                            id: 1,
+                            lv: timestamp.date.getTime()
+                        });
+                    });
+
                 });
 
             });
@@ -296,9 +326,23 @@ describe('"projection" option', () => {
 
             describe('when projection is a non-empty string', () => {
 
+                const projection = 'compact';
+
                 it('performs deserialization in given projection', () => {
-                    const instance = inflate(User, userCompactProjection, { projection: 'compact' });
+                    const instance = inflate(User, userCompactProjection, { projection });
                     expect(instance).to.deep.equal(user);
+                });
+
+                describe('when fallback to default projection is disabled', () => {
+
+                    it('doesn\'t fallback to default projection', () => {
+                        const instance = inflate(User, userCompactProjection, { projection, fallbackToDefaultProjection: false });
+                        expect(instance).to.deep.equal({
+                            identifier: 1,
+                            lastVisit: timestamp
+                        });
+                    });
+
                 });
 
             });

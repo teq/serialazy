@@ -1,14 +1,17 @@
-import { DeflateOptions, InflateOptions } from './frontend_options';
 import { DEFAULT_PROJECTION } from "./metadata";
+import { DeflateOptions, InflateOptions } from './options';
 import TypeSerializerPicker from './type_serializer_picker';
 import { Constructor, isConstructor } from './types/constructor';
 
-export default function FrontendFunctions<TSerialized>(backend: string) {
+export default function FrontendFunctions(backend: string) {
 
     /** Serialize given value */
-    function deflate<TOriginal>(serializable: TOriginal, options?: DeflateOptions<TSerialized, TOriginal>): TSerialized {
+    function deflate<TSerialized, TOriginal>(
+        serializable: TOriginal,
+        options?: DeflateOptions<TSerialized, TOriginal>
+    ): TSerialized {
 
-        let { as: ctor, projection } = (options || {}) as DeflateOptions<TSerialized, TOriginal>;
+        let { as: ctor, projection } = options || {};
         projection = projection || DEFAULT_PROJECTION;
 
         let serialized: TSerialized;
@@ -19,12 +22,12 @@ export default function FrontendFunctions<TSerialized>(backend: string) {
 
         } else {
 
-            const picker = TypeSerializerPicker<TSerialized>(backend, projection);
+            const picker = TypeSerializerPicker<TSerialized, TOriginal>(backend, options);
             const { down, type } = isConstructor(ctor) ? picker.pickForType(ctor) : picker.pickForValue(serializable);
 
             if (!down) {
                 throw new Error(
-                    `Unable to serialize an instance of "${type.name}". ` +
+                    `Unable to serialize an instance of "${type.name}" in projection: "${projection}". ` +
                     'Its serializer is not defined or doesn\'t have a "down" method'
                 );
             }
@@ -37,21 +40,25 @@ export default function FrontendFunctions<TSerialized>(backend: string) {
     }
 
     /** Construct/deserialize given value */
-    function inflate<TOriginal>(ctor: Constructor<TOriginal>, serialized: TSerialized, options?: InflateOptions<TSerialized, TOriginal>): TOriginal {
+    function inflate<TSerialized, TOriginal>(
+        ctor: Constructor<TOriginal>,
+        serialized: TSerialized,
+        options?: InflateOptions<TSerialized, TOriginal>
+    ): TOriginal {
 
-        let { projection } = (options || {}) as InflateOptions<TSerialized, TOriginal>;
+        let { projection } = options || {};
         projection = projection || DEFAULT_PROJECTION;
 
         if (!isConstructor(ctor)) {
             throw new Error('Expecting a constructor function');
         }
 
-        const picker = TypeSerializerPicker<TSerialized>(backend, projection);
+        const picker = TypeSerializerPicker<TSerialized, TOriginal>(backend, options);
         const { up, type } = picker.pickForType(ctor);
 
         if (!up) {
             throw new Error(
-                `Unable to deserialize an instance of "${type.name}". ` +
+                `Unable to deserialize an instance of "${type.name}" in projection: "${projection}". ` +
                 'Its serializer is not defined or doesn\'t have an "up" method'
             );
         }

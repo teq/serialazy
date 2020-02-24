@@ -1,3 +1,4 @@
+import { ProjectionOptions } from "./options";
 
 /** Reporesents a generic property serializer */
 interface PropertySerializer<TSerialized, TOriginal, TTag> {
@@ -9,10 +10,10 @@ interface PropertySerializer<TSerialized, TOriginal, TTag> {
     readonly propertyTag: TTag;
 
     /** Serializes target property from `serializable` and writes value to `serialized` */
-    down(serializable: TOriginal, serialized: TSerialized): void;
+    down(serializable: TOriginal, serialized: TSerialized, options?: ProjectionOptions): void;
 
     /** Deserializes target property from `serialized` and writes value to `serializable` */
-    up(serializable: TOriginal, serialized: TSerialized): void;
+    up(serializable: TOriginal, serialized: TSerialized, options?: ProjectionOptions): void;
 
 }
 

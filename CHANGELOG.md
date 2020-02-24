@@ -1,4 +1,4 @@
-* Support projections
+* Support projections (`projection` and `fallbackToDefaultProjection` options)
 * Added optional `as` parameter to DeflateOptions. It allows to override a type of serializable
   (serialize as a different type)
 * Added inflate/deflate options

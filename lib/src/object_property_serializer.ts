@@ -1,78 +1,100 @@
+import { ProjectionOptions } from "./options";
 import PropertySerializer from "./property_serializer";
 import TypeSerializer from "./type_serializer";
+import TypeSerializerPicker from "./type_serializer_picker";
 import Provider from "./types/provider";
 
-/** Represents a bag of serialized properties */
-export interface PropertyBag<TSerialized> {
-    [prop: string]: TSerialized;
+export interface PropertyBag<T> {
+    [prop: string]: T;
 }
 
-/** Returns a property serializer for serializables which serialize to object-like (property bag) structures */
-function ObjectPropertySerializer<TSerialized>(
-    propertyName: string,
-    typeSerializerProvider: Provider<TypeSerializer<TSerialized, any>>,
-    options?: ObjectPropertySerializer.Options
-): PropertySerializer<PropertyBag<TSerialized>, any, string> {
+/** Returns a factory for object property serializers */
+function ObjectPropertySerializer(backend: string) {
 
-    let { name: propertyTag, optional, nullable } = (options || {}) as ObjectPropertySerializer.Options;
-    propertyTag = propertyTag || propertyName;
+    return { create };
 
-    function down(serializable: any, serialized: PropertyBag<TSerialized>) {
+    /** Returns a property serializer for serializables which serialize to object-like (property bag) structures */
+    function create<TSerialized, TOriginal>(
+        proto: Object,
+        propertyName: string,
+        options?: TypeSerializer<TSerialized, TOriginal> & ObjectPropertySerializer.Options
+    ): PropertySerializer<PropertyBag<TSerialized>, any, string> {
 
-        try {
-            const originalValue = serializable[propertyName];
-            const serializedValue = typeSerializerProvider().down(validate(originalValue));
-            if (serializedValue !== undefined) {
-                serialized[propertyTag] = serializedValue;
+        const customTypeSerializer = options as TypeSerializer<TSerialized, TOriginal>;
+        let { name: propertyTag, optional, nullable } = options || {};
+        propertyTag = propertyTag || propertyName;
+
+        return {
+            propertyName,
+            propertyTag,
+            down,
+            up
+        };
+
+        function getTypeSerializer(options?: ProjectionOptions) {
+
+            try {
+                const picker = TypeSerializerPicker<TSerialized, TOriginal>(backend, options);
+                const defaultTypeSerializer = picker.pickForProp(proto, propertyName);
+                return TypeSerializer.compile([defaultTypeSerializer, customTypeSerializer]);
+            } catch (error) {
+                const className = proto.constructor.name;
+                throw new Error(`Unable to construct a type serializer for "${propertyName}" property of "${className}": ${error.message}`);
             }
-        } catch (error) {
-            const message = formatError(`Unable to serialize property "${propertyName}"`);
-            throw new Error(`${message}: ${error.message}`);
+
         }
 
-    }
+        function down(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: ProjectionOptions) {
 
-    function up(serializable: any, serialized: PropertyBag<TSerialized>) {
-
-        try {
-            const serializedValue = serialized[propertyTag];
-            const originalValue = validate(typeSerializerProvider().up(serializedValue));
-            if (originalValue !== undefined) {
-                serializable[propertyName] = originalValue;
+            try {
+                const originalValue = (serializable as any)[propertyName];
+                const serializedValue = getTypeSerializer(options).down(validate(originalValue));
+                if (serializedValue !== undefined) {
+                    serialized[propertyTag] = serializedValue;
+                }
+            } catch (error) {
+                const message = formatError(`Unable to serialize property "${propertyName}"`);
+                throw new Error(`${message}: ${error.message}`);
             }
-        } catch (error) {
-            const message = formatError(`Unable to deserialize property "${propertyName}"`);
-            throw new Error(`${message}: ${error.message}`);
+
+        }
+
+        function up(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: ProjectionOptions) {
+
+            try {
+                const serializedValue = serialized[propertyTag];
+                const originalValue = validate(getTypeSerializer(options).up(serializedValue));
+                if (originalValue !== undefined) {
+                    (serializable as any)[propertyName] = originalValue;
+                }
+            } catch (error) {
+                const message = formatError(`Unable to deserialize property "${propertyName}"`);
+                throw new Error(`${message}: ${error.message}`);
+            }
+
+        }
+
+        function formatError(message: string) {
+            return propertyName !== propertyTag ? `${message} (mapped to "${propertyTag}")` : message;
+        }
+
+        function validate(value: any) {
+
+            if (!optional && value === undefined) {
+                const hint = (typeof(optional) !== 'boolean') ? 'Hint: make it optional' : null;
+                throw new Error(`Value is undefined${ hint ? `; ${hint}` : ''}`);
+            }
+
+            if (!nullable && value === null) {
+                const hint = (typeof(nullable) !== 'boolean') ? 'Hint: make it nullable' : null;
+                throw new Error(`Value is null${ hint ? `; ${hint}` : ''}`);
+            }
+
+            return value;
+
         }
 
     }
-
-    function formatError(message: string) {
-        return propertyName !== propertyTag ? `${message} (mapped to "${propertyTag}")` : message;
-    }
-
-    function validate(value: any) {
-
-        if (!optional && value === undefined) {
-            const hint = (typeof(optional) !== 'boolean') ? 'Hint: make it optional' : null;
-            throw new Error(`Value is undefined${ hint ? `; ${hint}` : ''}`);
-        }
-
-        if (!nullable && value === null) {
-            const hint = (typeof(nullable) !== 'boolean') ? 'Hint: make it nullable' : null;
-            throw new Error(`Value is null${ hint ? `; ${hint}` : ''}`);
-        }
-
-        return value;
-
-    }
-
-    return {
-        propertyName,
-        propertyTag,
-        down,
-        up
-    };
 
 }
 
@@ -81,13 +103,24 @@ namespace ObjectPropertySerializer {
     /** Object property serializer options */
     export interface Options {
 
-        /** _(Applicable to properties)_ Indicates if property can be undefined. _Default:_ false */
+        /**
+         * Indicates if property can be undefined
+         * @remarks Applicable to properties
+         * @defaultValue `false`
+         */
         optional?: boolean;
 
-        /** _(Applicable to properties)_ Indicates if property can be null. Default: false */
+        /**
+         * Indicates if property can be null
+         * @remarks Applicable to properties
+         * @defaultValue `false`
+         */
         nullable?: boolean;
 
-        /** _(Applicable to properties)_ When defined it forces to use different property name in serialized object */
+        /**
+         * When defined it forces to use different property name in serialized object
+         * @remarks Applicable to properties
+         */
         name?: string;
 
     }

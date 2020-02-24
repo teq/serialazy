@@ -1,14 +1,24 @@
 import { DEFAULT_PROJECTION, MetadataManager } from './metadata';
+import { ProjectionOptions } from './options';
 import TypeSerializer from './type_serializer';
 import { Constructor, isConstructor } from './types/constructor';
 
 /** Returns a helper which picks a type serializer for given value or type */
-export default function TypeSerializerPicker<TSerialized>(backend: string, projection?: string) {
+export default function TypeSerializerPicker<TSerialized, TOriginal>(backend: string, options?: ProjectionOptions) {
 
-    projection = projection || DEFAULT_PROJECTION;
+    const {
+        projection = DEFAULT_PROJECTION,
+        fallbackToDefaultProjection = true
+    } = options || {};
+
+    return {
+        pickForType,
+        pickForProp,
+        pickForValue
+    };
 
     /** Try to pick a (possibly partial) type serializer for given type */
-    function pickForType(ctor: Constructor<unknown>): TypeSerializer<TSerialized, any> {
+    function pickForType(ctor: Constructor<TOriginal>): TypeSerializer<TSerialized, TOriginal> {
 
         if (!isConstructor(ctor)) {
             throw new Error('Expecting constructor function');
@@ -16,19 +26,22 @@ export default function TypeSerializerPicker<TSerialized>(backend: string, proje
 
         const proto = ctor.prototype as Object;
 
-        const meta = MetadataManager.get(backend, projection).getMetaFor(proto)
-            || MetadataManager.get(backend, DEFAULT_PROJECTION).getMetaFor(proto); // Fall back to default projection
+        let meta = MetadataManager.get(backend, projection).getMetaFor(proto);
 
-        const typeSerializer = meta && meta.getTypeSerializer();
+        if (!meta && projection !== DEFAULT_PROJECTION && (fallbackToDefaultProjection || isBuiltInType(ctor))) {
+            meta = MetadataManager.get(backend, DEFAULT_PROJECTION).getMetaFor(proto);
+        }
+
+        const typeSerializer = meta?.getTypeSerializer(fallbackToDefaultProjection);
 
         return typeSerializer || { type: ctor };
 
     }
 
     /** Try to pick a (possibly partial) type serializer for given property */
-    function pickForProp(proto: Object, propertyName: string): TypeSerializer<TSerialized, any> {
+    function pickForProp(proto: Object, propertyName: string): TypeSerializer<TSerialized, TOriginal> {
 
-        const ctor: Constructor<unknown> = Reflect.getMetadata('design:type', proto, propertyName);
+        const ctor: Constructor<TOriginal> = Reflect.getMetadata('design:type', proto, propertyName);
 
         if (ctor === undefined) {
             throw new Error('Unable to fetch type information. Hint: Enable TS options: "emitDecoratorMetadata" and "experimentalDecorators"');
@@ -39,20 +52,18 @@ export default function TypeSerializerPicker<TSerialized>(backend: string, proje
     }
 
     /** Try to pick a (possibly partial) type serializer for given value */
-    function pickForValue(value: unknown): TypeSerializer<TSerialized, any> {
+    function pickForValue(value: unknown): TypeSerializer<TSerialized, TOriginal> {
 
         if (value === null || value === undefined) {
             throw new Error('Expecting value to be not null/undefined');
         }
 
-        return pickForType(value.constructor as Constructor<unknown>);
+        return pickForType(value.constructor as Constructor<TOriginal>);
 
     }
 
-    return {
-        pickForType,
-        pickForProp,
-        pickForValue
-    };
+    function isBuiltInType(ctor: Constructor<unknown>) {
+        return ([Boolean, Number, String] as Array<Constructor<unknown>>).includes(ctor);
+    }
 
 }

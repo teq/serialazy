@@ -1,6 +1,5 @@
 import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
-import MetadataManager from './metadata_manager';
 
 /** Generic metadata container for serializables */
 export default abstract class GenericMetadata {
@@ -12,22 +11,16 @@ export default abstract class GenericMetadata {
     public readonly name: string;
 
     public constructor(
-
-        /** Prototype to create metadata for */
+        public readonly backend: string,
+        public readonly projection: string,
         public readonly proto: Object,
-
-        /** Metadata version */
-        public readonly version: number,
-
-        /** Manager instance to access metadata */
-        protected readonly manager: MetadataManager,
-
+        public readonly version: number
     ) {
         this.ctor = proto.constructor as Constructor<any>;
         this.name = this.ctor.name;
     }
 
     /** Get type serializer from metadata */
-    public abstract getTypeSerializer(): TypeSerializer<any, any>;
+    public abstract getTypeSerializer(fallbackToDefaultProjection: boolean): TypeSerializer<any, any>;
 
 }

@@ -1,6 +1,8 @@
+import { DEFAULT_PROJECTION } from '.';
 import PropertySerializer from '../property_serializer';
 import TypeSerializer from '../type_serializer';
 import GenericMetadata from './generic_metadata';
+import MetadataManager from './metadata_manager';
 
 /** Metadata container for serializable property bag */
 export default class PropertyBagMetadata extends GenericMetadata {
@@ -15,7 +17,10 @@ export default class PropertyBagMetadata extends GenericMetadata {
         return this.propSerializers as ReadonlyMap<string, PropertySerializer<any, any, unknown>>;
     }
 
-    public getTypeSerializer(): TypeSerializer<any, any> {
+    public getTypeSerializer(fallbackToDefaultProjection: boolean): TypeSerializer<any, any> {
+
+        const serializers = this.aggregateSerializers(fallbackToDefaultProjection);
+        const options = { projection: this.projection, fallbackToDefaultProjection };
 
         return {
 
@@ -30,9 +35,9 @@ export default class PropertyBagMetadata extends GenericMetadata {
                 } else {
                     serialized = {};
                     try {
-                        this.aggregateSerializers().forEach(serializer => serializer.down(serializable, serialized));
+                        serializers.forEach(serializer => serializer.down(serializable, serialized, options));
                     } catch (error) {
-                        throw new Error(`Unable to serialize an instance of "${this.name}": ${error.message}`);
+                        throw new Error(`Unable to serialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
                     }
                 }
 
@@ -49,9 +54,9 @@ export default class PropertyBagMetadata extends GenericMetadata {
                 } else {
                     serializable = new this.ctor();
                     try {
-                        this.aggregateSerializers().forEach(serializer => serializer.up(serializable, serialized));
+                        serializers.forEach(serializer => serializer.up(serializable, serialized, options));
                     } catch (error) {
-                        throw new Error(`Unable to deserialize an instance of "${this.name}": ${error.message}`);
+                        throw new Error(`Unable to deserialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
                     }
                 }
 
@@ -65,7 +70,7 @@ export default class PropertyBagMetadata extends GenericMetadata {
 
     public addPropertySerializer(propSerializer: PropertySerializer<any, any, unknown>) {
 
-        const serializers = this.aggregateSerializers();
+        const serializers = this.aggregateSerializers(false);
 
         if (serializers.has(propSerializer.propertyName)) {
             throw new Error(`Unable to redefine/shadow serializer for "${propSerializer.propertyName}" property of "${this.name}"`);
@@ -84,14 +89,26 @@ export default class PropertyBagMetadata extends GenericMetadata {
     }
 
     /** Aggregates all property serializers: own and inherited */
-    private aggregateSerializers(): Map<string, PropertySerializer<any, any, unknown>> {
+    private aggregateSerializers(fallbackToDefaultProjection: boolean): Map<string, PropertySerializer<any, any, unknown>> {
 
-        const inheritedMeta = this.manager.seekInheritedMetaFor(this.proto) as PropertyBagMetadata;
+        let serializers = new Map(this.propSerializers); // clone
 
-        if (inheritedMeta) {
-            return new Map([...inheritedMeta.aggregateSerializers(), ...this.propSerializers]);
+        if (fallbackToDefaultProjection) {
+
+            const defaultMeta = MetadataManager.get(this.backend, DEFAULT_PROJECTION).getOwnMetaFor(this.proto);
+
+            if (defaultMeta?.kind === PropertyBagMetadata.kind) {
+                serializers = new Map([...defaultMeta.propSerializers, ...serializers]);
+            }
+
+        }
+
+        const inheritedMeta = MetadataManager.get(this.backend, this.projection).seekInheritedMetaFor(this.proto);
+
+        if (inheritedMeta?.kind === PropertyBagMetadata.kind) {
+            return new Map([...inheritedMeta.aggregateSerializers(fallbackToDefaultProjection), ...serializers]);
         } else {
-            return new Map(this.propSerializers); // clone
+            return serializers;
         }
 
     }

@@ -1,8 +1,7 @@
-import { DecoratorOptions } from "./frontend_options";
 import { DEFAULT_PROJECTION, MetadataManager } from "./metadata";
 import ObjectPropertySerializer from "./object_property_serializer";
+import { DecoratorOptions } from "./options";
 import TypeSerializer from "./type_serializer";
-import TypeSerializerPicker from './type_serializer_picker';
 import { Constructor, isConstructor } from "./types/constructor";
 
 /** Constructs type/property decorators */
@@ -11,25 +10,12 @@ export default function DecoratorFactory<TSerialized, TOriginal>(
     options?: DecoratorOptions<TSerialized, TOriginal>
 ) {
 
-    let { projection } = (options || {}) as DecoratorOptions<TSerialized, TOriginal>;
+    let { projection } = options || {};
     projection = projection || DEFAULT_PROJECTION;
 
-    function decorateProperty<TOriginal>(proto: Object, propertyName: string, options: DecoratorOptions<TSerialized, TOriginal>) {
+    function decorateProperty(proto: Object, propertyName: string, options: DecoratorOptions<TSerialized, TOriginal>) {
 
-        const picker = TypeSerializerPicker(backend, projection);
-
-        const compiledTypeSerializerProvider = () => {
-            try {
-                const defaultTypeSerializer = picker.pickForProp(proto, propertyName);
-                const customTypeSerializer = options as TypeSerializer<TSerialized, TOriginal>;
-                return TypeSerializer.compile([defaultTypeSerializer, customTypeSerializer]);
-            } catch (error) {
-                const className = proto.constructor.name;
-                throw new Error(`Unable to construct a type serializer for "${propertyName}" property of "${className}": ${error.message}`);
-            }
-        };
-
-        const propertySerializer = ObjectPropertySerializer(propertyName, compiledTypeSerializerProvider, options);
+        const propertySerializer = ObjectPropertySerializer(backend).create(proto, propertyName, options);
 
         MetadataManager.get(backend, projection)
             .getOrCreatePropertyBagMetaFor(proto)
@@ -37,7 +23,7 @@ export default function DecoratorFactory<TSerialized, TOriginal>(
 
     }
 
-    function decorateType<TOriginal>(ctor: Constructor<TOriginal>, options: DecoratorOptions<TSerialized, TOriginal>) {
+    function decorateType(ctor: Constructor<TOriginal>, options: DecoratorOptions<TSerialized, TOriginal>) {
 
         const customTypeSerializerProvider = () => options as TypeSerializer<TSerialized, TOriginal>;
 
