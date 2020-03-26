@@ -1,23 +1,4 @@
-import { DEFAULT_PROJECTION } from ".";
-import CustomTypeMetadata from "./custom_type_metadata";
-import PropertyBagMetadata from "./property_bag_metadata";
-
-type Metadata = CustomTypeMetadata | PropertyBagMetadata;
-
-/**
- * Metadata version number.
- *
- * It is possible to mix multiple serialazy versions which came from different dependencies.
- * To make sure that we access a compatible version of metadata (or throw an error instead)
- * we use a metadata version number.
- *
- * It's not directly linked with package (NPM) version, but:
- * * Several consecutive major package versions can share the same metadata version.
- *   (If there are chages in public API, but not in metadata format)
- * * Metadata version increase is a **breaking change**, so the major part
- *   of package versions should be increased as well
- */
-const METADATA_VERSION = 3;
+import MetadataContainer from "./metadata_container";
 
 /** Used to access serializable type metadata */
 export default class MetadataManager {
@@ -57,21 +38,27 @@ export default class MetadataManager {
 
     }
 
+    /** Set own metadata */
+    public setOwnMetaFor(proto: Object, metadata: MetadataContainer): void {
+        const key = MetadataManager.key(this.backend, this.projection);
+        Reflect.defineMetadata(key, metadata, proto);
+    }
+
     /** Get own metadata */
-    public getOwnMetaFor(proto: Object): Metadata {
+    public getOwnMetaFor(proto: Object): MetadataContainer {
 
         if (proto === null || proto === undefined) {
             throw new Error('Expecting prototype object to be not null/undefined');
         }
 
         const key = MetadataManager.key(this.backend, this.projection);
-        const metadata: Metadata = Reflect.getOwnMetadata(key, proto) || null;
+        const metadata: MetadataContainer = Reflect.getOwnMetadata(key, proto);
 
         if (metadata) {
             const version = metadata.version || 0;
-            if (version !== METADATA_VERSION) {
+            if (version !== MetadataContainer.VERSION) {
                 throw new Error(
-                    `Metadata version mismatch (lib: ${METADATA_VERSION}, meta: ${version}). ` +
+                    `Metadata version mismatch (lib: ${MetadataContainer.VERSION}, meta: ${version}). ` +
                     'Seems like you\'re trying to use 2 or more incompatible versions of "serialazy"'
                 );
             }
@@ -81,81 +68,46 @@ export default class MetadataManager {
 
     }
 
-    /** Get metadata */
-    public getMetaFor(proto: Object): Metadata {
+    /** Get own or inherited metadata */
+    public getMetaFor(proto: Object): MetadataContainer {
 
-        let result: Metadata = null;
+        let metadata = this.getOwnMetaFor(proto);
 
-        const ownMeta = this.getOwnMetaFor(proto);
-
-        if (ownMeta) {
-            result = ownMeta;
-        } else {
-            const inheritedMeta = this.seekInheritedMetaFor(proto);
-            if (inheritedMeta?.kind === PropertyBagMetadata.kind) {
-                // No own metadata, but it inherits from property-bag serializable.
-                // Return a virtual (not persisted) property-bag metadata.
-                result = new PropertyBagMetadata(this.backend, this.projection, proto, METADATA_VERSION);
+        if (!metadata) {
+            const inheritedMetadata = this.seekInheritedMetaFor(proto);
+            if (inheritedMetadata?.aggregatePropertySerializers(true)) {
+                // No own metadata, but it inherits from a property-bag serializable.
+                // Return a virtual (not persisted) metadata.
+                metadata = new MetadataContainer(this.backend, this.projection, proto);
             }
         }
 
-        return result;
-    }
+        return metadata;
 
-    /** Set own metadata */
-    public setMetaFor(proto: Object, metadata: Metadata): void {
-        const key = MetadataManager.key(this.backend, this.projection);
-        Reflect.defineMetadata(key, metadata, proto);
     }
 
     /** Seek prototype chain for inherited metadata */
-    public seekInheritedMetaFor(proto: Object): Metadata {
+    public seekInheritedMetaFor(proto: Object): MetadataContainer {
 
-        let result: Metadata = null;
+        let metadata: MetadataContainer;
 
-        while (proto && !result) {
+        while (proto && !metadata) {
             proto = Object.getPrototypeOf(proto);
-            result = proto ? this.getOwnMetaFor(proto) : null;
+            metadata = proto && this.getOwnMetaFor(proto);
         }
 
-        return result;
+        return metadata;
 
     }
 
-    /** Get or create own custom serializable type metadata */
-    public getOrCreateCustomTypeMetaFor(proto: Object): CustomTypeMetadata {
+    /** Get or create a metadata container */
+    public getOrCreateMetaFor(proto: Object): MetadataContainer {
 
         let ownMeta = this.getOwnMetaFor(proto);
 
         if (!ownMeta) {
-            const inheritedMeta = this.seekInheritedMetaFor(proto);
-            if (inheritedMeta) {
-                throw new Error('Can\'t define a custom serializer on type which inherits from another serializable');
-            }
-            ownMeta = new CustomTypeMetadata(this.backend, this.projection, proto, METADATA_VERSION);
-            this.setMetaFor(proto, ownMeta);
-        } else if (ownMeta.kind === PropertyBagMetadata.kind) {
-            throw new Error('Can\'t define a custom type serializer on a "property bag" serializable');
-        }
-
-        return ownMeta;
-
-    }
-
-    /** Get or create own property-bag serializable type metadata */
-    public getOrCreatePropertyBagMetaFor(proto: Object): PropertyBagMetadata {
-
-        let ownMeta = this.getOwnMetaFor(proto);
-
-        if (!ownMeta) {
-            const inheritedMeta = this.seekInheritedMetaFor(proto);
-            if (inheritedMeta?.kind === CustomTypeMetadata.kind) {
-                throw new Error('A property-bag serializable can\'t inherit from a type with custom serializer');
-            }
-            ownMeta = new PropertyBagMetadata(this.backend, this.projection, proto, METADATA_VERSION);
-            this.setMetaFor(proto, ownMeta);
-        } else if (ownMeta.kind === CustomTypeMetadata.kind) {
-            throw new Error('Can\'t define property serializers on type which has a custom serializer');
+            ownMeta = new MetadataContainer(this.backend, this.projection, proto);
+            this.setOwnMetaFor(proto, ownMeta);
         }
 
         return ownMeta;

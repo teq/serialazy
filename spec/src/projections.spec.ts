@@ -8,7 +8,6 @@ import {
     inflate,
     JsonType,
     MetadataManager,
-    PropertyBagMetadata,
     Serialize
 } from 'serialazy';
 
@@ -133,8 +132,8 @@ describe('projection options', () => {
                 }
 
                 it('applies decorator in default projection', () => {
-                    const meta = defaultProjection.getOwnMetaFor(Person.prototype) as PropertyBagMetadata;
-                    expect(meta.propertySerializers.size).to.equal(4);
+                    const meta = defaultProjection.getOwnMetaFor(Person.prototype);
+                    expect(meta.getPropertySerializers().size).to.equal(4);
                     // tslint:disable-next-line: no-unused-expression
                     expect(testProjection.getOwnMetaFor(Person.prototype)).to.not.exist;
                 });
@@ -154,8 +153,8 @@ describe('projection options', () => {
                 }
 
                 it('applies decorator in given projection', () => {
-                    const meta = testProjection.getOwnMetaFor(Person.prototype) as PropertyBagMetadata;
-                    expect(meta.propertySerializers.size).to.equal(2);
+                    const meta = testProjection.getOwnMetaFor(Person.prototype);
+                    expect(meta.getPropertySerializers().size).to.equal(2);
                     // tslint:disable-next-line: no-unused-expression
                     expect(defaultProjection.getOwnMetaFor(Person.prototype)).to.not.exist;
                 });

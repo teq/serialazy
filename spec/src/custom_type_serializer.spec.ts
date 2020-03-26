@@ -34,24 +34,6 @@ describe('custom type serializer', () => {
         expect(point).to.deep.equal({ x: 4, y: 5 });
     });
 
-    it('should fail to apply on a class which has property serializers', () => {
-        expect(() => {
-            @Serialize({ down: null, up: null })
-            class Test {
-                @Serialize() public prop: string;
-            }
-        }).to.throw('Can\'t define a custom type serializer on a "property bag" serializable');
-    });
-
-    it('should fail to apply on a class which inherits from another serializable', () => {
-        expect(() => {
-            @Serialize({ down: (val: TaggedPoint) => `(${val.x},${val.y}),${val.tag}` })
-            class TaggedPoint extends Point {
-                public tag: string;
-            }
-        }).to.throw('Can\'t define a custom serializer on type which inherits from another serializable');
-    });
-
     it('can\'t be re-defined', () => {
         expect(() => {
             Serialize({ down: null, up: null })(Point);

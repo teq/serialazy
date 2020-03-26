@@ -18,7 +18,7 @@ export default function DecoratorFactory<TSerialized, TOriginal>(
         const propertySerializer = ObjectPropertySerializer(backend).create(proto, propertyName, options);
 
         MetadataManager.get(backend, projection)
-            .getOrCreatePropertyBagMetaFor(proto)
+            .getOrCreateMetaFor(proto)
             .addPropertySerializer(propertySerializer);
 
     }
@@ -30,7 +30,7 @@ export default function DecoratorFactory<TSerialized, TOriginal>(
         const proto = ctor.prototype;
 
         MetadataManager.get(backend, projection)
-            .getOrCreateCustomTypeMetaFor(proto)
+            .getOrCreateMetaFor(proto)
             .setTypeSerializer(customTypeSerializerProvider);
 
     }

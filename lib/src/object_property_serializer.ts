@@ -2,7 +2,6 @@ import { ProjectionOptions } from "./options";
 import PropertySerializer from "./property_serializer";
 import TypeSerializer from "./type_serializer";
 import TypeSerializerPicker from "./type_serializer_picker";
-import Provider from "./types/provider";
 
 export interface PropertyBag<T> {
     [prop: string]: T;
