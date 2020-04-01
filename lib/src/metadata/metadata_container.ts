@@ -1,9 +1,9 @@
 import { DEFAULT_PROJECTION } from '.';
 import { ProjectionOptions } from '../options';
 import PropertySerializer from '../property_serializer';
-import TypeSerializer from '../type_serializer';
 import Constructor from '../types/constructor';
 import Provider from '../types/provider';
+import TypeSerializer from '../type_serializer';
 import MetadataManager from './metadata_manager';
 
 /** Metadata container for serializables */

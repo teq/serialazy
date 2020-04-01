@@ -1,6 +1,6 @@
 import ObjectPropertySerializer from './object_property_serializer';
-import TypeSerializer from "./type_serializer";
 import Constructor from "./types/constructor";
+import TypeSerializer from "./type_serializer";
 
 export interface ProjectionOptions {
 

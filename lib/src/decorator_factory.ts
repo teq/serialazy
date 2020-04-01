@@ -1,8 +1,8 @@
 import { DEFAULT_PROJECTION, MetadataManager } from "./metadata";
 import ObjectPropertySerializer from "./object_property_serializer";
 import { DecoratorOptions } from "./options";
-import TypeSerializer from "./type_serializer";
 import { Constructor, isConstructor } from "./types/constructor";
+import TypeSerializer from "./type_serializer";
 
 /** Constructs type/property decorators */
 export default function DecoratorFactory<TSerialized, TOriginal>(
