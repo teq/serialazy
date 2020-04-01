@@ -125,13 +125,11 @@ export default class MetadataContainer {
     /** Add own property serializer */
     public addPropertySerializer(propSerializer: PropertySerializer<any, any, unknown>) {
 
-        const serializers = this.aggregatePropertySerializers(false);
-
-        if (serializers.has(propSerializer.propertyName)) {
-            throw new Error(`Unable to redefine/shadow serializer for "${propSerializer.propertyName}" property of "${this.name}"`);
+        if (this.propertySerializers.has(propSerializer.propertyName)) {
+            throw new Error(`Unable to redefine serializer for "${propSerializer.propertyName}" property of "${this.name}"`);
         }
 
-        const conflict = Array.from(serializers.values()).find(ps => ps.propertyTag === propSerializer.propertyTag);
+        const conflict = Array.from(this.propertySerializers.values()).find(ps => ps.propertyTag === propSerializer.propertyTag);
         if (conflict) {
             throw new Error(
                 `Unable to define serializer for "${propSerializer.propertyName}" property of "${this.name}": ` +

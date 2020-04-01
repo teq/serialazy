@@ -76,14 +76,47 @@ describe('class inheritance', () => {
 
         describe('and ancestor(-s) has property serializers', () => {
 
-            it('should fail when trying to shadow inherited property serializers', () => {
+            it('should fail to redefine own property serializers', () => {
 
                 expect(() => {
                     // tslint:disable-next-line:no-unused-variable
-                    class MyRectangle extends Rectangle {
-                        @Serialize() public width: number;
+                    class Person {
+                        @Serialize() @Serialize() public name: number;
                     }
-                }).to.throw('Unable to redefine/shadow serializer for "width" property of "MyRectangle"');
+                }).to.throw('Unable to redefine serializer for "name" property of "Person"');
+
+            });
+
+            it('be able to shadow inherited property serializers', () => {
+
+                class MyRectangle extends Rectangle {
+
+                    @Serialize({
+                        name: 'p',
+                        down: (pos: Position) => [pos.x, pos.y],
+                        up: ([x, y]) => Position.create({ x, y })
+                    })
+                    public position: Position;
+
+                    @Serialize({ name: 'w' })
+                    public width: number;
+
+                    @Serialize({ name: 'h' })
+                    public height: number;
+
+                }
+
+                const rectangle = MyRectangle.create({
+                    position: Position.create({ x: 2, y: 3 }),
+                    width: 5,
+                    height: 6
+                });
+
+                const serialized = deflate(rectangle);
+                expect(serialized).to.deep.equal({ p: [2, 3], w: 5, h: 6 });
+
+                const deserialized = inflate(MyRectangle, serialized);
+                expect(deserialized).to.deep.equal(rectangle);
 
             });
 
