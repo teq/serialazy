@@ -1,5 +1,5 @@
 import { DEFAULT_PROJECTION } from '.';
-import { ProjectionOptions } from '../options';
+import { SerializationOptions } from '../options';
 import PropertySerializer from '../property_serializer';
 import Constructor from '../types/constructor';
 import Provider from '../types/provider';
@@ -62,63 +62,81 @@ export default class MetadataContainer {
      * Return own type serializer (if defined) or build type serializer
      * based on own and inherited property serializers
      */
-    public getTypeSerializer(
-        {
-            projection = this.projection,
+    public getTypeSerializer(options?: SerializationOptions): TypeSerializer<any, any> {
+
+        let {
+            useSerializerFrom: sources = ['type', 'props'],
             fallbackToDefaultProjection = true
-        }: ProjectionOptions = {}
-    ): TypeSerializer<any, any> {
+        } = options || {};
+        sources = Array.isArray(sources) ? sources : [sources];
 
-        return this.typeSerializerProvider?.() ?? (() => {
+        for (const source of sources) {
 
-            const serializers = this.aggregatePropertySerializers(fallbackToDefaultProjection);
-            const options = { projection, fallbackToDefaultProjection };
+            if (source === 'type') {
 
-            return {
+                if (this.typeSerializerProvider) {
+                    return this.typeSerializerProvider();
+                }
 
-                type: this.ctor,
+            } else if (source === 'props') {
 
-                down: serializers?.size > 0 ? (serializable: any) => {
+                const serializers = this.aggregatePropertySerializers(fallbackToDefaultProjection);
 
-                    let serialized: {};
+                if (serializers.size > 0) {
 
-                    if (serializable === null || serializable === undefined) {
-                        serialized = serializable;
-                    } else {
-                        serialized = {};
-                        try {
-                            serializers.forEach(serializer => serializer.down(serializable, serialized, options));
-                        } catch (error) {
-                            throw new Error(`Unable to serialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
+                    return {
+
+                        type: this.ctor,
+
+                        down: (serializable: any) => {
+
+                            let serialized: {};
+
+                            if (serializable === null || serializable === undefined) {
+                                serialized = serializable;
+                            } else {
+                                serialized = {};
+                                try {
+                                    serializers.forEach(serializer => serializer.down(serializable, serialized, options));
+                                } catch (error) {
+                                    throw new Error(`Unable to serialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
+                                }
+                            }
+
+                            return serialized;
+
+                        },
+
+                        up: (serialized: any) => {
+
+                            let serializable: any;
+
+                            if (serialized === null || serialized === undefined) {
+                                serializable = serialized;
+                            } else {
+                                serializable = new this.ctor();
+                                try {
+                                    serializers.forEach(serializer => serializer.up(serializable, serialized, options));
+                                } catch (error) {
+                                    throw new Error(`Unable to deserialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
+                                }
+                            }
+
+                            return serializable;
+
                         }
-                    }
 
-                    return serialized;
+                    };
 
-                } : undefined,
+                }
 
-                up: serializers?.size > 0 ? (serialized: any) => {
+            } else {
+                throw new Error(`Unexpected value: ${source}`);
+            }
 
-                    let serializable: any;
+        }
 
-                    if (serialized === null || serialized === undefined) {
-                        serializable = serialized;
-                    } else {
-                        serializable = new this.ctor();
-                        try {
-                            serializers.forEach(serializer => serializer.up(serializable, serialized, options));
-                        } catch (error) {
-                            throw new Error(`Unable to deserialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
-                        }
-                    }
-
-                    return serializable;
-
-                } : undefined
-
-            };
-
-        })();
+        return { type: this.ctor };
 
     }
 

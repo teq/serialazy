@@ -1,18 +1,16 @@
 import { DEFAULT_PROJECTION, MetadataManager } from './metadata';
-import { ProjectionOptions } from './options';
+import { SerializationOptions } from './options';
 import { Constructor, isConstructor } from './types/constructor';
 import TypeSerializer from './type_serializer';
 
 /** Returns a helper which picks a type serializer for given value or type */
 export default function TypeSerializerPicker<TSerialized, TOriginal>(
     backend: string,
-    {
-        projection = DEFAULT_PROJECTION,
-        fallbackToDefaultProjection = true
-    }: ProjectionOptions = { }
+    options?: SerializationOptions
 ) {
 
-    const options = { projection, fallbackToDefaultProjection };
+    let { projection, fallbackToDefaultProjection = true } = options || {};
+    projection = projection || DEFAULT_PROJECTION;
 
     return {
         pickForType,

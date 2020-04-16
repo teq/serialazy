@@ -1,4 +1,4 @@
-import { ProjectionOptions } from "./options";
+import { SerializationOptions } from "./options";
 import PropertySerializer from "./property_serializer";
 import TypeSerializer from "./type_serializer";
 import TypeSerializerPicker from "./type_serializer_picker";
@@ -30,7 +30,7 @@ function ObjectPropertySerializer(backend: string) {
             up
         };
 
-        function getTypeSerializer(options?: ProjectionOptions) {
+        function getTypeSerializer(options?: SerializationOptions) {
 
             try {
                 const picker = TypeSerializerPicker<TSerialized, TOriginal>(backend, options);
@@ -43,7 +43,7 @@ function ObjectPropertySerializer(backend: string) {
 
         }
 
-        function down(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: ProjectionOptions) {
+        function down(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: SerializationOptions) {
 
             try {
                 const originalValue = (serializable as any)[propertyName];
@@ -58,7 +58,7 @@ function ObjectPropertySerializer(backend: string) {
 
         }
 
-        function up(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: ProjectionOptions) {
+        function up(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: SerializationOptions) {
 
             try {
                 const serializedValue = serialized[propertyTag];
