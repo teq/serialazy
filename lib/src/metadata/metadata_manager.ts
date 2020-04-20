@@ -75,7 +75,7 @@ export default class MetadataManager {
 
         if (!metadata) {
             const inheritedMetadata = this.seekInheritedMetaFor(proto);
-            if (inheritedMetadata?.aggregatePropertySerializers(true)) {
+            if (inheritedMetadata?.hasPropertySerializers()) {
                 // No own metadata, but it inherits from a property-bag serializable.
                 // Return a virtual (not persisted) metadata.
                 metadata = new MetadataContainer(this.backend, this.projection, proto);

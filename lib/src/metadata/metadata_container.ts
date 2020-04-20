@@ -45,8 +45,7 @@ export default class MetadataContainer {
         this.name = this.ctor.name;
     }
 
-    /** Set own type serializer */
-    public setTypeSerializer(
+    public setOwnTypeSerializer(
         typeSerializer: TypeSerializer<any, any> | Provider<TypeSerializer<any, any>>
     ) {
 
@@ -58,90 +57,11 @@ export default class MetadataContainer {
 
     }
 
-    /**
-     * Return own type serializer (if defined) or build type serializer
-     * based on own and inherited property serializers
-     */
-    public getTypeSerializer(options?: SerializationOptions): TypeSerializer<any, any> {
-
-        let {
-            useSerializerFrom: sources = ['type', 'props'],
-            fallbackToDefaultProjection = true
-        } = options || {};
-        sources = Array.isArray(sources) ? sources : [sources];
-
-        for (const source of sources) {
-
-            if (source === 'type') {
-
-                if (this.typeSerializerProvider) {
-                    return this.typeSerializerProvider();
-                }
-
-            } else if (source === 'props') {
-
-                const serializers = this.aggregatePropertySerializers(fallbackToDefaultProjection);
-
-                if (serializers.size > 0) {
-
-                    return {
-
-                        type: this.ctor,
-
-                        down: (serializable: any) => {
-
-                            let serialized: {};
-
-                            if (serializable === null || serializable === undefined) {
-                                serialized = serializable;
-                            } else {
-                                serialized = {};
-                                try {
-                                    serializers.forEach(serializer => serializer.down(serializable, serialized, options));
-                                } catch (error) {
-                                    throw new Error(`Unable to serialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
-                                }
-                            }
-
-                            return serialized;
-
-                        },
-
-                        up: (serialized: any) => {
-
-                            let serializable: any;
-
-                            if (serialized === null || serialized === undefined) {
-                                serializable = serialized;
-                            } else {
-                                serializable = new this.ctor();
-                                try {
-                                    serializers.forEach(serializer => serializer.up(serializable, serialized, options));
-                                } catch (error) {
-                                    throw new Error(`Unable to deserialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
-                                }
-                            }
-
-                            return serializable;
-
-                        }
-
-                    };
-
-                }
-
-            } else {
-                throw new Error(`Unexpected value: ${source}`);
-            }
-
-        }
-
-        return { type: this.ctor };
-
+    public getOwnTypeSerializer() {
+        return this.typeSerializerProvider?.();
     }
 
-    /** Add own property serializer */
-    public addPropertySerializer(propSerializer: PropertySerializer<any, any, unknown>) {
+    public addOwnPropertySerializer(propSerializer: PropertySerializer<any, any, unknown>) {
 
         if (this.propertySerializers.has(propSerializer.propertyName)) {
             throw new Error(`Unable to redefine serializer for "${propSerializer.propertyName}" property of "${this.name}"`);
@@ -159,13 +79,90 @@ export default class MetadataContainer {
 
     }
 
-    /** Get own property serializers */
-    public getPropertySerializers() {
+    public getOwnPropertySerializers() {
         return this.propertySerializers as ReadonlyMap<string, PropertySerializer<any, any, unknown>>;
     }
 
+    /** Check if it has own or inherited property serializers */
+    public hasPropertySerializers() {
+        return !!this.aggregatePropertySerializers({ fallbackToDefaultProjection: true });
+    }
+
+    /**
+     * Get own type serializer or build type serializer
+     * based on own and inherited property serializers
+     */
+    public getTypeSerializer(options?: SerializationOptions): TypeSerializer<any, any> {
+
+        let { prioritizePropSerializers = false } = options || {};
+
+        const typeSerializer = prioritizePropSerializers ?
+            (this.buildPropertyBagSerializer(options) ?? this.getOwnTypeSerializer())
+            : (this.getOwnTypeSerializer() ?? this.buildPropertyBagSerializer(options));
+
+        return typeSerializer ?? { type: this.ctor };
+
+    }
+
+    /** Build type serializer based on own and inherited property serializers */
+    private buildPropertyBagSerializer(options?: SerializationOptions): TypeSerializer<any, any> {
+
+        const serializers = this.aggregatePropertySerializers(options);
+
+        if (serializers.size > 0) {
+
+            return {
+
+                type: this.ctor,
+
+                down: (serializable: any) => {
+
+                    let serialized: {};
+
+                    if (serializable === null || serializable === undefined) {
+                        serialized = serializable;
+                    } else {
+                        serialized = {};
+                        try {
+                            serializers.forEach(serializer => serializer.down(serializable, serialized, options));
+                        } catch (error) {
+                            throw new Error(`Unable to serialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
+                        }
+                    }
+
+                    return serialized;
+
+                },
+
+                up: (serialized: any) => {
+
+                    let serializable: any;
+
+                    if (serialized === null || serialized === undefined) {
+                        serializable = serialized;
+                    } else {
+                        serializable = new this.ctor();
+                        try {
+                            serializers.forEach(serializer => serializer.up(serializable, serialized, options));
+                        } catch (error) {
+                            throw new Error(`Unable to deserialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
+                        }
+                    }
+
+                    return serializable;
+
+                }
+
+            };
+
+        }
+
+    }
+
     /** Aggregate all property serializers: own and inherited */
-    public aggregatePropertySerializers(fallbackToDefaultProjection: boolean): Map<string, PropertySerializer<any, any, unknown>> {
+    private aggregatePropertySerializers(options?: SerializationOptions) {
+
+        let { fallbackToDefaultProjection = true } = options || {};
 
         let serializers = new Map(this.propertySerializers); // clone
 
@@ -182,12 +179,12 @@ export default class MetadataContainer {
 
         if (inheritedMeta) {
             serializers = new Map([
-                ...inheritedMeta.aggregatePropertySerializers(fallbackToDefaultProjection),
+                ...inheritedMeta.aggregatePropertySerializers(options),
                 ...serializers
             ]);
         }
 
-        return serializers;
+        return serializers as ReadonlyMap<string, PropertySerializer<any, any, unknown>>;
 
     }
 

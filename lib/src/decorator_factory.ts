@@ -19,19 +19,21 @@ export default function DecoratorFactory<TSerialized, TOriginal>(
 
         MetadataManager.get(backend, projection)
             .getOrCreateMetaFor(proto)
-            .addPropertySerializer(propertySerializer);
+            .addOwnPropertySerializer(propertySerializer);
 
     }
 
     function decorateType(ctor: Constructor<TOriginal>, options: DecoratorOptions<TSerialized, TOriginal>) {
 
-        const customTypeSerializerProvider = () => options as TypeSerializer<TSerialized, TOriginal>;
+        const customTypeSerializerProvider = () => {
+            return { type: ctor, ...options } as TypeSerializer<TSerialized, TOriginal>;
+        };
 
         const proto = ctor.prototype;
 
         MetadataManager.get(backend, projection)
             .getOrCreateMetaFor(proto)
-            .setTypeSerializer(customTypeSerializerProvider);
+            .setOwnTypeSerializer(customTypeSerializerProvider);
 
     }
 

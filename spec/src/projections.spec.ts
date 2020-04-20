@@ -133,7 +133,7 @@ describe('projection options', () => {
 
                 it('applies decorator in default projection', () => {
                     const meta = defaultProjection.getOwnMetaFor(Person.prototype);
-                    expect(meta.getPropertySerializers().size).to.equal(4);
+                    expect(meta.getOwnPropertySerializers().size).to.equal(4);
                     // tslint:disable-next-line: no-unused-expression
                     expect(testProjection.getOwnMetaFor(Person.prototype)).to.not.exist;
                 });
@@ -154,7 +154,7 @@ describe('projection options', () => {
 
                 it('applies decorator in given projection', () => {
                     const meta = testProjection.getOwnMetaFor(Person.prototype);
-                    expect(meta.getPropertySerializers().size).to.equal(2);
+                    expect(meta.getOwnPropertySerializers().size).to.equal(2);
                     // tslint:disable-next-line: no-unused-expression
                     expect(defaultProjection.getOwnMetaFor(Person.prototype)).to.not.exist;
                 });

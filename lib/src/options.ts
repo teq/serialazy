@@ -18,12 +18,12 @@ export interface SerializationOptions {
     fallbackToDefaultProjection?: boolean;
 
     /**
-     * Controls which serializer to use: one which comes from a type (class decorator)
-     * or one which built upon property serializers (own and inherited).
-     * Array allows to define a primary and fallback option: [<primary>, <fallback>].
-     * @defaultValue `['type', 'props']`
+     * Controls which serializer takes precedence:
+     * - One which comes from a type (class decorator). It is the **default** behavior.
+     * - Or one which built upon property serializers (own and inherited).
+     * @defaultValue `false`
      */
-    useSerializerFrom?: 'type' | 'props' | Array<'type' | 'props'>;
+    prioritizePropSerializers?: boolean;
 
 }
 
