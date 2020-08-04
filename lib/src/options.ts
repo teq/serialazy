@@ -34,9 +34,21 @@ export type DecoratorOptions<TSerialized, TOriginal> =
 
 export interface DeflateOptions<TSerialized, TOriginal> extends SerializationOptions {
 
-    /** Overrides the type of serializable */
+    /** Serialize instance as if it were of the given type */
     as?: Constructor<TOriginal>;
 
 }
 
-export interface InflateOptions<TSerialized, TOriginal> extends SerializationOptions {}
+export interface InflateOptions<TSerialized, TOriginal> extends SerializationOptions {
+
+    /**
+     * Deserialize to plain javascript object (POJO)
+     * @defaultValue `false`
+     */
+    toPojo?: boolean;
+
+}
+
+export type DeflateOrInflateOptions<TSerialized, TOriginal> =
+    DeflateOptions<TSerialized, TOriginal> |
+    InflateOptions<TSerialized, TOriginal>;

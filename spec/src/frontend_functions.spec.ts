@@ -53,44 +53,6 @@ describe('frontend functions', () => {
             expect(() => deflate(bar)).to.throw('Unable to serialize an instance of "Bar"');
         });
 
-        describe('when used with "as" option', () => {
-
-            @Serialize({ down: (p: PointType1) => `${p.x},${p.y}` })
-            class PointType1 extends Serializable {
-                public x: number;
-                public y: number;
-            }
-
-            @Serialize({ down: (p: PointType2) => [p.x, p.y] })
-            class PointType2 extends Serializable {
-                public x: number;
-                public y: number;
-            }
-
-            class RectType1 extends Serializable {
-                @Serialize() public center: PointType1;
-                @Serialize() public width: number;
-                @Serialize() public height: number;
-            }
-
-            class RectType2 extends Serializable {
-                @Serialize() public center: PointType2;
-                @Serialize() public width: number;
-                @Serialize() public height: number;
-            }
-
-            it('allows to override a type of serializable', () => {
-                const rect = RectType1.create({
-                    center: PointType1.create({ x: 20, y: 15 }),
-                    width: 6,
-                    height: 3
-                });
-                expect(deflate(rect)).to.deep.equal({ center: '20,15', width: 6, height: 3 });
-                expect(deflate(rect, { as: RectType2 })).to.deep.equal({ center: [20, 15], width: 6, height: 3 });
-            });
-
-        });
-
     });
 
     describe('inflate', () => {
@@ -133,9 +95,6 @@ describe('frontend functions', () => {
 
         it('should fail to deserialize non-primitives which are not serializable', () => {
             expect(() => inflate(Bar, { id: 'bar' })).to.throw('Unable to deserialize an instance of "Bar"');
-        });
-
-        describe('when used with options', () => {
         });
 
     });

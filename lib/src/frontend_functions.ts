@@ -14,11 +14,9 @@ export default function FrontendFunctions(backend: string) {
         let { as: ctor, projection } = options || {};
         projection = projection || DEFAULT_PROJECTION;
 
-        let serialized: TSerialized;
-
         if (serializable === null || serializable === undefined) {
 
-            serialized = serializable as null | undefined;
+            return serializable as null | undefined;
 
         } else {
 
@@ -32,10 +30,8 @@ export default function FrontendFunctions(backend: string) {
                 );
             }
 
-            serialized = down(serializable);
+            return down(serializable);
         }
-
-        return serialized;
 
     }
 

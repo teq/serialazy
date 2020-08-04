@@ -1,4 +1,4 @@
-import { SerializationOptions } from "./options";
+import { DeflateOrInflateOptions } from "./options";
 import PropertySerializer from "./property_serializer";
 import TypeSerializer from "./type_serializer";
 import TypeSerializerPicker from "./type_serializer_picker";
@@ -30,7 +30,7 @@ function ObjectPropertySerializer(backend: string) {
             up
         };
 
-        function getTypeSerializer(options?: SerializationOptions) {
+        function getTypeSerializer(options?: DeflateOrInflateOptions<TSerialized, TOriginal>) {
 
             try {
                 const picker = TypeSerializerPicker<TSerialized, TOriginal>(backend, options);
@@ -43,7 +43,7 @@ function ObjectPropertySerializer(backend: string) {
 
         }
 
-        function down(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: SerializationOptions) {
+        function down(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: DeflateOrInflateOptions<TSerialized, TOriginal>) {
 
             try {
                 const originalValue = (serializable as any)[propertyName];
@@ -58,7 +58,7 @@ function ObjectPropertySerializer(backend: string) {
 
         }
 
-        function up(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: SerializationOptions) {
+        function up(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: DeflateOrInflateOptions<TSerialized, TOriginal>) {
 
             try {
                 const serializedValue = serialized[propertyTag];

@@ -1,5 +1,5 @@
 import { DEFAULT_PROJECTION } from '.';
-import { SerializationOptions } from '../options';
+import { DeflateOrInflateOptions, InflateOptions } from '../options';
 import PropertySerializer from '../property_serializer';
 import Constructor from '../types/constructor';
 import Provider from '../types/provider';
@@ -92,7 +92,7 @@ export default class MetadataContainer {
      * Get own type serializer or build type serializer
      * based on own and inherited property serializers
      */
-    public getTypeSerializer(options?: SerializationOptions): TypeSerializer<any, any> {
+    public getTypeSerializer(options?: DeflateOrInflateOptions<any, any>): TypeSerializer<any, any> {
 
         let { prioritizePropSerializers = false } = options || {};
 
@@ -105,9 +105,10 @@ export default class MetadataContainer {
     }
 
     /** Build type serializer based on own and inherited property serializers */
-    private buildPropertyBagSerializer(options?: SerializationOptions): TypeSerializer<any, any> {
+    private buildPropertyBagSerializer(options?: DeflateOrInflateOptions<any, any>): TypeSerializer<any, any> {
 
         const serializers = this.aggregatePropertySerializers(options);
+        const { toPojo = false } = options as InflateOptions<any, any> || {};
 
         if (serializers.size > 0) {
 
@@ -141,7 +142,7 @@ export default class MetadataContainer {
                     if (serialized === null || serialized === undefined) {
                         serializable = serialized;
                     } else {
-                        serializable = new this.ctor();
+                        serializable = toPojo ? {} : new this.ctor();
                         try {
                             serializers.forEach(serializer => serializer.up(serializable, serialized, options));
                         } catch (error) {
@@ -160,7 +161,7 @@ export default class MetadataContainer {
     }
 
     /** Aggregate all property serializers: own and inherited */
-    private aggregatePropertySerializers(options?: SerializationOptions) {
+    private aggregatePropertySerializers(options?: DeflateOrInflateOptions<any, any>) {
 
         let { fallbackToDefaultProjection = true } = options || {};
 
