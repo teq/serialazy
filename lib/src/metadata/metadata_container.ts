@@ -3,6 +3,7 @@ import { DeflateOrInflateOptions, InflateOptions } from '../options';
 import PropertySerializer from '../property_serializer';
 import Constructor from '../types/constructor';
 import Provider from '../types/provider';
+import Util from '../types/util';
 import TypeSerializer from '../type_serializer';
 import MetadataManager from './metadata_manager';
 
@@ -118,39 +119,43 @@ export default class MetadataContainer {
 
                 down: (serializable: any) => {
 
-                    let serialized: {};
-
                     if (serializable === null || serializable === undefined) {
-                        serialized = serializable;
-                    } else {
-                        serialized = {};
-                        try {
-                            serializers.forEach(serializer => serializer.down(serializable, serialized, options));
-                        } catch (error) {
-                            throw new Error(`Unable to serialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
-                        }
+                        return serializable;
                     }
 
-                    return serialized;
+                    const serialized = {};
+
+                    try {
+                        const results = Array.from(serializers.values()).map(serializer => serializer.down(serializable, serialized, options));
+                        if (results.some(result => Util.isPromise(result))) {
+                            return (() => Promise.all(results).then(() => serialized))();
+                        } else {
+                            return serialized;
+                        }
+                    } catch (error) {
+                        throw new Error(`Unable to serialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
+                    }
 
                 },
 
                 up: (serialized: any) => {
 
-                    let serializable: any;
-
                     if (serialized === null || serialized === undefined) {
-                        serializable = serialized;
-                    } else {
-                        serializable = toPojo ? {} : new this.ctor();
-                        try {
-                            serializers.forEach(serializer => serializer.up(serializable, serialized, options));
-                        } catch (error) {
-                            throw new Error(`Unable to deserialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
-                        }
+                        return serialized;
                     }
 
-                    return serializable;
+                    const serializable: any = toPojo ? {} : new this.ctor();
+
+                    try {
+                        const results = Array.from(serializers.values()).map(serializer => serializer.up(serializable, serialized, options));
+                        if (results.some(result => Util.isPromise(result))) {
+                            return (() => Promise.all(results).then(() => serializable))();
+                        } else {
+                            return serializable;
+                        }
+                    } catch (error) {
+                        throw new Error(`Unable to deserialize an instance of "${this.name}" in projection: "${this.projection}": ${error.message}`);
+                    }
 
                 }
 

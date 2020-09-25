@@ -12,12 +12,6 @@ export default function TypeSerializerPicker<TSerialized, TOriginal>(
     let { projection, fallbackToDefaultProjection = true } = options || {};
     projection = projection || DEFAULT_PROJECTION;
 
-    return {
-        pickForType,
-        pickForProp,
-        pickForValue
-    };
-
     /** Try to pick a (possibly partial) type serializer for given type */
     function pickForType(ctor: Constructor<TOriginal>): TypeSerializer<TSerialized, TOriginal> {
 
@@ -63,8 +57,14 @@ export default function TypeSerializerPicker<TSerialized, TOriginal>(
 
     }
 
-    function isBuiltInType(ctor: Constructor<unknown>) {
-        return ([Boolean, Number, String] as Array<Constructor<unknown>>).includes(ctor);
-    }
+    return {
+        pickForType,
+        pickForProp,
+        pickForValue
+    };
 
+}
+
+function isBuiltInType(ctor: Constructor<unknown>) {
+    return ([Boolean, Number, String] as Array<Constructor<unknown>>).includes(ctor);
 }

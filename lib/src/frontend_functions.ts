@@ -9,7 +9,7 @@ export default function FrontendFunctions(backend: string) {
     function deflate<TSerialized, TOriginal>(
         serializable: TOriginal,
         options?: DeflateOptions<TSerialized, TOriginal>
-    ): TSerialized {
+    ): TSerialized | Promise<TSerialized> {
 
         let { as: ctor, projection } = options || {};
         projection = projection || DEFAULT_PROJECTION;
@@ -40,7 +40,7 @@ export default function FrontendFunctions(backend: string) {
         ctor: Constructor<TOriginal>,
         serialized: TSerialized,
         options?: InflateOptions<TSerialized, TOriginal>
-    ): TOriginal {
+    ): TOriginal | Promise<TOriginal> {
 
         let { projection } = options || {};
         projection = projection || DEFAULT_PROJECTION;

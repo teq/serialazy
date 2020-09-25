@@ -1,3 +1,4 @@
+* Async serialization/deserialization (`deflate.resolve` and `inflate.resolve`)
 * Serialization/deserialization to/from a POJO (`as` and `toPojo` options)
 * Support projections (`projection` and `fallbackToDefaultProjection` options)
 * Added optional `as` parameter to DeflateOptions. It allows to override a type of serializable

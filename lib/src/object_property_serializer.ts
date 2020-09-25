@@ -1,5 +1,6 @@
 import { DeflateOrInflateOptions } from "./options";
 import PropertySerializer from "./property_serializer";
+import Util from './types/util';
 import TypeSerializer from "./type_serializer";
 import TypeSerializerPicker from "./type_serializer_picker";
 
@@ -23,13 +24,6 @@ function ObjectPropertySerializer(backend: string) {
         let { name: propertyTag, optional, nullable } = options || {};
         propertyTag = propertyTag || propertyName;
 
-        return {
-            propertyName,
-            propertyTag,
-            down,
-            up
-        };
-
         function getTypeSerializer(options?: DeflateOrInflateOptions<TSerialized, TOriginal>) {
 
             try {
@@ -43,13 +37,25 @@ function ObjectPropertySerializer(backend: string) {
 
         }
 
-        function down(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: DeflateOrInflateOptions<TSerialized, TOriginal>) {
+        function down(
+            serializable: TOriginal,
+            serialized: PropertyBag<TSerialized>,
+            options?: DeflateOrInflateOptions<TSerialized, TOriginal>
+        ): void | Promise<void> {
+
+            const putProperty = (value: TSerialized) => {
+                if (value !== undefined) {
+                    serialized[propertyTag] = value;
+                }
+            };
 
             try {
                 const originalValue = (serializable as any)[propertyName];
                 const serializedValue = getTypeSerializer(options).down(validate(originalValue));
-                if (serializedValue !== undefined) {
-                    serialized[propertyTag] = serializedValue;
+                if (Util.isPromise(serializedValue)) {
+                    return (async () => putProperty(await serializedValue))();
+                } else {
+                    putProperty(serializedValue as TSerialized);
                 }
             } catch (error) {
                 const message = formatError(`Unable to serialize property "${propertyName}"`);
@@ -58,13 +64,26 @@ function ObjectPropertySerializer(backend: string) {
 
         }
 
-        function up(serializable: TOriginal, serialized: PropertyBag<TSerialized>, options?: DeflateOrInflateOptions<TSerialized, TOriginal>) {
+        function up(
+            serializable: TOriginal,
+            serialized: PropertyBag<TSerialized>,
+            options?: DeflateOrInflateOptions<TSerialized, TOriginal>
+        ): void | Promise<void> {
+
+            const putProperty = (value: TOriginal) => {
+                value = validate(value);
+                if (value !== undefined) {
+                    (serializable as any)[propertyName] = value;
+                }
+            };
 
             try {
                 const serializedValue = serialized[propertyTag];
-                const originalValue = validate(getTypeSerializer(options).up(serializedValue));
-                if (originalValue !== undefined) {
-                    (serializable as any)[propertyName] = originalValue;
+                const originalValue = getTypeSerializer(options).up(serializedValue);
+                if (Util.isPromise(originalValue)) {
+                    return (async () => putProperty(await originalValue))();
+                } else {
+                    putProperty(originalValue as TOriginal);
                 }
             } catch (error) {
                 const message = formatError(`Unable to deserialize property "${propertyName}"`);
@@ -77,7 +96,7 @@ function ObjectPropertySerializer(backend: string) {
             return propertyName !== propertyTag ? `${message} (mapped to "${propertyTag}")` : message;
         }
 
-        function validate(value: any) {
+        function validate<T>(value: T): T {
 
             if (!optional && value === undefined) {
                 const hint = (typeof(optional) !== 'boolean') ? 'Hint: make it optional' : null;
@@ -92,6 +111,13 @@ function ObjectPropertySerializer(backend: string) {
             return value;
 
         }
+
+        return {
+            propertyName,
+            propertyTag,
+            down,
+            up
+        };
 
     }
 

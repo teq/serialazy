@@ -8,14 +8,14 @@ interface TypeSerializer<TSerialized, TOriginal> {
      * @param original Original value
      * @returns Serialized value
      */
-    down?(original: TOriginal): TSerialized;
+    down?(original: TOriginal): TSerialized | Promise<TSerialized>;
 
     /**
      * Deserializer function
      * @param serialized Serialized value
      * @returns Original value
      */
-    up?(serialized: TSerialized): TOriginal;
+    up?(serialized: TSerialized): TOriginal | Promise<TOriginal>;
 
     /**
      * Type of serializable
@@ -45,7 +45,7 @@ namespace TypeSerializer {
             type: undefined
         }, ...partials) as TypeSerializer<TSerialized, TOriginal>;
 
-        const typeName = type?.name ? type.name : '<unknown>';
+        const typeName = type?.name || '<unknown>';
 
         return { down, up, type };
 

@@ -37,6 +37,11 @@ namespace Util {
         }
     }
 
+    /** Check if target is a promise */
+    export function isPromise<T = unknown>(target: unknown): target is Promise<T> {
+        return Promise.resolve(target) === target;
+    }
+
 }
 
 export default Util;
