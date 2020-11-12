@@ -8,10 +8,9 @@ import {
     inflate,
     JsonType,
     MetadataManager,
+    Serializable,
     Serialize
 } from 'serialazy';
-
-import Serializable from './serializable';
 
 const { expect } = chai;
 

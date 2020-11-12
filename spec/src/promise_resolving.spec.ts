@@ -1,9 +1,7 @@
 import chai = require('chai');
 import { resolve } from 'dns';
 
-import { deflate, inflate, Serialize, Util } from 'serialazy';
-
-import Serializable from './serializable';
+import { deflate, inflate, Serializable, Serialize, Util } from 'serialazy';
 
 const { expect } = chai;
 
