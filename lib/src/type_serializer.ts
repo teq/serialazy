@@ -1,3 +1,4 @@
+import { DeflateOptions, InflateOptions } from './options';
 import Constructor from './types/constructor';
 
 /** Represents a generic type serializer */
@@ -6,16 +7,24 @@ interface TypeSerializer<TSerialized, TOriginal> {
     /**
      * Serializer function
      * @param original Original value
+     * @param options Options passed to `deflate` function
      * @returns Serialized value
      */
-    down?(original: TOriginal): TSerialized | Promise<TSerialized>;
+    down?(
+        original: TOriginal,
+        options: DeflateOptions<TSerialized, TOriginal>
+    ): TSerialized | Promise<TSerialized>;
 
     /**
      * Deserializer function
      * @param serialized Serialized value
+     * @param options Options passed to `inflate` function
      * @returns Original value
      */
-    up?(serialized: TSerialized): TOriginal | Promise<TOriginal>;
+    up?(
+        serialized: TSerialized,
+        options: InflateOptions<TSerialized, TOriginal>
+    ): TOriginal | Promise<TOriginal>;
 
     /**
      * Type of serializable

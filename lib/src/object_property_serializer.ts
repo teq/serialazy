@@ -1,4 +1,4 @@
-import { DeflateOrInflateOptions } from "./options";
+import { DeflateOptions, DeflateOrInflateOptions, InflateOptions } from "./options";
 import PropertySerializer from "./property_serializer";
 import Util from './types/util';
 import TypeSerializer from "./type_serializer";
@@ -40,7 +40,7 @@ function ObjectPropertySerializer(backend: string) {
         function down(
             serializable: TOriginal,
             serialized: PropertyBag<TSerialized>,
-            options?: DeflateOrInflateOptions<TSerialized, TOriginal>
+            options?: DeflateOptions<TSerialized, TOriginal>
         ): void | Promise<void> {
 
             const putProperty = (value: TSerialized) => {
@@ -51,7 +51,7 @@ function ObjectPropertySerializer(backend: string) {
 
             try {
                 const originalValue = (serializable as any)[propertyName];
-                const serializedValue = getTypeSerializer(options).down(validate(originalValue));
+                const serializedValue = getTypeSerializer(options).down(validate(originalValue), options);
                 if (Util.isPromise(serializedValue)) {
                     return (async () => putProperty(await serializedValue))();
                 } else {
@@ -67,7 +67,7 @@ function ObjectPropertySerializer(backend: string) {
         function up(
             serializable: TOriginal,
             serialized: PropertyBag<TSerialized>,
-            options?: DeflateOrInflateOptions<TSerialized, TOriginal>
+            options?: InflateOptions<TSerialized, TOriginal>
         ): void | Promise<void> {
 
             const putProperty = (value: TOriginal) => {
@@ -79,7 +79,7 @@ function ObjectPropertySerializer(backend: string) {
 
             try {
                 const serializedValue = serialized[propertyTag];
-                const originalValue = getTypeSerializer(options).up(serializedValue);
+                const originalValue = getTypeSerializer(options).up(serializedValue, options);
                 if (Util.isPromise(originalValue)) {
                     return (async () => putProperty(await originalValue))();
                 } else {

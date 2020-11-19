@@ -6,9 +6,16 @@ const { expect } = chai;
 
 describe('serialization/deserialization to/from a POJO ("as" and "toPojo" options)', () => {
 
+    @Serialize({
+        down: (coord: Coord) => [coord.x, coord.y],
+        up: (tuple: number[], { toPojo }) => Object.assign(
+            toPojo ? {} : new Coord(),
+            { x: tuple[0], y: tuple[1] }
+        )
+    })
     class Coord extends Serializable {
-        @Serialize() public x: number;
-        @Serialize() public y: number;
+        public x: number;
+        public y: number;
     }
 
     class Descriptor extends Serializable {
@@ -33,8 +40,8 @@ describe('serialization/deserialization to/from a POJO ("as" and "toPojo" option
 
     const vecObj = {
         dsc: { id: 123, name: 'vec1' },
-        pos: { x: -10, y: -5 },
-        dir: { x: 3, y: 7 }
+        pos: [-10, -5],
+        dir: [3, 7]
     };
 
     it('is able to serialize POJO as if it were of type specified by "as" option', () => {
@@ -46,7 +53,7 @@ describe('serialization/deserialization to/from a POJO ("as" and "toPojo" option
         const pojo = inflate(Vector, vecObj, { toPojo: true });
         expect(pojo).to.deep.equal(vecPojo);
         [pojo, pojo.descriptor, pojo.direction, pojo.position].forEach(arg => {
-            expect(Object.getPrototypeOf(arg)).to.equal(Object.prototype);
+            expect(arg.constructor).to.equal(Object);
         });
     });
 

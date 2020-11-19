@@ -1,4 +1,4 @@
-import { DeflateOrInflateOptions } from "./options";
+import { DeflateOptions, InflateOptions } from "./options";
 
 /** Reporesents a generic property serializer */
 interface PropertySerializer<TSerialized, TOriginal, TTag> {
@@ -13,14 +13,14 @@ interface PropertySerializer<TSerialized, TOriginal, TTag> {
     down(
         serializable: TOriginal,
         serialized: TSerialized,
-        options?: DeflateOrInflateOptions<TSerialized, TOriginal>
+        options?: DeflateOptions<TSerialized, TOriginal>
     ): void | Promise<void>;
 
     /** Deserializes target property from `serialized` and writes value to `serializable` */
     up(
         serializable: TOriginal,
         serialized: TSerialized,
-        options?: DeflateOrInflateOptions<TSerialized, TOriginal>
+        options?: InflateOptions<TSerialized, TOriginal>
     ): void | Promise<void>;
 
 }

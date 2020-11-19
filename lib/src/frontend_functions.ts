@@ -30,7 +30,7 @@ export default function FrontendFunctions(backend: string) {
                 );
             }
 
-            return down(serializable);
+            return down(serializable, options);
         }
 
     }
@@ -59,7 +59,7 @@ export default function FrontendFunctions(backend: string) {
             );
         }
 
-        return up(serialized);
+        return up(serialized, options);
 
     }
 
