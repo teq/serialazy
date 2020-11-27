@@ -1,0 +1,55 @@
+.markdown {
+
+  @apply leading-relaxed;
+
+  p, ul, ol, blockquote, pre {
+    @apply my-6;
+  }
+
+  blockquote {
+    @apply border-l-4 border-gray-300 text-gray-700 pl-4;
+  }
+
+  li {
+    @apply list-disc list-inside;
+  }
+
+  pre {
+    @apply p-4;
+  }
+
+  code {
+    @apply text-sm;
+  }
+
+  :not(pre) code {
+    @apply py-05 px-2 bg-gray-300 rounded border-b border-r border-gray-400;
+  }
+
+  h1, h2, h3 {
+
+    @apply mb-4 leading-snug border-b;
+
+    :global(.icon-link) {
+      @apply inline-block align-baseline bg-contain bg-no-repeat w-6 h-4 -ml-6;
+    }
+
+    &:hover :global(.icon-link) {
+      background-image: url("/assets/icons/link.svg");
+    }
+
+  }
+
+  h1 {
+    @apply text-4xl mt-12;
+  }
+
+  h2 {
+    @apply text-3xl mt-10;
+  }
+
+  h3 {
+    @apply text-2xl mt-8;
+  }
+
+}

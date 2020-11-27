@@ -1,0 +1,22 @@
+
+.contents {
+
+    @apply leading-loose font-light;
+
+    a {
+        @apply no-underline;
+    }
+
+    &.inline {
+
+        ul, li {
+            display: inline;
+        }
+
+        li:not(:last-child):after {
+            content: " • ";
+        }
+
+    }
+
+}

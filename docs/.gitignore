@@ -1,0 +1,6 @@
+/out
+/build
+/node_modules
+/.pnp
+/.next/
+.pnp.js

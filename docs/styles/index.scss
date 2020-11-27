@@ -1,0 +1,19 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+body {
+  @apply overflow-y-scroll;
+}
+
+a {
+
+  @apply underline duration-200 transition-colors;
+
+  &:hover {
+    @apply text-success;
+  }
+
+}

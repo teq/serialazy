@@ -1,3 +1,7 @@
+---
+title: Changelog
+---
+
 * Pass `inflate` / `deflate` options to `up` / `down` functions
 * Add `Serializable`, an abstract base class for serializables
 * Async serialization/deserialization (`deflate.resolve` and `inflate.resolve`)
