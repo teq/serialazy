@@ -6,7 +6,7 @@ import Constructor from "../types/constructor";
 import Util from '../types/util';
 import JsonType from "./json_type";
 
-export const BACKEND_NAME = 'json';
+const BACKEND_NAME = 'json';
 
 /**
  * Define serializer for given property or type

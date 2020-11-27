@@ -63,7 +63,7 @@ v1.2.2
 v1.2.1
 ------
 
-* Added JSON types export
+* Export JSON types
 
 v1.2.0
 ------

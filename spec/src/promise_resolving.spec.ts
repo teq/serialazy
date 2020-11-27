@@ -1,13 +1,16 @@
 import chai = require('chai');
-import { resolve } from 'dns';
 
-import { deflate, inflate, Serializable, Serialize, Util } from 'serialazy';
+import { deflate, inflate, Serializable, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
 function randDefer<T>(value: T): Promise<T> {
     const pause = Math.random() * 100;
     return new Promise((resolve) => setTimeout(() => resolve(value), pause));
+}
+
+function isPromise<T = unknown>(target: unknown): target is Promise<T> {
+    return Promise.resolve(target) === target;
 }
 
 describe('promise resolving', () => {
@@ -69,11 +72,11 @@ describe('promise resolving', () => {
 
             it('should return a promise', async () => {
                 const serialazedPromise = deflate.resolve(pos);
-                expect(Util.isPromise(serialazedPromise)).to.equal(true);
+                expect(isPromise(serialazedPromise)).to.equal(true);
                 const serialized = await serialazedPromise;
                 expect(serialized).to.equal(posSerialized);
                 const deserializedPromise = inflate.resolve(Position, serialized);
-                expect(Util.isPromise(deserializedPromise)).to.equal(true);
+                expect(isPromise(deserializedPromise)).to.equal(true);
                 const deserialized = await deserializedPromise;
                 expect(deserialized).to.deep.equal(pos);
             });
@@ -84,10 +87,10 @@ describe('promise resolving', () => {
 
             it('should return a non-promise value', () => {
                 const serialized = deflate(pos) as any;
-                expect(Util.isPromise(serialized)).to.equal(false);
+                expect(isPromise(serialized)).to.equal(false);
                 expect(serialized).to.equal(posSerialized);
                 const deserialized = inflate(Position, serialized);
-                expect(Util.isPromise(deserialized)).to.equal(false);
+                expect(isPromise(deserialized)).to.equal(false);
                 expect(deserialized).to.deep.equal(pos);
             });
 
@@ -104,11 +107,11 @@ describe('promise resolving', () => {
 
             it('should return a promise', async () => {
                 const serialazedPromise = deflate.resolve(pos);
-                expect(Util.isPromise(serialazedPromise)).to.equal(true);
+                expect(isPromise(serialazedPromise)).to.equal(true);
                 const serialized = await serialazedPromise;
                 expect(serialized).to.equal(posSerialized);
                 const deserializedPromise = inflate.resolve(PositionAsync, serialized);
-                expect(Util.isPromise(deserializedPromise)).to.equal(true);
+                expect(isPromise(deserializedPromise)).to.equal(true);
                 const deserialized = await deserializedPromise;
                 expect(deserialized).to.deep.equal(pos);
             });
@@ -141,11 +144,11 @@ describe('promise resolving', () => {
 
             it('should return a promise', async () => {
                 const serialazedPromise = deflate.resolve(part);
-                expect(Util.isPromise(serialazedPromise)).to.equal(true);
+                expect(isPromise(serialazedPromise)).to.equal(true);
                 const serialized = await serialazedPromise;
                 expect(serialized).to.deep.equal(partSerialized);
                 const deserializedPromise = inflate.resolve(Particle, serialized);
-                expect(Util.isPromise(deserializedPromise)).to.equal(true);
+                expect(isPromise(deserializedPromise)).to.equal(true);
                 const deserialized = await deserializedPromise;
                 expect(deserialized).to.deep.equal(part);
             });
@@ -156,10 +159,10 @@ describe('promise resolving', () => {
 
             it('should return a non-promise value', () => {
                 const serialized = deflate(part) as any;
-                expect(Util.isPromise(serialized)).to.equal(false);
+                expect(isPromise(serialized)).to.equal(false);
                 expect(serialized).to.deep.equal(partSerialized);
                 const deserialized = inflate(Particle, serialized);
-                expect(Util.isPromise(deserialized)).to.equal(false);
+                expect(isPromise(deserialized)).to.equal(false);
                 expect(deserialized).to.deep.equal(part);
             });
 
@@ -182,11 +185,11 @@ describe('promise resolving', () => {
 
             it('should return a promise', async () => {
                 const serialazedPromise = deflate.resolve(part);
-                expect(Util.isPromise(serialazedPromise)).to.equal(true);
+                expect(isPromise(serialazedPromise)).to.equal(true);
                 const serialized = await serialazedPromise;
                 expect(serialized).to.deep.equal(partSerialized);
                 const deserializedPromise = inflate.resolve(ParticleAsync, serialized);
-                expect(Util.isPromise(deserializedPromise)).to.equal(true);
+                expect(isPromise(deserializedPromise)).to.equal(true);
                 const deserialized = await deserializedPromise;
                 expect(deserialized).to.deep.equal(part);
             });

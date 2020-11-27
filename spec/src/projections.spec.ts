@@ -1,25 +1,16 @@
 import chai = require('chai');
 
-import {
-    BACKEND_NAME,
-    Constructor,
-    DEFAULT_PROJECTION,
-    deflate,
-    inflate,
-    JsonType,
-    MetadataManager,
-    Serializable,
-    Serialize
-} from 'serialazy';
+import { deflate, inflate, JsonType, Serializable, Serialize } from 'serialazy';
 
 const { expect } = chai;
 
+type Constructor<T> = new () => T;
+
 describe('projection options', () => {
 
-    describe('when applied to decorator', () => {
+    const TEST_PROJECTION = 'test';
 
-        const defaultProjection = MetadataManager.get(BACKEND_NAME, DEFAULT_PROJECTION);
-        const testProjection = MetadataManager.get(BACKEND_NAME, 'test');
+    describe('when applied to decorator', () => {
 
         describe('on a type', () => {
 
@@ -27,27 +18,23 @@ describe('projection options', () => {
                 name: string;
             }
 
-            const typeSerializer = {
-                down: (named: Named) => named.name
-            };
-
             function itAppliesInDefaultProjection(ctor: Constructor<Named>) {
 
                 it('applies decorator in default projection', () => {
-                    const { down } = defaultProjection.getOwnMetaFor(ctor.prototype).getTypeSerializer({
-                        projection: DEFAULT_PROJECTION,
+                    const serializable = Object.assign(new ctor(), { name: 'joe' });
+                    expect(() => deflate(serializable, {
+                        projection: TEST_PROJECTION,
                         fallbackToDefaultProjection: false
-                    });
-                    expect(down).to.equal(typeSerializer.down);
-                    // tslint:disable-next-line: no-unused-expression
-                    expect(testProjection.getOwnMetaFor(ctor.prototype)).to.not.exist;
+                    })).to.throw();
+                    const serialized = deflate(serializable);
+                    expect(serialized).to.equal('joe');
                 });
 
             }
 
             describe('when projection is undefined', () => {
 
-                @Serialize(typeSerializer)
+                @Serialize({ down: (named: Named) => named.name })
                 class Person implements Named {
                     public name: string;
                 }
@@ -58,7 +45,7 @@ describe('projection options', () => {
 
             describe('when projection is set to undefined', () => {
 
-                @Serialize({ projection: undefined, ...typeSerializer })
+                @Serialize({ projection: undefined, down: (named: Named) => named.name })
                 class Person implements Named {
                     public name: string;
                 }
@@ -69,7 +56,7 @@ describe('projection options', () => {
 
             describe('when projection is set to null', () => {
 
-                @Serialize({ projection: null, ...typeSerializer })
+                @Serialize({ projection: null, down: (named: Named) => named.name })
                 class Person implements Named {
                     public name: string;
                 }
@@ -80,7 +67,7 @@ describe('projection options', () => {
 
             describe('when projection is set to empty string', () => {
 
-                @Serialize({ projection: '', ...typeSerializer })
+                @Serialize({ projection: '', down: (named: Named) => named.name })
                 class Person implements Named {
                     public name: string;
                 }
@@ -91,19 +78,16 @@ describe('projection options', () => {
 
             describe('when projection is a non-empty string', () => {
 
-                @Serialize({ projection: 'test', ...typeSerializer })
+                @Serialize({ projection: 'test', down: (named: Named) => named.name })
                 class Person implements Named {
                     public name: string;
                 }
 
                 it('applies decorator in given projection', () => {
-                    const { down } = testProjection.getOwnMetaFor(Person.prototype).getTypeSerializer({
-                        projection: DEFAULT_PROJECTION,
-                        fallbackToDefaultProjection: false
-                    });
-                    expect(down).to.equal(typeSerializer.down);
-                    // tslint:disable-next-line: no-unused-expression
-                    expect(defaultProjection.getOwnMetaFor(Person.prototype)).to.not.exist;
+                    const serializable = Object.assign(new Person(), { name: 'joe' });
+                    expect(() => deflate(serializable)).to.throw();
+                    const serialized = deflate(serializable, { projection: TEST_PROJECTION });
+                    expect(serialized).to.equal('joe');
                 });
 
             });
@@ -114,7 +98,7 @@ describe('projection options', () => {
 
             describe('when projection is undefined/null or empty string', () => {
 
-                class Person {
+                class Person extends Serializable {
 
                     @Serialize()
                     public id: number;
@@ -131,31 +115,38 @@ describe('projection options', () => {
                 }
 
                 it('applies decorator in default projection', () => {
-                    const meta = defaultProjection.getOwnMetaFor(Person.prototype);
-                    expect(meta.getOwnPropertySerializers().size).to.equal(4);
-                    // tslint:disable-next-line: no-unused-expression
-                    expect(testProjection.getOwnMetaFor(Person.prototype)).to.not.exist;
+                    const person = Person.create({
+                        id: 1, name: 'joe', address: 'unknown', email: 'joe@example.com'
+                    });
+                    expect(() => deflate(person, {
+                        projection: TEST_PROJECTION,
+                        fallbackToDefaultProjection: false
+                    })).to.throw();
+                    const serialized = deflate(person);
+                    expect(serialized).to.deep.equal({
+                        id: 1, name: 'joe', address: 'unknown', email: 'joe@example.com'
+                    });
                 });
 
             });
 
             describe('when projection is a non-empty string', () => {
 
-                class Person {
+                class Person extends Serializable {
 
-                    @Serialize({ projection: 'test' })
+                    @Serialize({ projection: TEST_PROJECTION })
                     public id: number;
 
-                    @Serialize({ projection: 'test' })
+                    @Serialize({ projection: TEST_PROJECTION })
                     public name: string;
 
                 }
 
                 it('applies decorator in given projection', () => {
-                    const meta = testProjection.getOwnMetaFor(Person.prototype);
-                    expect(meta.getOwnPropertySerializers().size).to.equal(2);
-                    // tslint:disable-next-line: no-unused-expression
-                    expect(defaultProjection.getOwnMetaFor(Person.prototype)).to.not.exist;
+                    const person = Person.create({ id: 1, name: 'joe' });
+                    expect(() => deflate(person)).to.throw();
+                    const serialized = deflate(person, { projection: TEST_PROJECTION });
+                    expect(serialized).to.deep.equal({ id: 1, name: 'joe' });
                 });
 
             });
@@ -164,7 +155,7 @@ describe('projection options', () => {
 
     });
 
-    describe('when applied to serialize/deserialize functions', () => {
+    describe('when applied to serialization functions', () => {
 
         @Serialize({
             down: (ts: Timestamp) => ts.date.toISOString(),
