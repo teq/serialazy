@@ -1,7 +1,7 @@
 {
   "name": "serialazy",
   "version": "3.0.0",
-  "description": "A TypeScript class serialization / data-mapping library",
+  "description": "TypeScript class serialization / data-mapping library",
   "keywords": [
     "serialize",
     "deserialize",

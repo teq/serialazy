@@ -9,7 +9,8 @@ It might be useful when data should be presented in different formats when passe
 
 By default all serializers are defined and serialization / deserialization is done in projection called `"default"`.
 
-Alternative serialisers can be defined using [`"projection"`](/options#projection) option:
+Serializers for alternative projections can be defined using `@Serialize()` decorator
+with [`"projection"`](/options#projection-decorator-option) option:
 
 ```ts
 import { deflate, inflate, Serialize } from 'serialazy';
@@ -27,7 +28,8 @@ class Position {
 }
 ```
 
-and later serialize / deserialize it in default or alternative projection:
+and later serialized / deserialized using `deflate` / `inflate`
+in required [`"projection"`](/options#projection-serialization-option):
 
 ```ts
 const pos = Object.assign(new Position(), { x: 1, y: 2 });

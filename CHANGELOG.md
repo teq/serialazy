@@ -2,6 +2,8 @@
 title: Changelog
 ---
 
+# Changelog
+
 v3.0.0
 ------
 
