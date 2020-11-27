@@ -4,7 +4,7 @@ title: Getting Started
 
 # Getting Started
 
-**serialazy** is a serialization / data-mapping library
+**Serialazy** is a serialization / data-mapping library
 which can be used to deflate/inflate TypeScript class instances as well as plain objects ([POJO](/pojo)).
 
 Features:
