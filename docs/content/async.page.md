@@ -17,7 +17,7 @@ import { getUserFieldsById } from './db';
 
 @Serialize({
     down: (user: User) => user.id,
-    up: (id: string) => Object.assign(new User(), getUserFieldsById(id))
+    up: async (id: string) => Object.assign(new User(), await getUserFieldsById(id))
 })
 class User {
     public id: string;

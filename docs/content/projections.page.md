@@ -65,7 +65,7 @@ expect(deflate(user)).to.deep.equal({
 expect(deflate(user, { projection: 'api' })).to.deep.equal("<unique_id>");
 ```
 
-## Fallback option
+## Fallback to "default" projection
 
 `"default"` projection has a special role. It is used as a fallback if type is not serializable in given projection.
 This behaviour can be disabled by setting [`"fallbackToDefaultProjection"`](/options#fallbacktodefaultprojection) to `false`
