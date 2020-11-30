@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next",
-    "build": "next build && next export",
+    "build": "rm -rf .next && rm -rf out/* && next build && next export",
     "start": "next start"
   },
   "dependencies": {

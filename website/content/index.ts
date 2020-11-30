@@ -39,7 +39,7 @@ export async function getPageContent(slug: string) {
   return {
     slug,
     frontmatter,
-    githubLink: `${repositoryUrl}/tree/master/docs/${relPath}`,
+    githubLink: `${repositoryUrl}/tree/main/website/${relPath}`,
     markdown: renderedMarkdown.toString()
   };
 

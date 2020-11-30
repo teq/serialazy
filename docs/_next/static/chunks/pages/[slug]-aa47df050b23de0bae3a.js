@@ -1,1 +1,0 @@
-_N_E=(window.webpackJsonp_N_E=window.webpackJsonp_N_E||[]).push([[5],{WD4f:function(_,n,w){(window.__NEXT_P=window.__NEXT_P||[]).push(["/[slug]",function(){return w("eL0V")}])}},[["WD4f",0,2,1,3]]]);
