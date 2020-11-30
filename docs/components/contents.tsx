@@ -2,7 +2,7 @@ import cn from 'classnames';
 import Link from 'next/link';
 
 import { ActiveLink } from '../components/active-link';
-import { SITE_TITLE } from  '../components/meta';
+import { packageName, packageVersion } from '../package-info';
 
 import styles from './contents.module.scss';
 
@@ -18,8 +18,8 @@ export function Contents({ inline }: Props) {
 
       <Link href="/"><a>
         <h1 className="relative text-3xl mb-4">
-          { SITE_TITLE }
-          <small className="absolute bottom-0 text-xs">3.0.0</small>
+          { packageName }
+          <small className="absolute bottom-0 text-xs">{ packageVersion }</small>
         </h1>
       </a></Link>
 

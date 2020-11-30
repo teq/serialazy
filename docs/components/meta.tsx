@@ -1,7 +1,6 @@
 import Head from 'next/head';
 
-export const SITE_TITLE = 'serialazy';
-export const SITE_DESCRIPTION = "TypeScript class serialization / data-mapping library";
+import { packageDescription, packageName } from '../package-info';
 
 type Props = {
   subtitle?: string
@@ -9,7 +8,7 @@ type Props = {
 
 export function Meta({ subtitle }: Props) {
 
-  let title = subtitle ? `${SITE_TITLE} - ${subtitle}` : SITE_TITLE;
+  let title = subtitle ? `${packageName} - ${subtitle}` : packageName;
 
   return (
     <Head>
@@ -18,17 +17,17 @@ export function Meta({ subtitle }: Props) {
 
       <link rel="icon" href="/assets/icons/favicon.ico" />
       <meta name="author" content="Andrey Tselishchev"></meta>
-      <meta name="description" content={SITE_DESCRIPTION} />
+      <meta name="description" content={packageDescription} />
 
       <meta property="og:title" content={title} />
       <meta property="og:type" content="website" />
       {/* <meta property="og:image" content="" /> */}
-      <meta property="og:description" content={SITE_DESCRIPTION} />
-      <meta property="og:site_name" content={SITE_TITLE} />
+      <meta property="og:description" content={packageDescription} />
+      <meta property="og:site_name" content={packageName} />
 
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={SITE_DESCRIPTION} />
+      <meta name="twitter:description" content={packageDescription} />
       {/* <meta name="twitter:image" content="" /> */}
       <meta name="twitter:creator" content="@teqbwt" />
 

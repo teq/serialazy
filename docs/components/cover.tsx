@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import Link from 'next/link';
 
+import { packageDescription, packageName, packageVersion } from '../package-info';
 import { ExternalLink } from './external-link';
-import { SITE_DESCRIPTION, SITE_TITLE } from  './meta';
 
 import styles from './cover.module.scss';
 
@@ -12,11 +12,11 @@ export function Cover() {
     <div className="min-h-screen min-w-full flex items-center bg-gradient-to-bl from-cover1 to-cover2">
       <div className="flex-1 text-center font-light">
         <h1 className="relative text-6xl my-8">
-          {SITE_TITLE}
-          <small className="absolute bottom-0 text-base">3.0.0</small>
+          {packageName}
+          <small className="absolute bottom-0 text-base">{packageVersion}</small>
         </h1>
         <p className="text-xl my-8">
-          {SITE_DESCRIPTION}
+          {packageDescription}
         </p>
         <ul className="my-8">
           <li>Class inheritance</li>
