@@ -11,14 +11,13 @@ v3.0.0
   Now all type and property decoration is done by `@Serialize()`.
 * **[BREAKING]** `@Serialize()` accepts custom type serializer (`up` & `down`) and options as a single argument.
 * **[BREAKING]** Removed `TypeSerializer.discriminate()` (redundant, was never used)
-* Pass `inflate` / `deflate` options to `up` / `down` functions
 * Add `Serializable`, an abstract base class for serializables
 * Async serialization / deserialization (`deflate.resolve` and `inflate.resolve`)
 * Serializatio / deserialization to/from a POJO (`as` and `toPojo` options)
-* Support projections (`projection` and `fallbackToDefaultProjection` options)
+* Add projections (`projection` and `fallbackToDefaultProjection` options)
 * Add optional `as` parameter to DeflateOptions. It allows to override a type of serializable
   (serialize as a different type)
-* Add `inflate` / `deflate` options
+* Add options for `inflate` / `deflate`, pass them to `up` / `down` functions as second argument
 * Both `up` and `down` functions for custom type serializer are now optional
 
 v2.0.2
