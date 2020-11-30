@@ -20,7 +20,7 @@
   "main": "./lib/dist/index.js",
   "types": "./lib/dist/index.d.ts",
   "scripts": {
-    "lint": "tslint -p ./lib && tslint -p ./spec && tslint -p ./samples && tslint -p ./docs",
+    "lint": "tslint -p ./lib && tslint -p ./spec && tslint -p ./samples && tslint -p ./website",
     "clean_lib": "rm -rf ./lib/dist",
     "clean_spec": "rm -rf ./spec/bin",
     "clean_samples": "rm -rf ./samples/bin",
