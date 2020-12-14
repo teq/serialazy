@@ -5,6 +5,7 @@ import rehypeAutolink from 'rehype-autolink-headings';
 import rehypeShiki from 'rehype-shiki';
 import rehypeSlug from 'rehype-slug';
 import rehypeHtml from 'rehype-stringify';
+import rehypeUrlInspector from '@jsdevtools/rehype-url-inspector';
 import remarkParse from 'remark-parse';
 import remark2rehype from 'remark-rehype';
 import unified from 'unified';
@@ -33,6 +34,18 @@ export async function getPageContent(slug: string) {
     .use(rehypeSlug)
     .use(rehypeAutolink)
     .use(rehypeShiki)
+    .use(rehypeUrlInspector, {
+      inspectEach(urlMatch) {
+        // Urls starting with "http(s)" treated as external and opened in new tab
+        if (urlMatch.url.startsWith('http')) {
+          console.log('!!!', urlMatch.url);
+          urlMatch.node.properties = Object.assign(urlMatch.node.properties ?? {}, {
+            target: '_blank',
+            rel: ['nofollow', 'noopener', 'noreferrer']
+          });
+        }
+      }
+    })
     .use(rehypeHtml)
     .process(content);
 
