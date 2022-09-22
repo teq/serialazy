@@ -1,6 +1,6 @@
 import { DEFAULT_PROJECTION } from "./metadata";
 import { DeflateOptions, InflateOptions } from './options';
-import { Constructor, isConstructor } from './types/constructor';
+import { Constructor, isConstructor } from './util';
 import TypeSerializerPicker from './type_serializer_picker';
 
 export default function FrontendFunctions(backend: string) {

@@ -6,5 +6,3 @@ export type Constructor<T> = new () => T;
 export function isConstructor<T = unknown>(target: unknown): target is Constructor<T> {
     return typeof target === 'function' && target.prototype && target.prototype.constructor.name;
 }
-
-export default Constructor;

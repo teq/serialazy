@@ -1,7 +1,7 @@
 import { Constructor } from './constructor';
 
 /** Generic serializable */
-export default abstract class Serializable {
+export abstract class Serializable {
 
     /**
      * Create new instance

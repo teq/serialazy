@@ -1,6 +1,6 @@
 import { DeflateOptions, DeflateOrInflateOptions, InflateOptions } from "./options";
 import PropertySerializer from "./property_serializer";
-import Util from './types/util';
+import { isPromise } from './util';
 import TypeSerializer from "./type_serializer";
 import TypeSerializerPicker from "./type_serializer_picker";
 
@@ -52,7 +52,7 @@ function ObjectPropertySerializer(backend: string) {
             try {
                 const originalValue = (serializable as any)[propertyName];
                 const serializedValue = getTypeSerializer(options).down(validate(originalValue), options);
-                if (Util.isPromise(serializedValue)) {
+                if (isPromise(serializedValue)) {
                     return (async () => putProperty(await serializedValue))();
                 } else {
                     putProperty(serializedValue as TSerialized);
@@ -80,7 +80,7 @@ function ObjectPropertySerializer(backend: string) {
             try {
                 const serializedValue = serialized[propertyTag];
                 const originalValue = getTypeSerializer(options).up(serializedValue, options);
-                if (Util.isPromise(originalValue)) {
+                if (isPromise(originalValue)) {
                     return (async () => putProperty(await originalValue))();
                 } else {
                     putProperty(originalValue as TOriginal);

@@ -1,9 +1,8 @@
-import DecoratorFactory from '../decorator_factory';
-import FrontendFunctions from '../frontend_functions';
-import { DEFAULT_PROJECTION, MetadataManager } from '../metadata';
-import { DecoratorOptions, DeflateOptions, InflateOptions } from '../options';
-import Constructor from "../types/constructor";
-import Util from '../types/util';
+import DecoratorFactory from '../shared/decorator_factory';
+import FrontendFunctions from '../shared/frontend_functions';
+import { DEFAULT_PROJECTION, MetadataManager } from '../shared/metadata';
+import { DecoratorOptions, DeflateOptions, InflateOptions } from '../shared/options';
+import { Constructor, isPromise, expectBooleanOrNil, expectNumberOrNil, expectStringOrNil } from '../shared/util';
 import JsonType from "./json_type";
 
 const BACKEND_NAME = 'json';
@@ -30,7 +29,7 @@ export function deflate<TOriginal>(
     options?: DeflateOptions<JsonType, TOriginal>
 ): JsonType {
     const serializedValue = FrontendFunctions(BACKEND_NAME).deflate<JsonType, TOriginal>(serializable, options);
-    if (Util.isPromise(serializedValue)) {
+    if (isPromise(serializedValue)) {
         throw new Error('Async-serializable type should be serialized with "deflate.resolve"');
     }
     return serializedValue as JsonType;
@@ -68,7 +67,7 @@ export function inflate<TOriginal>(
     options?: InflateOptions<JsonType, TOriginal>
 ): TOriginal {
     const originalValue = FrontendFunctions(BACKEND_NAME).inflate<JsonType, TOriginal>(ctor, serialized, options);
-    if (Util.isPromise(originalValue)) {
+    if (isPromise(originalValue)) {
         throw new Error('Async-serializable type should be deserialized with "inflate.resolve"');
     }
     return originalValue as TOriginal;
@@ -104,21 +103,21 @@ const metaManager = MetadataManager.get(BACKEND_NAME, DEFAULT_PROJECTION);
 
 if (!metaManager.getMetaFor(Boolean.prototype)) {
     Serialize({
-        down: (original: any) => Util.expectBooleanOrNil(original),
-        up: (serialized: any) => Util.expectBooleanOrNil(serialized)
+        down: (original: any) => expectBooleanOrNil(original),
+        up: (serialized: any) => expectBooleanOrNil(serialized)
     })(Boolean);
 }
 
 if (!metaManager.getMetaFor(Number.prototype)) {
     Serialize({
-        down: (original: any) => Util.expectNumberOrNil(original),
-        up: (serialized: any) => Util.expectNumberOrNil(serialized)
+        down: (original: any) => expectNumberOrNil(original),
+        up: (serialized: any) => expectNumberOrNil(serialized)
     })(Number);
 }
 
 if (!metaManager.getMetaFor(String.prototype)) {
     Serialize({
-        down: (original: any) => Util.expectStringOrNil(original),
-        up: (serialized: any) => Util.expectStringOrNil(serialized)
+        down: (original: any) => expectStringOrNil(original),
+        up: (serialized: any) => expectStringOrNil(serialized)
     })(String);
 }

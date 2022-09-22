@@ -1,5 +1,5 @@
 import { DeflateOptions, InflateOptions } from './options';
-import Constructor from './types/constructor';
+import { Constructor } from './util';
 
 /** Represents a generic type serializer */
 interface TypeSerializer<TSerialized, TOriginal> {

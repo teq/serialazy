@@ -1,9 +1,7 @@
 import { DEFAULT_PROJECTION } from '.';
 import { DeflateOrInflateOptions, InflateOptions } from '../options';
 import PropertySerializer from '../property_serializer';
-import Constructor from '../types/constructor';
-import Provider from '../types/provider';
-import Util from '../types/util';
+import { Constructor, Provider, isPromise } from '../util';
 import TypeSerializer from '../type_serializer';
 import MetadataManager from './metadata_manager';
 
@@ -127,7 +125,7 @@ export default class MetadataContainer {
 
                     try {
                         const results = Array.from(serializers.values()).map(serializer => serializer.down(serializable, serialized, options));
-                        if (results.some(result => Util.isPromise(result))) {
+                        if (results.some(result => isPromise(result))) {
                             return (() => Promise.all(results).then(() => serialized))();
                         } else {
                             return serialized;
@@ -148,7 +146,7 @@ export default class MetadataContainer {
 
                     try {
                         const results = Array.from(serializers.values()).map(serializer => serializer.up(serializable, serialized, options));
-                        if (results.some(result => Util.isPromise(result))) {
+                        if (results.some(result => isPromise(result))) {
                             return (() => Promise.all(results).then(() => serializable))();
                         } else {
                             return serializable;

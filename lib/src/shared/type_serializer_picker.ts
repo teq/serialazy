@@ -1,6 +1,6 @@
 import { DEFAULT_PROJECTION, MetadataManager } from './metadata';
 import { DeflateOrInflateOptions } from './options';
-import { Constructor, isConstructor } from './types/constructor';
+import { Constructor, isConstructor } from './util';
 import TypeSerializer from './type_serializer';
 
 /** Returns a helper which picks a type serializer for given value or type */
