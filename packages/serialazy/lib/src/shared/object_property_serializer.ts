@@ -1,8 +1,8 @@
 import { DeflateOptions, DeflateOrInflateOptions, InflateOptions } from "./options";
 import PropertySerializer from "./property_serializer";
-import { isPromise } from './util';
 import TypeSerializer from "./type_serializer";
 import TypeSerializerPicker from "./type_serializer_picker";
+import { isPromise } from './util';
 
 export interface PropertyBag<T> {
     [prop: string]: T;

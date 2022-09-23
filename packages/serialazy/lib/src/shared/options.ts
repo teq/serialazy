@@ -1,6 +1,6 @@
 import ObjectPropertySerializer from './object_property_serializer';
-import { Constructor } from "./util";
 import TypeSerializer from "./type_serializer";
+import { Constructor } from "./util";
 
 export interface SerializationOptions {
 

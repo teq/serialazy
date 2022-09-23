@@ -1,7 +1,7 @@
 import { DEFAULT_PROJECTION, MetadataManager } from './metadata';
 import { DeflateOrInflateOptions } from './options';
-import { Constructor, isConstructor } from './util';
 import TypeSerializer from './type_serializer';
+import { Constructor, isConstructor } from './util';
 
 /** Returns a helper which picks a type serializer for given value or type */
 export default function TypeSerializerPicker<TSerialized, TOriginal>(

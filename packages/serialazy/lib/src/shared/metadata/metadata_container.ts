@@ -1,8 +1,8 @@
 import { DEFAULT_PROJECTION } from '.';
 import { DeflateOrInflateOptions, InflateOptions } from '../options';
 import PropertySerializer from '../property_serializer';
-import { Constructor, Provider, isPromise } from '../util';
 import TypeSerializer from '../type_serializer';
+import { Constructor, isPromise, Provider } from '../util';
 import MetadataManager from './metadata_manager';
 
 /** Metadata container for serializables */

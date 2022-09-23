@@ -1,6 +1,6 @@
 {
   "name": "serialazy-bson",
-  "version": "1.0.0-rc.17",
+  "version": "1.0.0-rc.18",
   "description": "A TypeScript class serialization library (BSON backend)",
   "keywords": [
     "serialazy",
