@@ -1,0 +1,38 @@
+{
+  "rules": {
+
+    // TypeScript Specific
+    "adjacent-overload-signatures": true,
+    "member-access": [ true, "check-accessor", "check-constructor" ],
+    "no-inferrable-types": true,
+    "no-internal-module": true,
+    "no-var-requires": true,
+
+    // Functionality
+    "curly": true,
+    "no-console": [ true, "log", "error", "debug" ],
+    "no-debugger": true,
+    "no-eval": true,
+    "no-unused-expression": true,
+    "no-var-keyword": true,
+
+    // Maintainability
+    "eofline": true,
+    "indent": [ true, "spaces" ],
+    "linebreak-style": [ true, "LF" ],
+    "no-trailing-whitespace": true,
+
+    // Style
+    "class-name": true,
+    "comment-format": [ true, "check-space" ],
+    "jsdoc-format": true,
+    "ordered-imports": true,
+    "semicolon": [ true, "always" ],
+    "variable-name": [ true, "ban-keywords", "check-format" ],
+    "whitespace": [ true,
+        "check-branch", "check-decl", "check-module",
+        "check-operator", "check-separator", "check-type", "check-typecast"
+    ]
+
+  }
+}

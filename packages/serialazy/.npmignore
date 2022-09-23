@@ -1,0 +1,10 @@
+/lib/src
+/samples
+/spec
+**/tsconfig.json
+**/tslint.json
+tsconfig.base.json
+
+# IDEs
+**/.idea
+**/.vscode

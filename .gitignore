@@ -1,11 +1,8 @@
 /node_modules
-/lib/dist
-/samples/bin
-/spec/bin
 
 # IDEs
-.idea/
-.vscode/
+**/.idea
+**/.vscode
 
 # OS Specific
-.DS_Store
+**/.DS_Store

@@ -1,13 +1,10 @@
-/docs
 /lib/src
-/node_modules
 /samples
 /spec
-/website
 **/tsconfig.json
 **/tslint.json
 tsconfig.base.json
 
 # IDEs
-.idea/
-.vscode/
+**/.idea
+**/.vscode
