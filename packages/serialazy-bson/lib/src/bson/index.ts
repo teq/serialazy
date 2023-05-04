@@ -47,7 +47,7 @@ export function deflate<TOriginal>(
 export function deflateToBinary<TOriginal>(
     serializable: TOriginal,
     options?: DeflateOptions<BsonType, TOriginal>
-): Buffer {
+): Uint8Array {
     const bsonType = deflate(serializable, options);
     if (bsonType === null || bsonType === undefined) {
         return bsonType as null | undefined;
@@ -85,12 +85,12 @@ export function inflate<TOriginal>(
  */
 export function inflateFromBinary<TOriginal>(
     ctor: Constructor<TOriginal>,
-    serialized: Buffer,
+    serialized: Uint8Array,
     options?: InflateOptions<BsonType, TOriginal>
 ): TOriginal {
 
     const bsonType: BsonType = (serialized === null || serialized === undefined)
-        ? serialized
+        ? serialized as null | undefined
         : deserialize(serialized, {
             promoteValues: false,
             promoteLongs: false,
