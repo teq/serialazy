@@ -6,7 +6,7 @@ import {
     Double,
     Int32,
     Long,
-    ObjectID,
+    ObjectId,
     Timestamp
 } from 'bson';
 
@@ -18,7 +18,7 @@ export {
     Double,
     Int32,
     Long,
-    ObjectID,
+    ObjectId,
     Timestamp
 };
 
@@ -32,7 +32,7 @@ export type BsonType =
     string | boolean | number | Date |  // JS-types
     Binary | BSONRegExp | Code |        // \
     Decimal128 | Double | Int32 |       // | BSON-specific types
-    Long | ObjectID | Timestamp |       // /
+    Long | ObjectId | Timestamp |       // /
     BsonDocument | BsonArray;           // nested BSON types
 
 export default BsonType;

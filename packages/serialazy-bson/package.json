@@ -37,9 +37,6 @@
   "license": "MIT",
   "dependencies": {
     "reflect-metadata": "^0.1.13",
-    "bson": "^4.0.2"
-  },
-  "devDependencies": {
-    "@types/bson": "^4.0.0"
+    "bson": "4"
   }
 }
